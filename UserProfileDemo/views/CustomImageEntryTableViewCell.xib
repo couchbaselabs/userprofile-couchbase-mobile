@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="208" id="8jh-cc-x12" customClass="CustomImageEntryTableViewCell" customModule="UserProfileDemo" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="392" height="208"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="8jh-cc-x12" id="w5M-vL-QbG">
+                <rect key="frame" x="0.0" y="0.0" width="392" height="207.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Cv0-E4-0wK">
+                        <rect key="frame" x="0.0" y="0.0" width="394" height="208"/>
+                    </imageView>
+                </subviews>
+                <constraints>
+                    <constraint firstAttribute="bottom" secondItem="Cv0-E4-0wK" secondAttribute="bottom" constant="-0.5" id="GeN-rb-juO"/>
+                    <constraint firstItem="Cv0-E4-0wK" firstAttribute="leading" secondItem="w5M-vL-QbG" secondAttribute="leading" id="c6Q-ut-bhJ"/>
+                    <constraint firstItem="Cv0-E4-0wK" firstAttribute="leading" secondItem="w5M-vL-QbG" secondAttribute="leading" id="eSA-oU-WWP"/>
+                    <constraint firstAttribute="trailing" secondItem="Cv0-E4-0wK" secondAttribute="trailing" constant="-2" id="lZP-f0-DjK"/>
+                    <constraint firstItem="Cv0-E4-0wK" firstAttribute="top" secondItem="w5M-vL-QbG" secondAttribute="top" id="nWk-Le-UaX"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="imageEntryView" destination="Cv0-E4-0wK" id="VZY-sh-Br4"/>
+            </connections>
+            <point key="canvasLocation" x="-85" y="75"/>
+        </tableViewCell>
+    </objects>
+</document>
