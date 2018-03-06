@@ -134,12 +134,17 @@ class ProfileTableViewController:UITableViewController, UserPresentingViewProtoc
 extension ProfileTableViewController {
     @IBAction func onDoneTapped(_ sender: UIBarButtonItem) {
         guard var userProfile = record else {return}
-      //   let image = userImageView.image else {return}
-      
-        userProfile[UserRecordKeys.email.rawValue] = self.emailTextEntry?.text
-        userProfile[UserRecordKeys.address.rawValue] = self.addressTextEntry?.text
-        userProfile[UserRecordKeys.name.rawValue] = self.nameTextEntry?.text
         
+      //   let image = userImageView.image else {return}
+        userProfile.email = self.emailTextEntry?.text
+        userProfile.address = self.addressTextEntry?.text
+        userProfile.name = self.nameTextEntry?.text
+        
+        if let imageVal = self.userImageView?.image, let imageData = UIImageJPEGRepresentation(imageVal, 0.75)  {
+            userProfile.imageData = imageData
+        }
+        
+    
         self.userPresenter.setRecordForCurrentUser(userProfile) { [weak self](error) in
             guard let `self` = self else {
                 return
@@ -182,9 +187,10 @@ extension ProfileTableViewController {
                 guard let cell = tableView.dequeueReusableCell( withIdentifier: "ImageCell") as? CustomImageEntryTableViewCell else {
                     return UITableViewCell()
                 }
-                if let imageData = self.record?[UserRecordKeys.name.rawValue] as? Data {
-                    // TODO : Extract image data 
-                    cell.imageBlob = UIImage.init(imageLiteralResourceName: "logo")
+                if let imageData = self.record?.imageData{
+                    // TODO : Extract image data
+                    
+                    cell.imageBlob = UIImage.init(imageLiteralResourceName: "default-user-thumbnail")
                     
                     cell.selectionStyle = .none
                     
@@ -207,7 +213,7 @@ extension ProfileTableViewController {
                     
                     cell.selectionStyle = .none
                     
-                   if let name = self.record?[UserRecordKeys.name.rawValue] as? String {
+                   if let name = self.record?.name as? String {
                     
                         nameTextEntry?.text = name
                     
@@ -226,7 +232,7 @@ extension ProfileTableViewController {
                     emailTextEntry?.delegate = self
                     
                     cell.selectionStyle = .none
-                    if let email = self.record?[UserRecordKeys.email.rawValue] as? String {
+                    if let email = self.record?.email as? String {
                         emailTextEntry?.text = email
                       
                     }
@@ -243,7 +249,7 @@ extension ProfileTableViewController {
                     addressTextEntry?.delegate = self
                     
                     cell.selectionStyle = .none
-                    if let address = self.record?[UserRecordKeys.address.rawValue] as? String {
+                    if let address = self.record?.address as? String {
                         addressTextEntry?.text = address
                 
                         
@@ -291,7 +297,7 @@ extension ProfileTableViewController {
         var numExtn = 0
         // Future extensions
         if let record = self.record {
-            if let extensions = record[UserRecordKeys.extended.rawValue] as? [[String:Any] ] {
+            if let extensions = record.extended  {
                 numExtn = extensions.count
             }
         }
@@ -318,12 +324,24 @@ extension ProfileTableViewController {
 extension ProfileTableViewController:UITextViewDelegate {
 
     public func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        if text == "\n" {
+            switch textView {
+            case self.nameTextEntry!:
+                self.emailTextEntry?.becomeFirstResponder()
+            case self.emailTextEntry!:
+                self.addressTextEntry?.becomeFirstResponder()
+            case self.addressTextEntry!:
+                textView.resignFirstResponder()
+            default:
+                textView.resignFirstResponder()
+                
+            }
+        }
         let length = (textView.text?.characters.count)! - range.length + text.characters.count
         let addressEntryLength = (textView == self.addressTextEntry ) ? length : self.addressTextEntry?.text?.characters.count ?? 0
         let nameTextEntryLength = (textView == self.nameTextEntry) ? length : self.nameTextEntry?.text?.characters.count ?? 0
         let emailEntryLength = (textView == self.emailTextEntry ) ? length : self.emailTextEntry?.text?.characters.count ?? 0
-        
-
+    
         self.doneButton.isEnabled = emailEntryLength > 0 || nameTextEntryLength > 0 || addressEntryLength > 0
         
         return true

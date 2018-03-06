@@ -11,6 +11,7 @@
 		5F61CCB4204C9F4400399C1D /* CustomTextEntryTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5F61CCB3204C9F4400399C1D /* CustomTextEntryTableViewCell.xib */; };
 		5F61CCB6204E47B500399C1D /* CustomImageEntryTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5F61CCB5204E47B500399C1D /* CustomImageEntryTableViewCell.xib */; };
 		5F61CCB8204E47CD00399C1D /* CustomImageEntryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F61CCB7204E47CD00399C1D /* CustomImageEntryTableViewCell.swift */; };
+		5F61CCBA204F578100399C1D /* UserRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F61CCB9204F578100399C1D /* UserRecord.swift */; };
 		5F7CCFAF204849BE0019D450 /* UserPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F7CCFAE204849BE0019D450 /* UserPresenter.swift */; };
 		5F7CCFB1204849DB0019D450 /* PresenterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F7CCFB0204849DB0019D450 /* PresenterProtocol.swift */; };
 		5F86E84B2037E292007ED29E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F86E84A2037E292007ED29E /* AppDelegate.swift */; };
@@ -47,6 +48,7 @@
 		5F61CCB3204C9F4400399C1D /* CustomTextEntryTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustomTextEntryTableViewCell.xib; sourceTree = "<group>"; };
 		5F61CCB5204E47B500399C1D /* CustomImageEntryTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustomImageEntryTableViewCell.xib; sourceTree = "<group>"; };
 		5F61CCB7204E47CD00399C1D /* CustomImageEntryTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomImageEntryTableViewCell.swift; sourceTree = "<group>"; };
+		5F61CCB9204F578100399C1D /* UserRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRecord.swift; sourceTree = "<group>"; };
 		5F7CCFAE204849BE0019D450 /* UserPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPresenter.swift; sourceTree = "<group>"; };
 		5F7CCFB0204849DB0019D450 /* PresenterProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresenterProtocol.swift; sourceTree = "<group>"; };
 		5F86E8472037E292007ED29E /* UserProfileDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UserProfileDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -154,6 +156,7 @@
 			isa = PBXGroup;
 			children = (
 				5F86E883203B66B5007ED29E /* DatabaseManager.swift */,
+				5F61CCB9204F578100399C1D /* UserRecord.swift */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -241,6 +244,7 @@
 				5F86E84D2037E292007ED29E /* LoginViewController.swift in Sources */,
 				5F86E886203B788C007ED29E /* ProfileTableViewController.swift in Sources */,
 				5F7CCFAF204849BE0019D450 /* UserPresenter.swift in Sources */,
+				5F61CCBA204F578100399C1D /* UserRecord.swift in Sources */,
 				5F86E880203B65FF007ED29E /* StoryboardExtension.swift in Sources */,
 				5F61CCB2204C9F2C00399C1D /* CustomTextEntryTableViewCell.swift in Sources */,
 				5F86E84B2037E292007ED29E /* AppDelegate.swift in Sources */,

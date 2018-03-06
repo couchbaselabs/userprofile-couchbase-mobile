@@ -18,15 +18,15 @@
                 <rect key="frame" x="0.0" y="0.0" width="392" height="207.5"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Cv0-E4-0wK">
-                        <rect key="frame" x="0.0" y="0.0" width="394" height="208"/>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="default-user-thumbnail" translatesAutoresizingMaskIntoConstraints="NO" id="Cv0-E4-0wK">
+                        <rect key="frame" x="66" y="0.0" width="265" height="208"/>
                     </imageView>
                 </subviews>
                 <constraints>
                     <constraint firstAttribute="bottom" secondItem="Cv0-E4-0wK" secondAttribute="bottom" constant="-0.5" id="GeN-rb-juO"/>
-                    <constraint firstItem="Cv0-E4-0wK" firstAttribute="leading" secondItem="w5M-vL-QbG" secondAttribute="leading" id="c6Q-ut-bhJ"/>
-                    <constraint firstItem="Cv0-E4-0wK" firstAttribute="leading" secondItem="w5M-vL-QbG" secondAttribute="leading" id="eSA-oU-WWP"/>
-                    <constraint firstAttribute="trailing" secondItem="Cv0-E4-0wK" secondAttribute="trailing" constant="-2" id="lZP-f0-DjK"/>
+                    <constraint firstItem="Cv0-E4-0wK" firstAttribute="leading" secondItem="w5M-vL-QbG" secondAttribute="leading" constant="66" id="c6Q-ut-bhJ"/>
+                    <constraint firstItem="Cv0-E4-0wK" firstAttribute="leading" secondItem="w5M-vL-QbG" secondAttribute="leading" constant="66" id="eSA-oU-WWP"/>
+                    <constraint firstAttribute="trailing" secondItem="Cv0-E4-0wK" secondAttribute="trailing" constant="61" id="lZP-f0-DjK"/>
                     <constraint firstItem="Cv0-E4-0wK" firstAttribute="top" secondItem="w5M-vL-QbG" secondAttribute="top" id="nWk-Le-UaX"/>
                 </constraints>
             </tableViewCellContentView>
@@ -36,4 +36,7 @@
             <point key="canvasLocation" x="-85" y="75"/>
         </tableViewCell>
     </objects>
+    <resources>
+        <image name="default-user-thumbnail" width="383" height="356"/>
+    </resources>
 </document>

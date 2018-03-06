@@ -11,7 +11,6 @@ import CouchbaseLiteSwift
 
 
 // MARK : typealias
-typealias UserRecord = [String:Any]
 enum UserRecordKeys:String {
     case image
     case name
@@ -55,18 +54,15 @@ extension UserPresenter {
         }
         
         // First  query for document of specified ID
-        var profile = [String:Any]()
-         self.associatedView?.dataStartedLoading()
+        var profile = UserRecord.init()
+        self.associatedView?.dataStartedLoading()
         if let doc = db.document(withID: self.userProfileDocId) {
-          //  let profile = doc.toDictionary() as? UserRecord
+     
+            profile.email  =  doc.string(forKey: UserRecordKeys.email.rawValue)
+            profile.address = doc.string(forKey:UserRecordKeys.address.rawValue)
+            profile.imageData = doc.blob(forKey:UserRecordKeys.image.rawValue)?.content
+            profile.name =  doc.string(forKey: UserRecordKeys.name.rawValue)
             
-            // TO DO : EXTRACT FROM USER RECORD
-            profile[UserRecordKeys.name.rawValue] = doc.toDictionary()[UserRecordKeys.name.rawValue]
-            profile[UserRecordKeys.image.rawValue] = doc.toDictionary()[UserRecordKeys.image.rawValue]
-            profile[UserRecordKeys.address.rawValue] = doc.toDictionary()[UserRecordKeys.address.rawValue]
-            profile[UserRecordKeys.email.rawValue] = doc.toDictionary()[UserRecordKeys.email.rawValue]
-            
-          
         }
         self.associatedView?.dataFinishedLoading()
         self.associatedView?.updateUIWithUserRecord(profile, error: nil)
