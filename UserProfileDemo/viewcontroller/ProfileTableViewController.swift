@@ -134,7 +134,7 @@ class ProfileTableViewController:UITableViewController, UserPresentingViewProtoc
 extension ProfileTableViewController {
     @IBAction func onDoneTapped(_ sender: UIBarButtonItem) {
         guard var userProfile = record else {return}
-        guard let image = userImageView.image else {return}
+      //   let image = userImageView.image else {return}
       
         userProfile[UserRecordKeys.email.rawValue] = self.emailTextEntry?.text
         userProfile[UserRecordKeys.address.rawValue] = self.addressTextEntry?.text
@@ -163,9 +163,9 @@ extension ProfileTableViewController {
         case Section.basic.index:
             return Section.basic.numRows
         case Section.extended.index:
-            return Section.basic.numRows
-        case Section.extended.index:
             return Section.extended.numRows
+        case Section.image.index:
+            return Section.image.numRows
         default:
             return 0
         }
@@ -188,7 +188,8 @@ extension ProfileTableViewController {
                     
                     cell.selectionStyle = .none
                     
-            }
+                }
+            return cell
             
             // Basic Info
             case Section.basic.index :
@@ -197,16 +198,18 @@ extension ProfileTableViewController {
                     guard let cell = tableView.dequeueReusableCell( withIdentifier: "BasicInfoCell") as? CustomTextEntryTableViewCell else {
                         return UITableViewCell()
                     }
+                    cell.textEntryName.text = NSLocalizedString("Name:", comment: "")
+                    cell.selectionStyle = .none
+                    
+                    nameTextEntry = cell.textEntryValue
+                    nameTextEntry?.isEditable = true
+                    nameTextEntry?.delegate = self
+                    
+                    cell.selectionStyle = .none
+                    
                    if let name = self.record?[UserRecordKeys.name.rawValue] as? String {
-                        cell.textEntryName.text = NSLocalizedString("Name:", comment: "")
-                        cell.selectionStyle = .none
                     
-                        nameTextEntry = cell.textEntryValue
                         nameTextEntry?.text = name
-                        nameTextEntry?.isEditable = true
-                        nameTextEntry?.delegate = self
-                    
-                        cell.selectionStyle = .none
                     
                     }
                     return cell
@@ -215,16 +218,16 @@ extension ProfileTableViewController {
                     guard let cell = tableView.dequeueReusableCell( withIdentifier: "BasicInfoCell") as? CustomTextEntryTableViewCell else {
                         return UITableViewCell()
                     }
+                    cell.textEntryName.text = NSLocalizedString("Email:", comment: "")
+                    cell.selectionStyle = .none
+                    
+                    emailTextEntry = cell.textEntryValue
+                    emailTextEntry?.isEditable = true
+                    emailTextEntry?.delegate = self
+                    
+                    cell.selectionStyle = .none
                     if let email = self.record?[UserRecordKeys.email.rawValue] as? String {
-                        cell.textEntryName.text = NSLocalizedString("Email:", comment: "")
-                        cell.selectionStyle = .none
-                        
-                        nameTextEntry = cell.textEntryValue
-                        nameTextEntry?.text = email
-                        nameTextEntry?.isEditable = true
-                        nameTextEntry?.delegate = self
-                        
-                        cell.selectionStyle = .none
+                        emailTextEntry?.text = email
                       
                     }
                     return  cell
@@ -232,16 +235,17 @@ extension ProfileTableViewController {
                     guard let cell = tableView.dequeueReusableCell( withIdentifier: "BasicInfoCell") as? CustomTextEntryTableViewCell else {
                         return UITableViewCell()
                     }
+                    cell.textEntryName.text = NSLocalizedString("Address:", comment: "")
+                    cell.selectionStyle = .none
+                    
+                    addressTextEntry = cell.textEntryValue
+                    addressTextEntry?.isEditable = true
+                    addressTextEntry?.delegate = self
+                    
+                    cell.selectionStyle = .none
                     if let address = self.record?[UserRecordKeys.address.rawValue] as? String {
-                        cell.textEntryName.text = NSLocalizedString("Address:", comment: "")
-                        cell.selectionStyle = .none
-                        
-                        nameTextEntry = cell.textEntryValue
-                        nameTextEntry?.text = address
-                        nameTextEntry?.isEditable = true
-                        nameTextEntry?.delegate = self
-                        
-                        cell.selectionStyle = .none
+                        addressTextEntry?.text = address
+                
                         
                     }
                     return cell
@@ -320,7 +324,7 @@ extension ProfileTableViewController:UITextViewDelegate {
         let emailEntryLength = (textView == self.emailTextEntry ) ? length : self.emailTextEntry?.text?.characters.count ?? 0
         
 
-        self.doneButton.isEnabled = emailEntryLength > 0 || nameTextEntryLength > 0 && addressEntryLength > 0
+        self.doneButton.isEnabled = emailEntryLength > 0 || nameTextEntryLength > 0 || addressEntryLength > 0
         
         return true
     }

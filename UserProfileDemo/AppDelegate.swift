@@ -14,12 +14,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     fileprivate var loginViewController:LoginViewController?
     fileprivate var userProfileViewController:ProfileTableViewController?
+    fileprivate var userProfileNavViewController:UINavigationController?
+    
+    
     fileprivate var cbMgr = DatabaseManager.shared
     fileprivate var isObservingForLoginEvents:Bool = false
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        self.loadLoginViewController()
         return true
     }
 
@@ -57,7 +61,7 @@ extension AppDelegate {
         else {
             let storyboard = UIStoryboard.init(name: "Main", bundle: Bundle.main)
             loginViewController = storyboard.instantiateViewController(withIdentifier: "LoginViewController") as? LoginViewController
-            window!.rootViewController = loginViewController
+            window?.rootViewController = loginViewController
             
         }
         self.registerNotificationObservers()
@@ -65,14 +69,14 @@ extension AppDelegate {
     }
     
     func loadProfileViewController() {
-        if let profileVC = userProfileViewController {
-            window?.rootViewController = profileVC
+        if let profileNVC = userProfileNavViewController {
+            window?.rootViewController = profileNVC
             
         }
         else {
             let storyboard = UIStoryboard.init(name: "Main", bundle: Bundle.main)
-            userProfileViewController = storyboard.instantiateViewController(withIdentifier: "ProfileTableViewController") as? ProfileTableViewController
-            window!.rootViewController = userProfileViewController
+            userProfileNavViewController = storyboard.instantiateViewController(withIdentifier: "UserProfileNVC") as? UINavigationController
+            window?.rootViewController = userProfileNavViewController
             
         }
         

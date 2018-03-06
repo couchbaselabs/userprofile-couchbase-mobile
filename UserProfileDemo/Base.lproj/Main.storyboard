@@ -265,7 +265,7 @@
         <!--Navigation Controller-->
         <scene sceneID="i6v-0G-XhT">
             <objects>
-                <navigationController storyboardIdentifier="TemperatureMonitorNVC" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="UlB-71-iFn" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="UserProfileNVC" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="UlB-71-iFn" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="6TH-Fi-aYD">
                         <rect key="frame" x="0.0" y="20" width="375" height="44"/>
@@ -305,7 +305,11 @@
                     </tableView>
                     <navigationItem key="navigationItem" id="wFN-hA-SD0">
                         <barButtonItem key="leftBarButtonItem" title="Log Off" id="Sb6-GG-snT"/>
-                        <barButtonItem key="rightBarButtonItem" title="Done" id="h5W-Y5-Twc"/>
+                        <barButtonItem key="rightBarButtonItem" enabled="NO" title="Done" id="h5W-Y5-Twc">
+                            <connections>
+                                <action selector="onDoneTapped:" destination="HOs-tn-3yl" id="4VE-dN-0lw"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="doneButton" destination="h5W-Y5-Twc" id="Gi5-kB-EkJ"/>

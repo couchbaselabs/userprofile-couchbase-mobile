@@ -55,9 +55,10 @@ extension UserPresenter {
         }
         
         // First  query for document of specified ID
+        var profile = [String:Any]()
+         self.associatedView?.dataStartedLoading()
         if let doc = db.document(withID: self.userProfileDocId) {
           //  let profile = doc.toDictionary() as? UserRecord
-            var profile = [String:Any]()
             
             // TO DO : EXTRACT FROM USER RECORD
             profile[UserRecordKeys.name.rawValue] = doc.toDictionary()[UserRecordKeys.name.rawValue]
@@ -65,9 +66,10 @@ extension UserPresenter {
             profile[UserRecordKeys.address.rawValue] = doc.toDictionary()[UserRecordKeys.address.rawValue]
             profile[UserRecordKeys.email.rawValue] = doc.toDictionary()[UserRecordKeys.email.rawValue]
             
-            self.associatedView?.dataFinishedLoading()
-            self.associatedView?.updateUIWithUserRecord(profile, error: nil)
+          
         }
+        self.associatedView?.dataFinishedLoading()
+        self.associatedView?.updateUIWithUserRecord(profile, error: nil)
     }
     
     func setRecordForCurrentUser( _ record:UserRecord?, handler:@escaping(_ error:Error?)->Void) {
