@@ -21,8 +21,23 @@
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="default-user-thumbnail" translatesAutoresizingMaskIntoConstraints="NO" id="Cv0-E4-0wK">
                         <rect key="frame" x="66" y="0.0" width="265" height="208"/>
                     </imageView>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kvx-L1-lh0">
+                        <rect key="frame" x="182" y="178" width="46" height="30"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="30" id="4wx-Eb-qxS"/>
+                            <constraint firstAttribute="width" constant="46" id="g6e-5K-P1c"/>
+                        </constraints>
+                        <state key="normal" title="Tap!">
+                            <color key="titleColor" red="0.047058823530000002" green="0.67450980390000004" blue="0.87843137250000003" alpha="1" colorSpace="calibratedRGB"/>
+                        </state>
+                        <connections>
+                            <action selector="updateThumbnail:" destination="8jh-cc-x12" eventType="touchUpInside" id="bWt-xB-4IO"/>
+                        </connections>
+                    </button>
                 </subviews>
                 <constraints>
+                    <constraint firstItem="kvx-L1-lh0" firstAttribute="bottom" secondItem="Cv0-E4-0wK" secondAttribute="bottom" id="D6V-Ve-9tV"/>
+                    <constraint firstItem="kvx-L1-lh0" firstAttribute="leading" secondItem="Cv0-E4-0wK" secondAttribute="trailing" constant="-149" id="Ef1-v8-DbJ"/>
                     <constraint firstAttribute="bottom" secondItem="Cv0-E4-0wK" secondAttribute="bottom" constant="-0.5" id="GeN-rb-juO"/>
                     <constraint firstItem="Cv0-E4-0wK" firstAttribute="leading" secondItem="w5M-vL-QbG" secondAttribute="leading" constant="66" id="c6Q-ut-bhJ"/>
                     <constraint firstItem="Cv0-E4-0wK" firstAttribute="leading" secondItem="w5M-vL-QbG" secondAttribute="leading" constant="66" id="eSA-oU-WWP"/>

@@ -9,8 +9,23 @@
 import Foundation
 import UIKit
 
+
+protocol CustomImageEntryTableViewCellProtocol:class {
+    func onUploadImage()
+    
+}
+
+// optional
+extension CustomImageEntryTableViewCellProtocol {
+    func onUploadImage() {
+        print(#function)
+    }
+}
+
 class CustomImageEntryTableViewCell: UITableViewCell {
     var imageBlob:UIImage?
+    var uploadButton:UIButton?
+    weak var delegate:CustomImageEntryTableViewCellProtocol?
     
     @IBOutlet weak var imageEntryView: UIImageView!
     override func awakeFromNib() {
@@ -34,4 +49,11 @@ class CustomImageEntryTableViewCell: UITableViewCell {
         self.layoutIfNeeded()
     }
     
+}
+
+extension CustomImageEntryTableViewCell {
+    @IBAction func updateThumbnail(_ sender: UIButton) {
+        delegate?.onUploadImage()
+        
+    }
 }

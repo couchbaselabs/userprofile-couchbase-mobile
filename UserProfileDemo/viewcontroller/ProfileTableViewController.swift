@@ -187,12 +187,13 @@ extension ProfileTableViewController {
                 guard let cell = tableView.dequeueReusableCell( withIdentifier: "ImageCell") as? CustomImageEntryTableViewCell else {
                     return UITableViewCell()
                 }
+                cell.delegate = self
+                cell.selectionStyle = .none
+                userImageView = cell.imageEntryView
                 if let imageData = self.record?.imageData{
                     // TODO : Extract image data
-                    
                     cell.imageBlob = UIImage.init(imageLiteralResourceName: "default-user-thumbnail")
-                    
-                    cell.selectionStyle = .none
+    
                     
                 }
             return cell
@@ -271,7 +272,7 @@ extension ProfileTableViewController {
         return UITableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: "DefaultCell")
         
     }
-    override public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    override public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat{
         switch indexPath.section {
             // Profile Image
             case Section.image.index:
@@ -305,7 +306,69 @@ extension ProfileTableViewController {
     }
 }
 
+// MARK : CustomImageEntryTableViewCellProtocol
+extension ProfileTableViewController:CustomImageEntryTableViewCellProtocol {
+    func onUploadImage() {
+        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        alert.modalPresentationStyle = .popover
+        
+        let albumAction = UIAlertAction(title: NSLocalizedString("Select From Photo Album", comment: ""), style: .default) { action in
+            
+            let imagePickerController = UIImagePickerController()
+            imagePickerController.delegate = self
+            imagePickerController.allowsEditing = false
+            imagePickerController.sourceType = UIImagePickerControllerSourceType.photoLibrary;
+            
+            imagePickerController.modalPresentationStyle = .overCurrentContext
+            
+            self.present(imagePickerController, animated: true, completion: nil)
+            
+        }
+        
+        if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.camera) {
+            let cameraAction = UIAlertAction(title: NSLocalizedString("Take Photo", comment: ""), style: .default) { [unowned self] action in
+                
+                let imagePickerController = UIImagePickerController()
+                imagePickerController.delegate = self
+                imagePickerController.allowsEditing = false
+                imagePickerController.sourceType = UIImagePickerControllerSourceType.camera;
+                imagePickerController.cameraDevice = UIImagePickerControllerCameraDevice.front;
+                
+                imagePickerController.modalPresentationStyle = .overCurrentContext
+                
+                self.present(imagePickerController, animated: true, completion: nil)
+                
+                
+            }
+            alert.addAction(cameraAction)
+            
+        }
+        alert.addAction(albumAction)
+        
+        if let presenter = alert.popoverPresentationController {
+            presenter.sourceView = self.view
+            presenter.sourceRect = self.view.bounds
+        }
+        present(alert, animated: true, completion: nil)
+        
+    }
+}
 
+// TODO: FIX DONEBUTTON ENABLED
+extension ProfileTableViewController : UIImagePickerControllerDelegate , UINavigationControllerDelegate{
+    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
+            self.userImageView.image = image
+            
+            picker.presentingViewController?.dismiss(animated: true, completion: nil)
+        }
+    }
+    
+    public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        picker.presentingViewController?.dismiss(animated: true, completion: nil)
+    }
+    
+}
 // MARK : UserPresentingViewProtocol
 extension ProfileTableViewController {
     func updateUIWithUserRecord(_ record: UserRecord?, error: Error?) {

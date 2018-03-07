@@ -9,8 +9,7 @@
 import Foundation
 import CouchbaseLiteSwift
 
-
-
+// TODO: Remove sync stuff
 class DatabaseManager {
     
     // public
