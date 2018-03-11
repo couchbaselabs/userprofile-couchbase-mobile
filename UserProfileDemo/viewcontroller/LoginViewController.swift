@@ -100,7 +100,7 @@ extension LoginViewController {
                     self.activitySpinner.startAnimating()
                    // cbMgr.startPushAndPullReplicationForCurrentUser()
                     NotificationCenter.default.post(Notification.notificationForLoginSuccess(userName))
-               //     self.activitySpinner.stopAnimating()
+                    self.activitySpinner.stopAnimating()
 
                 default:
                     self.activitySpinner.startAnimating()
@@ -112,7 +112,6 @@ extension LoginViewController {
         }
         
     }
-    
     
 }
 
@@ -134,7 +133,6 @@ extension LoginViewController {
         
         NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillShow, object: nil)
         NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillHide, object: nil)
-        
         
     }
     

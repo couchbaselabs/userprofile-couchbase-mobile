@@ -22,7 +22,7 @@ class ProfileTableViewController:UITableViewController, UserPresentingViewProtoc
     fileprivate var emailTextEntry:UITextView?
     fileprivate var addressTextEntry:UITextView?
     fileprivate var userImageView: UIImageView!
-    
+    fileprivate var imageUpdated:Bool = false
     
     let  baselineProfileSections:Int = 3
     
@@ -100,7 +100,7 @@ class ProfileTableViewController:UITableViewController, UserPresentingViewProtoc
                 self?.record = record
                 self?.tableView.reloadData()
             default:
-                self?.showAlertWithTitle(NSLocalizedString("Error!", comment: ""), message: (error?.localizedDescription)!)
+                self?.showAlertWithTitle(NSLocalizedString("Error!", comment: ""), message: (error?.localizedDescription) ?? "Unknown error while fetching user record")
             }
         })
         
@@ -150,14 +150,17 @@ extension ProfileTableViewController {
                 return
             }
             if error != nil {
-                self.showAlertWithTitle(NSLocalizedString("Error!", comment: ""), message: (error?.localizedDescription)!)
+                self.showAlertWithTitle(NSLocalizedString("Error!", comment: ""), message: (error?.localizedDescription) ?? "Failed to update user record")
+            }
+            else {
+                 self.showAlertWithTitle("", message: "Succesfully updated profile!")
             }
         }
     }
     
     
     @IBAction func onCancelTapped(_ sender: UIBarButtonItem) {
-        self.dismiss(animated: true, completion: nil)
+        NotificationCenter.default.post(Notification.notificationForLogOut())
     }
 }
 
@@ -191,9 +194,8 @@ extension ProfileTableViewController {
                 cell.selectionStyle = .none
                 userImageView = cell.imageEntryView
                 if let imageData = self.record?.imageData{
-                    // TODO : Extract image data
-                    cell.imageBlob = UIImage.init(imageLiteralResourceName: "default-user-thumbnail")
-    
+                
+                    cell.imageBlob  = UIImage.init(data: imageData)
                     
                 }
             return cell
@@ -215,9 +217,7 @@ extension ProfileTableViewController {
                     cell.selectionStyle = .none
                     
                    if let name = self.record?.name as? String {
-                    
                         nameTextEntry?.text = name
-                    
                     }
                     return cell
                 
@@ -252,8 +252,7 @@ extension ProfileTableViewController {
                     cell.selectionStyle = .none
                     if let address = self.record?.address as? String {
                         addressTextEntry?.text = address
-                
-                        
+                    
                     }
                     return cell
                     
@@ -338,7 +337,6 @@ extension ProfileTableViewController:CustomImageEntryTableViewCellProtocol {
                 
                 self.present(imagePickerController, animated: true, completion: nil)
                 
-                
             }
             alert.addAction(cameraAction)
             
@@ -354,12 +352,14 @@ extension ProfileTableViewController:CustomImageEntryTableViewCellProtocol {
     }
 }
 
-// TODO: FIX DONEBUTTON ENABLED
+
 extension ProfileTableViewController : UIImagePickerControllerDelegate , UINavigationControllerDelegate{
     public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
             self.userImageView.image = image
-            
+            self.imageUpdated = true
+            self.doneButton.isEnabled = true
+
             picker.presentingViewController?.dismiss(animated: true, completion: nil)
         }
     }
@@ -377,9 +377,8 @@ extension ProfileTableViewController {
             self.record = record
             self.tableView.reloadData()
         default:
-            self.showAlertWithTitle(NSLocalizedString("Error!", comment: ""), message: (error?.localizedDescription)!)
+            self.showAlertWithTitle(NSLocalizedString("Error!", comment: ""), message: (error?.localizedDescription) ?? "Failed to fetch date user record")
         }
-        
     }
 }
 
@@ -404,12 +403,10 @@ extension ProfileTableViewController:UITextViewDelegate {
         let addressEntryLength = (textView == self.addressTextEntry ) ? length : self.addressTextEntry?.text?.characters.count ?? 0
         let nameTextEntryLength = (textView == self.nameTextEntry) ? length : self.nameTextEntry?.text?.characters.count ?? 0
         let emailEntryLength = (textView == self.emailTextEntry ) ? length : self.emailTextEntry?.text?.characters.count ?? 0
-    
-        self.doneButton.isEnabled = emailEntryLength > 0 || nameTextEntryLength > 0 || addressEntryLength > 0
-        
+        self.doneButton.isEnabled = imageUpdated || emailEntryLength > 0 || nameTextEntryLength > 0 || addressEntryLength > 0
+       
         return true
     }
     
 }
-
 

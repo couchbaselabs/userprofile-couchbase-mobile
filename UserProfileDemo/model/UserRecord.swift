@@ -8,11 +8,12 @@
 
 import Foundation
 import UIKit
-
+typealias ExtendedData = [[String:Any]]
 struct UserRecord {
     var name:String?
     var email:String?
     var address:String?
     var imageData:Data?
-    var extended:[[String:Any]]? // future
+    var extended:ExtendedData? // future
+
 }

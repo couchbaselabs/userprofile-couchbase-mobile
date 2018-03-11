@@ -267,9 +267,6 @@ extension DatabaseManager {
         }
     }
     
-    
-    
-    
 }
 
 // MARK: Utils

@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5F4493FD2055BF3A0063508C /* CouchbaseLiteSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F4493FC2055BF3A0063508C /* CouchbaseLiteSwift.framework */; };
+		5F4493FE2055BF400063508C /* CouchbaseLiteSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F4493FC2055BF3A0063508C /* CouchbaseLiteSwift.framework */; };
+		5F4493FF2055BF400063508C /* CouchbaseLiteSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5F4493FC2055BF3A0063508C /* CouchbaseLiteSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5F61CCB2204C9F2C00399C1D /* CustomTextEntryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F61CCB1204C9F2C00399C1D /* CustomTextEntryTableViewCell.swift */; };
 		5F61CCB4204C9F4400399C1D /* CustomTextEntryTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5F61CCB3204C9F4400399C1D /* CustomTextEntryTableViewCell.xib */; };
 		5F61CCB6204E47B500399C1D /* CustomImageEntryTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5F61CCB5204E47B500399C1D /* CustomImageEntryTableViewCell.xib */; };
@@ -19,9 +22,6 @@
 		5F86E8502037E292007ED29E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5F86E84E2037E292007ED29E /* Main.storyboard */; };
 		5F86E8522037E292007ED29E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5F86E8512037E292007ED29E /* Assets.xcassets */; };
 		5F86E8552037E292007ED29E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5F86E8532037E292007ED29E /* LaunchScreen.storyboard */; };
-		5F86E8762037E54B007ED29E /* CouchbaseLiteSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F86E8752037E54B007ED29E /* CouchbaseLiteSwift.framework */; };
-		5F86E8772037E55D007ED29E /* CouchbaseLiteSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F86E8752037E54B007ED29E /* CouchbaseLiteSwift.framework */; };
-		5F86E8782037E55D007ED29E /* CouchbaseLiteSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5F86E8752037E54B007ED29E /* CouchbaseLiteSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5F86E87C203B659C007ED29E /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F86E87B203B659C007ED29E /* Notifications.swift */; };
 		5F86E87E203B65D1007ED29E /* CustomErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F86E87D203B65D1007ED29E /* CustomErrors.swift */; };
 		5F86E880203B65FF007ED29E /* StoryboardExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F86E87F203B65FF007ED29E /* StoryboardExtension.swift */; };
@@ -36,7 +36,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				5F86E8782037E55D007ED29E /* CouchbaseLiteSwift.framework in Embed Frameworks */,
+				5F4493FF2055BF400063508C /* CouchbaseLiteSwift.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -44,6 +44,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		5F4493FC2055BF3A0063508C /* CouchbaseLiteSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CouchbaseLiteSwift.framework; path = Frameworks/iOS/CouchbaseLiteSwift.framework; sourceTree = "<group>"; };
 		5F61CCB1204C9F2C00399C1D /* CustomTextEntryTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextEntryTableViewCell.swift; sourceTree = "<group>"; };
 		5F61CCB3204C9F4400399C1D /* CustomTextEntryTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustomTextEntryTableViewCell.xib; sourceTree = "<group>"; };
 		5F61CCB5204E47B500399C1D /* CustomImageEntryTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustomImageEntryTableViewCell.xib; sourceTree = "<group>"; };
@@ -58,7 +59,6 @@
 		5F86E8512037E292007ED29E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5F86E8542037E292007ED29E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		5F86E8562037E292007ED29E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		5F86E8752037E54B007ED29E /* CouchbaseLiteSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CouchbaseLiteSwift.framework; path = Frameworks/iOS/CouchbaseLiteSwift.framework; sourceTree = "<group>"; };
 		5F86E87B203B659C007ED29E /* Notifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
 		5F86E87D203B65D1007ED29E /* CustomErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomErrors.swift; sourceTree = "<group>"; };
 		5F86E87F203B65FF007ED29E /* StoryboardExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryboardExtension.swift; sourceTree = "<group>"; };
@@ -71,8 +71,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5F86E8772037E55D007ED29E /* CouchbaseLiteSwift.framework in Frameworks */,
-				5F86E8762037E54B007ED29E /* CouchbaseLiteSwift.framework in Frameworks */,
+				5F4493FE2055BF400063508C /* CouchbaseLiteSwift.framework in Frameworks */,
+				5F4493FD2055BF3A0063508C /* CouchbaseLiteSwift.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -102,7 +102,7 @@
 		5F86E83E2037E292007ED29E = {
 			isa = PBXGroup;
 			children = (
-				5F86E8752037E54B007ED29E /* CouchbaseLiteSwift.framework */,
+				5F4493FC2055BF3A0063508C /* CouchbaseLiteSwift.framework */,
 				5F86E8492037E292007ED29E /* UserProfileDemo */,
 				5F86E8482037E292007ED29E /* Products */,
 			);
@@ -391,6 +391,7 @@
 					"$(PROJECT_DIR)/Frameworks/iOS",
 					"$(PROJECT_DIR)/Frameworks/macOS",
 					"$(PROJECT_DIR)/Frameworks/tvOS",
+					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = UserProfileDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -412,6 +413,7 @@
 					"$(PROJECT_DIR)/Frameworks/iOS",
 					"$(PROJECT_DIR)/Frameworks/macOS",
 					"$(PROJECT_DIR)/Frameworks/tvOS",
+					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = UserProfileDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

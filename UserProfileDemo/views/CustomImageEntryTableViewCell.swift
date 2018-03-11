@@ -23,7 +23,11 @@ extension CustomImageEntryTableViewCellProtocol {
 }
 
 class CustomImageEntryTableViewCell: UITableViewCell {
-    var imageBlob:UIImage?
+    var imageBlob:UIImage? {
+        didSet {
+            updateUI()
+        }
+    }
     var uploadButton:UIButton?
     weak var delegate:CustomImageEntryTableViewCellProtocol?
     
