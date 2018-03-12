@@ -24,18 +24,10 @@ class DatabaseManager {
     public fileprivate(set) var currentUserCredentials:(user:String,password:String)?
     
     var lastError:Error?
-    
-    
-    // fileprivate
+
+    // db name
     fileprivate let kDBName:String = "userprofile"
-    
-    // This is the remote URL of the Sync Gateway (public Port)
-    fileprivate let kRemoteSyncUrl = "ws://localhost:4984"
-    
     fileprivate var _db:Database?
-    fileprivate var _pushPullRepl:Replicator?
-    fileprivate var _pushPullReplListener:ListenerToken?
-    
     
     fileprivate var _applicationDocumentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).last
     
@@ -104,7 +96,6 @@ extension DatabaseManager {
                 }
                 // Get handle to DB  specified path
                 _db = try Database(name: kDBName, config: options)
-                try createDatabaseIndexes()
                 
             }
             else
@@ -171,110 +162,6 @@ extension DatabaseManager {
         }
     }
     
-    
-    func createDatabaseIndexes() throws{
-        // For searches on type property
-        try _db?.createIndex(IndexBuilder.valueIndex(items:  ValueIndexItem.expression(Expression.property("type"))), withName: "typeIndex")
-        try _db?.createIndex(IndexBuilder.valueIndex(items:ValueIndexItem.expression(Expression.property("name"))), withName: "nameIndex")
-        try _db?.createIndex(IndexBuilder.valueIndex(items:ValueIndexItem.expression(Expression.property("airportname"))), withName: "airportIndex")
-        
-        // For Full text search on airports and hotels
-        try _db?.createIndex(IndexBuilder.fullTextIndex(items: FullTextIndexItem.property("description")).ignoreAccents(false), withName: "descFTSIndex")
-        
-    }
-    
-    
-    func startPushAndPullReplicationForCurrentUser() {
-        print(#function)
-        guard let remoteUrl = URL.init(string: kRemoteSyncUrl) else {
-            lastError = UserProfileError.RemoteDatabaseNotReachable
-            return
-        }
-        
-        guard let user = self.currentUserCredentials?.user,let password = self.currentUserCredentials?.password  else {
-            lastError = UserProfileError.UserCredentialsNotProvided
-            return
-        }
-        
-        guard let db = db else {
-            lastError = UserProfileError.RemoteDatabaseNotReachable
-            return
-        }
-        
-        if _pushPullRepl != nil {
-            // Replication is already started
-            return
-        }
-        
-        let dbUrl = remoteUrl.appendingPathComponent(kDBName)
-        
-        let config = ReplicatorConfiguration.init(database: db, target: URLEndpoint.init(url:dbUrl))
-        
-        config.replicatorType = .pushAndPull
-        config.continuous =  true
-        config.authenticator =  BasicAuthenticator(username: user, password: password)
-        
-        
-        // This should match what is specified in the sync gateway config
-        // Only pull documents from this user's channel
-        let userChannel = "channel.\(user)"
-        config.channels = [userChannel]
-        
-        _pushPullRepl = Replicator.init(config: config)
-        
-        _pushPullReplListener = _pushPullRepl?.addChangeListener({ [weak self] (change) in
-            let s = change.status
-            switch s.activity {
-            case .stopped:
-                print("Replication stopped")
-                self?.postNotificationOnReplicationState(.stopped)
-            
-            case .offline:
-                print("Replication offline")
-                self?.postNotificationOnReplicationState(.offline)
-            case .busy:
-                print("Replication busy")
-                self?.postNotificationOnReplicationState(.busy)
-            default:
-                print("Ignoring replicator status codes")
-                self?.postNotificationOnReplicationState(s.activity)
-            }
-        })
-        
-        _pushPullRepl?.start()
-        
-    }
-    
-    
-    
-    func stopAllReplicationForCurrentUser() {
-        _pushPullRepl?.stop()
-        if let pushPullReplListener = _pushPullReplListener{
-            print(#function)
-            _pushPullRepl?.removeChangeListener(withToken:  pushPullReplListener)
-            _pushPullRepl = nil
-            _pushPullReplListener = nil
-        }
-        
-    }
-    
-    
-    fileprivate func postNotificationOnReplicationState(_ status:Replicator.ActivityLevel) {
-        switch status {
-        case .offline:
-            NotificationCenter.default.post(Notification.notificationForReplicationOffline())
-        case .connecting:
-            NotificationCenter.default.post(Notification.notificationForReplicationConnecting())
-        case .stopped:
-            NotificationCenter.default.post(Notification.notificationForReplicationStopped())
-        case .idle:
-            NotificationCenter.default.post(Notification.notificationForReplicationIdle())
-        case .busy:
-            NotificationCenter.default.post(Notification.notificationForReplicationInProgress())
-            
-            
-        }
-    }
     
 }
 
