@@ -70,16 +70,17 @@ class DatabaseManager {
 
 // MARK: Public
 extension DatabaseManager {
-    
-    
+    // tag::openOrCreateDatabaseForUser[]
     func openOrCreateDatabaseForUser(_ user:String, password:String, handler:(_ error:Error?)->Void) {
+    // end::openOrCreateDatabaseForUser[]
         do {
+            // tag::dbconfig[]
             var options = DatabaseConfiguration()
             guard let defaultDBPath = _applicationSupportDirectory else {
                 fatalError("Could not open Application Support Directory for app!")
                 return
             }
-            // Create a folder for the logged in user
+            // Create a folder for the logged in user if one does not exist
             let userFolderUrl = defaultDBPath.appendingPathComponent(user, isDirectory: true)
             let userFolderPath = userFolderUrl.path
             let fileManager = FileManager.default
@@ -89,10 +90,12 @@ extension DatabaseManager {
                                                 attributes: nil)
                 
             }
-            
+            // Set the folder path for the CBLite DB
             options.directory = userFolderPath
+            // end::dbconfig[]
    
-            print("WIll open/create DB  at path \(userFolderPath)")
+            print("Will open/create DB  at path \(userFolderPath)")
+            // tag::dbcreate[]
             if Database.exists(withName: kDBName, inDirectory: userFolderPath) == false {
                 // Load prebuilt database from App Bundle and copy over to Applications support path
                 if let prebuiltPath = Bundle.main.path(forResource: kDBName, ofType: "cblite2") {
@@ -110,7 +113,9 @@ extension DatabaseManager {
                 _db = try Database(name: kDBName, config: options)
                 
             }
+            // end::dbcreate[]
             
+            // tag::dbchangelistener[]
             // Add database change listener
              _db?.addChangeListener({ [weak self](change) in
                 guard let `self` = self else {
@@ -128,6 +133,7 @@ extension DatabaseManager {
                     }
                 }
             })
+            // end::dbchangelistener[]
             
             currentUserCredentials = (user,password)
             handler(nil)
@@ -138,27 +144,27 @@ extension DatabaseManager {
         }
     }
     
-    
+    // tag::closeDatabaseForCurrentUser[]
     func closeDatabaseForCurrentUser() -> Bool {
+    // end::closeDatabaseForCurrentUser[]
         do {
             print(#function)
             // Get handle to DB  specified path
             if let db = self.db {
                 switch db.name {
                 case kDBName:
-                    stopAllReplicationForCurrentUser()
+                    // tag::dbclose[]
+                   // stopAllReplicationForCurrentUser()
                     try _db?.close()
+                    // end::dbclose[]
                     _db = nil
             
                 default:
                     return false
                 }
-                
             }
             
-            
             return true
-            
         }
         catch {
             return false
@@ -276,7 +282,6 @@ extension DatabaseManager {
 extension DatabaseManager {
     
     fileprivate func enableCrazyLevelLogging() {
-        
         Database.setLogLevel(.verbose, domain: .query)
     }
     

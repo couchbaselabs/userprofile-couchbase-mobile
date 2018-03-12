@@ -84,8 +84,8 @@
 			children = (
 				5F61CCB1204C9F2C00399C1D /* CustomTextEntryTableViewCell.swift */,
 				5F61CCB3204C9F4400399C1D /* CustomTextEntryTableViewCell.xib */,
-				5F61CCB5204E47B500399C1D /* CustomImageEntryTableViewCell.xib */,
 				5F61CCB7204E47CD00399C1D /* CustomImageEntryTableViewCell.swift */,
+				5F61CCB5204E47B500399C1D /* CustomImageEntryTableViewCell.xib */,
 			);
 			path = views;
 			sourceTree = "<group>";

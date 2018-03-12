@@ -8,12 +8,21 @@
 
 import Foundation
 import UIKit
+
+// tag::userrecord[]
 typealias ExtendedData = [[String:Any]]
-struct UserRecord {
+struct UserRecord : CustomStringConvertible{
+    
     var name:String?
     var email:String?
     var address:String?
     var imageData:Data?
     var extended:ExtendedData? // future
+    
+    var description: String {
+        return "name = \(String(describing: name)), email = \(String(describing: email)), address = \(String(describing: address)), imageData = \(imageData)"
+    }
+    
 
 }
+// end::userrecord[]

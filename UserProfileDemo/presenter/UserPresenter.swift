@@ -11,7 +11,7 @@ import CouchbaseLiteSwift
 
 
 // MARK : typealias
-enum UserRecordKeys:String {
+enum UserRecordDocumentKeys:String {
     case image
     case name
     case email
@@ -48,7 +48,9 @@ class UserPresenter:UserPresenterProtocol {
 
 
 extension UserPresenter {
+    // tag::fetchRecordForCurrentUser[]
     func fetchRecordForCurrentUser( handler:@escaping(_ records:UserRecord?, _ error:Error?)->Void) {
+    // end::fetchRecordForCurrentUser[]
         guard let db = dbMgr.db else {
             fatalError("db is not initialized at this point!")
         }
@@ -56,44 +58,54 @@ extension UserPresenter {
         var profile = UserRecord.init()
         self.associatedView?.dataStartedLoading()
         // Fetch user profile document if one exists
+        // tag::docfetch[]
         if let doc = db.document(withID: self.userProfileDocId) {
             // Create native object from Document
-        
-            profile.email  =  doc.string(forKey: UserRecordKeys.email.rawValue)
-            profile.address = doc.string(forKey:UserRecordKeys.address.rawValue)
-            profile.imageData = doc.blob(forKey:UserRecordKeys.image.rawValue)?.content
-            profile.name =  doc.string(forKey: UserRecordKeys.name.rawValue)
+            profile.email  =  doc.string(forKey: UserRecordDocumentKeys.email.rawValue)
+            profile.address = doc.string(forKey:UserRecordDocumentKeys.address.rawValue)
+            // tag::blobfetch[]
+            profile.imageData = doc.blob(forKey:UserRecordDocumentKeys.image.rawValue)?.content
+            // end::blobfetch[]
+            profile.name =  doc.string(forKey: UserRecordDocumentKeys.name.rawValue)
             
         }
+        // end::docfetch[]
         self.associatedView?.dataFinishedLoading()
         self.associatedView?.updateUIWithUserRecord(profile, error: nil)
     }
     
+    // tag::setRecordForCurrentUser[]
     func setRecordForCurrentUser( _ record:UserRecord?, handler:@escaping(_ error:Error?)->Void) {
-
+    // end::setRecordForCurrentUser[]
         guard let db = dbMgr.db else {
             fatalError("db is not initialized at this point!")
         }
-        
+        // tag::doccreate[]
         // First fetch user profile document if one exists.
         // Get mutable version
         var mutableDoc = MutableDocument.init(id: self.userProfileDocId)
+        // end::doccreate[]
+        
+        // tag::docset[]
         if let email = record?.email {
-            mutableDoc.setString(email, forKey: UserRecordKeys.email.rawValue)
+            mutableDoc.setString(email, forKey: UserRecordDocumentKeys.email.rawValue)
         }
         if let address = record?.address {
-            mutableDoc.setString(address, forKey: UserRecordKeys.address.rawValue)
+            mutableDoc.setString(address, forKey: UserRecordDocumentKeys.address.rawValue)
         }
         
         if let name = record?.name {
-            mutableDoc.setString(name, forKey: UserRecordKeys.name.rawValue)
+            mutableDoc.setString(name, forKey: UserRecordDocumentKeys.name.rawValue)
         }
-        
+        // end::docset[]
+        // tag::blobset[]
         if let imageData = record?.imageData {
             let blob = Blob.init(contentType: "image/jpeg", data: imageData)
-            mutableDoc.setBlob(blob, forKey: UserRecordKeys.image.rawValue)
+            mutableDoc.setBlob(blob, forKey: UserRecordDocumentKeys.image.rawValue)
         }
-    
+        // end::blobset[]
+        
+        // tag::docsave[]
         do {
             // This will create a document if it does not exist and overrite it if it exists
             // Using default concurrency control policy of "writes always win"
@@ -103,6 +115,7 @@ extension UserPresenter {
         catch {
             handler(error)
         }
+        // end::docsave[]
     }
     
 }
