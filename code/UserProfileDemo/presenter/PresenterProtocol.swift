@@ -7,15 +7,6 @@
 //
 
 import Foundation
-//
-//  PresenterProtocols.swift
-//  CBCHealth
-//
-//  Created by Priya Rajagopal on 9/16/17.
-//  Copyright © 2017 Couchbase Inc. All rights reserved.
-//
-
-import Foundation
 import UIKit
 
 // MVP pattern

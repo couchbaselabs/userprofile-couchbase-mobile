@@ -59,8 +59,10 @@ extension UserPresenter {
         self.associatedView?.dataStartedLoading()
         // Fetch user profile document if one exists
         // tag::docfetch[]
+        
         if let doc = db.document(withID: self.userProfileDocId) {
             // Create native object from Document
+            
             profile.email  =  doc.string(forKey: UserRecordDocumentKeys.email.rawValue)
             profile.address = doc.string(forKey:UserRecordDocumentKeys.address.rawValue)
             // tag::blobfetch[]
@@ -85,7 +87,7 @@ extension UserPresenter {
         // Get mutable version
         var mutableDoc = MutableDocument.init(id: self.userProfileDocId)
         // end::doccreate[]
-        
+
         // tag::docset[]
         if let email = record?.email {
             mutableDoc.setString(email, forKey: UserRecordDocumentKeys.email.rawValue)

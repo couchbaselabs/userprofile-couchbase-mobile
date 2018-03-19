@@ -268,7 +268,6 @@ extension ProfileTableViewController {
             
         }
         
-        return UITableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: "DefaultCell")
         
     }
     override public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat{
