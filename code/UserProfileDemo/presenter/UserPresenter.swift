@@ -12,10 +12,11 @@ import CouchbaseLiteSwift
 
 // MARK : typealias
 enum UserRecordDocumentKeys:String {
-    case image
+    case type
     case name
     case email
     case address
+    case image
     case extended
 }
 
@@ -40,7 +41,7 @@ class UserPresenter:UserPresenterProtocol {
     
     lazy var userProfileDocId: String = {
         let userId = dbMgr.currentUserCredentials?.user
-        return "user::\(userId)"
+        return "user::\(userId ?? "")"
     }()
     weak var associatedView: UserPresentingViewProtocol?
 }
@@ -56,10 +57,11 @@ extension UserPresenter {
         }
         
         var profile = UserRecord.init()
+        profile.email = self.dbMgr.currentUserCredentials?.user
         self.associatedView?.dataStartedLoading()
-        // Fetch user profile document if one exists
+    
         // tag::docfetch[]
-        
+        // fetch document corresponding to the user Id
         if let doc = db.document(withID: self.userProfileDocId) {
             // Create native object from Document
             
@@ -72,6 +74,7 @@ extension UserPresenter {
             
         }
         // end::docfetch[]
+
         self.associatedView?.dataFinishedLoading()
         self.associatedView?.updateUIWithUserRecord(profile, error: nil)
     }
@@ -83,12 +86,15 @@ extension UserPresenter {
             fatalError("db is not initialized at this point!")
         }
         // tag::doccreate[]
-        // First fetch user profile document if one exists.
+        // This will create a new instance of MutableDocument or will
+        // fetch existing one
         // Get mutable version
         var mutableDoc = MutableDocument.init(id: self.userProfileDocId)
         // end::doccreate[]
 
         // tag::docset[]
+        mutableDoc.setString(record?.type, forKey: UserRecordDocumentKeys.type.rawValue)
+        
         if let email = record?.email {
             mutableDoc.setString(email, forKey: UserRecordDocumentKeys.email.rawValue)
         }

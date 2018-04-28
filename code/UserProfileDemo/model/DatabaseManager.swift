@@ -17,6 +17,7 @@ class DatabaseManager {
             return _db
         }
     }
+    var dbChangeListenerToken:ListenerToken?
     
     
     // For demo purposes only. In prod apps, credentials must be stored in keychain
@@ -105,25 +106,8 @@ extension DatabaseManager {
             }
             // end::dbcreate[]
             
-            // tag::dbchangelistener[]
-            // Add database change listener
-             _db?.addChangeListener({ [weak self](change) in
-                guard let `self` = self else {
-                    return
-                }
-                for docId in change.documentIDs   {
-                    if let docString = docId as? String {
-                        let doc = self._db?.document(withID: docString)
-                        if doc == nil {
-                            print("Document was deleted")
-                        }
-                        else {
-                           print("Document was added/updated")
-                        }
-                    }
-                }
-            })
-            // end::dbchangelistener[]
+            // register for DB change notifications
+            self.registerForDatabaseChanges()
             
             currentUserCredentials = (user,password)
             handler(nil)
@@ -143,8 +127,9 @@ extension DatabaseManager {
             if let db = self.db {
                 switch db.name {
                 case kDBName:
+                    deregisterForDatabaseChanges()
+                    
                     // tag::dbclose[]
-                   // stopAllReplicationForCurrentUser()
                     try _db?.close()
                     // end::dbclose[]
                     _db = nil
@@ -161,7 +146,43 @@ extension DatabaseManager {
         }
     }
     
+    // tag::registerForDatabaseChanges[]
+    fileprivate func registerForDatabaseChanges() {
+        // end::registerForDatabaseChanges[]
+        
+        // tag::adddbchangelistener[]
+        // Add database change listener
+        dbChangeListenerToken = db?.addChangeListener({ [weak self](change) in
+            guard let `self` = self else {
+                return
+            }
+            for docId in change.documentIDs   {
+                if let docString = docId as? String {
+                    let doc = self._db?.document(withID: docString)
+                    if doc == nil {
+                        print("Document was deleted")
+                    }
+                    else {
+                        print("Document was added/updated")
+                    }
+                }
+            }
+        })
+        // end::adddbchangelistener[]
+    }
     
+    // tag::deregisterForDatabaseChanges[]
+    fileprivate func deregisterForDatabaseChanges() {
+        // end::deregisterForDatabaseChanges[]
+        
+        // tag::removedbchangelistener[]
+        // Add database change listener
+        if let dbChangeListenerToken = self.dbChangeListenerToken {
+            db?.removeChangeListener(withToken: dbChangeListenerToken)
+        }
+   
+        // end::removedbchangelistener[]
+    }
 }
 
 // MARK: Utils

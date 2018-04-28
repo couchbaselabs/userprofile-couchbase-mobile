@@ -86,7 +86,6 @@ extension LoginViewController {
     @IBAction func onLoginTapped(_ sender: UIButton) {
         if let userName = self.userTextEntry.text, let password = self.passwordTextEntry.text {
             let cbMgr = DatabaseManager.shared
-            
             cbMgr.openOrCreateDatabaseForUser(userName, password: password, handler: { [weak self](error) in
                 
                 guard let `self` = self else {

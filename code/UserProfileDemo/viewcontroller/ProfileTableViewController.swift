@@ -227,9 +227,8 @@ extension ProfileTableViewController {
                     }
                     cell.textEntryName.text = NSLocalizedString("Email:", comment: "")
                     cell.selectionStyle = .none
-                    
+                    cell.textEntryValue?.isEditable = false
                     emailTextEntry = cell.textEntryValue
-                    emailTextEntry?.isEditable = true
                     emailTextEntry?.delegate = self
                     
                     cell.selectionStyle = .none
@@ -388,8 +387,6 @@ extension ProfileTableViewController:UITextViewDelegate {
         if text == "\n" {
             switch textView {
             case self.nameTextEntry!:
-                self.emailTextEntry?.becomeFirstResponder()
-            case self.emailTextEntry!:
                 self.addressTextEntry?.becomeFirstResponder()
             case self.addressTextEntry!:
                 textView.resignFirstResponder()

@@ -10,9 +10,10 @@ import Foundation
 import UIKit
 
 // tag::userrecord[]
+let kUserRecordDocumentType = "user"
 typealias ExtendedData = [[String:Any]]
 struct UserRecord : CustomStringConvertible{
-    
+    let type = kUserRecordDocumentType
     var name:String?
     var email:String?
     var address:String?
