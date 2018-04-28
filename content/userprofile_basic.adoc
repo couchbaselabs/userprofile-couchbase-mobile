@@ -1,6 +1,6 @@
 :toc: left
 :toclevels: 3
-:codedir: https://github.com/couchbaselabs/userprofile-couchbase-mobile
+:codedir: https://github.com/couchbaselabs/userprofile-couchbase-mobile/blob/standalone/code/UserProfileDemo/
 toc::[]
 :icons: font
 :quick-uri: https://asciidoctor.org/docs/asciidoc-syntax-quick-reference/
@@ -87,7 +87,7 @@ The _"user"_ Document is encoded to a native struct
 TBD : Get right path
 [source,swift]
 ----
-include::{codedir}/UserRecord.swift[tags=userrecord]
+include::{codedir}/model/UserRecord.swift[tags=userrecord]
 ----
 
 == Basic Database Operations
@@ -99,19 +99,19 @@ When a user logs in, we create a Couchbase Lite Database for the user if one doe
 * Open the *DatabaseManager.swift* file and locate the `openOrCreateDatabaseForUser()` function. 
 [source,swift]
 ----
-include::{codedir}/UserRecord.swift[tags=openOrCreateDatabaseForUser]
+include::{codedir}/model/DatabaseManager.swift[tags=openOrCreateDatabaseForUser]
 ----
 
 * We create an instance of the `DatabaseConfiguration`. This is an optional step. In our case, we would like to override the default path of the Database. Every user has their own instance of the Database that is located in a folder corresponding to the user.
 [source,swift]
 ----
-include::{codedir}/UserRecord.swift[tags=dbconfig]
+include::{codedir}/model/DatabaseManager.swift[tags=dbconfig]
 ----
 
 * Then we create a local Couchbase Lite database for the user. If a database already exists for the user, the existing version is returned. We track the `ListenerToken` as it is needed for removing the listener.
 [source,swift]
 ----
-include::{codedir}/UserRecord.swift[tags=dbcreate]
+include::{codedir}/model/DatabaseManager.swift[tags=dbcreate]
 ----
 
 === Listening to Database Changes
@@ -120,13 +120,13 @@ You can be asynchornously notified of any change (add, delete, update) to the Da
 * Open the *DatabaseManager.swift* file and locate the `registerForDatabaseChanges()` function. 
 [source,swift]
 ----
-include::{codedir}/UserRecord.swift[tags=registerForDatabaseChanges]
+include::{codedir}/model/DatabaseManager.swift[tags=registerForDatabaseChanges]
 ----
 
 * We register a change listener with the database. This is an optional step. In our case, we would like to override the default path of the Database. Every user has their own instance of the Database that is located in a folder corresponding to the user.
 [source,swift]
 ----
-include::{codedir}/UserRecord.swift[tags=adddbchangelistener]
+include::{codedir}/model/DatabaseManager.swift[tags=adddbchangelistener]
 ----
 
 == Close a Database
@@ -135,13 +135,13 @@ When a user logs out, we close the Couchbase Lite Database associated with the u
 * Open the *DatabaseManager.swift* file and locate the `closeDatabaseForCurrentUser()` function. 
 [source,swift]
 ----
-include::{codedir}/UserRecord.swift[tags=closeDatabaseForCurrentUser]
+include::{codedir}/model/DatabaseManager.swift[tags=closeDatabaseForCurrentUser]
 ----
 
 * Closing the database is pretty straightforward
 [source,swift]
 ----
-include::{codedir}/UserRecord.swift[tags=dbclose]
+include::{codedir}/model/DatabaseManager.swift[tags=dbclose]
 ----
 
 === Deregistering for  Database Changes
@@ -149,13 +149,13 @@ include::{codedir}/UserRecord.swift[tags=dbclose]
 * Open the *DatabaseManager.swift* file and locate the `deregisterForDatabaseChanges()` function. 
 [source,swift]
 ----
-include::{codedir}/UserRecord.swift[tags=deregisterForDatabaseChanges]
+include::{codedir}/model/DatabaseManager.swift[tags=deregisterForDatabaseChanges]
 ----
 
 * We stop listening to database changes by passing in the `ListenerToken` associated with the listener. 
 [source,swift]
 ----
-include::{codedir}/UserRecord.swift[tags=removedbchangelistener]
+include::{codedir}/model/DatabaseManager.swift[tags=removedbchangelistener]
 ----
 
 
