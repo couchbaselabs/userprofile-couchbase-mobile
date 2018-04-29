@@ -38,11 +38,12 @@ protocol UserPresentingViewProtocol:PresentingViewProtocol {
 class UserPresenter:UserPresenterProtocol {
     fileprivate var userQuery: Query?
     fileprivate var dbMgr:DatabaseManager = DatabaseManager.shared
-    
+    // tag::userProfileDocId[]
     lazy var userProfileDocId: String = {
         let userId = dbMgr.currentUserCredentials?.user
         return "user::\(userId ?? "")"
     }()
+    // tag::userProfileDocId[]
     weak var associatedView: UserPresentingViewProtocol?
 }
 
@@ -51,26 +52,24 @@ class UserPresenter:UserPresenterProtocol {
 extension UserPresenter {
     // tag::fetchRecordForCurrentUser[]
     func fetchRecordForCurrentUser( handler:@escaping(_ records:UserRecord?, _ error:Error?)->Void) {
-    // end::fetchRecordForCurrentUser[]
+        // end::fetchRecordForCurrentUser[]
+        // tag::docfetch[]
         guard let db = dbMgr.db else {
             fatalError("db is not initialized at this point!")
         }
         
-        var profile = UserRecord.init()
-        profile.email = self.dbMgr.currentUserCredentials?.user
+        var profile = UserRecord.init() // <1>
+        profile.email = self.dbMgr.currentUserCredentials?.user // <2>
         self.associatedView?.dataStartedLoading()
     
-        // tag::docfetch[]
         // fetch document corresponding to the user Id
         if let doc = db.document(withID: self.userProfileDocId) {
             // Create native object from Document
             
             profile.email  =  doc.string(forKey: UserRecordDocumentKeys.email.rawValue)
             profile.address = doc.string(forKey:UserRecordDocumentKeys.address.rawValue)
-            // tag::blobfetch[]
-            profile.imageData = doc.blob(forKey:UserRecordDocumentKeys.image.rawValue)?.content
-            // end::blobfetch[]
             profile.name =  doc.string(forKey: UserRecordDocumentKeys.name.rawValue)
+            profile.imageData = doc.blob(forKey:UserRecordDocumentKeys.image.rawValue)?.content //<3>
             
         }
         // end::docfetch[]
@@ -105,13 +104,13 @@ extension UserPresenter {
         if let name = record?.name {
             mutableDoc.setString(name, forKey: UserRecordDocumentKeys.name.rawValue)
         }
-        // end::docset[]
-        // tag::blobset[]
+       
         if let imageData = record?.imageData {
             let blob = Blob.init(contentType: "image/jpeg", data: imageData)
             mutableDoc.setBlob(blob, forKey: UserRecordDocumentKeys.image.rawValue)
-        }
-        // end::blobset[]
+        } // <1>
+        // end::docset[]
+        
         
         // tag::docsave[]
         do {

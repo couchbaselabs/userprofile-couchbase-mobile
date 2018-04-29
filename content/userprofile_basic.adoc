@@ -26,18 +26,21 @@ You can learn more about Couchbase Mobile https://developer.couchbase.com/mobile
 ====
 
 == Prerequisites
+This tutorial assumes familiarity with building swift apps with Xcode.
+
 * iOS (Xcode 9.3+) 
   Download latest version from the link:https://itunes.apple.com/us/app/xcode/id497799835?mt=12[Mac App Store]
             
                 
 * git
-
 ** Create a link:https://github.com[free github account] if you don't already have one
 ** git can be downloaded from link:https://git-scm.com/book/en/v2/Getting-Started-Installing-Git[git-scm.org]
+
+
               
 
 == Installation
-- Clone the _standalone_ branch of the `User Profile Demo` app from GitHub.
+- Clone the *_standalone_* branch of the `User Profile Demo` project from GitHub. Type the following command in your terminal
   
 [source,bash] 
 ----
@@ -68,8 +71,8 @@ image::user_profile_login.png[User Profile Login Screen Image]
 Couchbase Lite is a JSON Document Store. A Document is a logical collection of named fields and values.The values are any valid JSON types. In addition to the standard JSON types, Couchbase Lite supports `Date` and `Blob` data types. 
 While it is not required or enforced, it is a recommended practice to include a _"type"_ property that can serve as a namespace for related. 
 
-=== "user" Type Document
-The app deals with a single Document with a _"type"_ property of _"user"_.   The document ID is of the form _"user::<email>"_.
+=== The "User Profile" Document
+The app deals with a single Document with a _"type"_ property of _"user"_.  The document ID is of the form _"user::<email>"_.
 An example of a document would be 
 
 ```json
@@ -160,9 +163,35 @@ include::{codedir}/model/DatabaseManager.swift[tags=removedbchangelistener]
 ----
 
 
-== Document CRUD Operations
-Once the user logs in and an instance of the Couchbase Lite Database corresponding to the user is created/opened, we can perform basic Document functions on the Database
+== Document Operations
+Once an instance of the Couchbase Lite Database is created/opened for the specific user, we can perform basic Document functions on the Database. In this section, we will walkthrough the code that describes basic Document operations
 
+=== Reading a Document
+Once the user logs in, the user is taken to the "Your Profile" screen. A request is made to load  <<The "User Profile" Document>>  for the user. The very first time that the user logs in, there would be no _user profile_ document for the user.
+
+* Open the *UserPresenter.swift* file and locate the `userProfileDocId` definition. This document Id is constructed by prefixing the term "user::" to the email Id of the user.  
+[source,swift]
+----
+include::{codedir}/model/UserPresenter.swift[tags=userProfileDocId]
+----
+
+* In the *UserPresenter.swift* file, locate the `fetchRecordForCurrentUser()` function. 
+[source,swift]
+----
+include::{codedir}/model/UserPresenter.swift[tags=fetchRecordForCurrentUser]
+----
+
+* We try to fetch the document with specified `userProfileDocId` from the database. 
+[source,swift]
+----
+include::{codedir}/model/DatabaseManager.swift[tags=fetchRecordForCurrentUser]
+----
+<1> 
+* We try to fetch the document with specified `userProfileDocId` from the database. 
+[source,swift]
+----
+include::{codedir}/model/DatabaseManager.swift[tags=fetchRecordForCurrentUser]
+----
 
 .Image caption
 image::image-file-name.png[I am the image alt text.]
