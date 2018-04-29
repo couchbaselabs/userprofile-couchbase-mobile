@@ -53,6 +53,7 @@ extension UserPresenter {
     // tag::fetchRecordForCurrentUser[]
     func fetchRecordForCurrentUser( handler:@escaping(_ records:UserRecord?, _ error:Error?)->Void) {
         // end::fetchRecordForCurrentUser[]
+        
         // tag::docfetch[]
         guard let db = dbMgr.db else {
             fatalError("db is not initialized at this point!")
@@ -63,13 +64,12 @@ extension UserPresenter {
         self.associatedView?.dataStartedLoading()
     
         // fetch document corresponding to the user Id
-        if let doc = db.document(withID: self.userProfileDocId) {
-            // Create native object from Document
-            
+        if let doc = db.document(withID: self.userProfileDocId)  { // <3> 
+        
             profile.email  =  doc.string(forKey: UserRecordDocumentKeys.email.rawValue)
             profile.address = doc.string(forKey:UserRecordDocumentKeys.address.rawValue)
             profile.name =  doc.string(forKey: UserRecordDocumentKeys.name.rawValue)
-            profile.imageData = doc.blob(forKey:UserRecordDocumentKeys.image.rawValue)?.content //<3>
+            profile.imageData = doc.blob(forKey:UserRecordDocumentKeys.image.rawValue)?.content //<4>
             
         }
         // end::docfetch[]

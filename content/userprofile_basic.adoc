@@ -172,21 +172,27 @@ Once the user logs in, the user is taken to the "Your Profile" screen. A request
 * Open the *UserPresenter.swift* file and locate the `userProfileDocId` definition. This document Id is constructed by prefixing the term "user::" to the email Id of the user.  
 [source,swift]
 ----
-include::{codedir}/model/UserPresenter.swift[tags=userProfileDocId]
+include::{codedir}/presenter/UserPresenter.swift[tags=userProfileDocId]
 ----
 
 * In the *UserPresenter.swift* file, locate the `fetchRecordForCurrentUser()` function. 
 [source,swift]
 ----
-include::{codedir}/model/UserPresenter.swift[tags=fetchRecordForCurrentUser]
+include::{codedir}/presenter/UserPresenter.swift[tags=fetchRecordForCurrentUser]
 ----
+
 
 * We try to fetch the document with specified `userProfileDocId` from the database. 
 [source,swift]
 ----
-include::{codedir}/model/DatabaseManager.swift[tags=fetchRecordForCurrentUser]
+include::{codedir}/presenter/UserPresenter.swift[tags=docfetch]
 ----
-<1> 
+<1> Create an instance of <<UserRecord>> object 
+<2> Set the `email` property of the UserRecord with the email Id of the logged in user. This value is not editable.
+<3> Fetch a immutable copy of the Document from the Database 
+<4> If document exists and is fetched succesfully, we use appropriate type-getters to fetch the various members of the Document based on the property name. Specifically, note the support of the `getBlob` type to fetch the value of a property of type `Blob` 
+
+
 * We try to fetch the document with specified `userProfileDocId` from the database. 
 [source,swift]
 ----
