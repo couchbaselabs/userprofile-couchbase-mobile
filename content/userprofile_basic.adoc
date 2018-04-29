@@ -1,6 +1,6 @@
 :toc: left
 :toclevels: 3
-:codedir: https://github.com/couchbaselabs/userprofile-couchbase-mobile/blob/standalone/code/UserProfileDemo/
+:codedir: ../code/UserProfileDemo
 toc::[]
 :icons: font
 :quick-uri: https://asciidoctor.org/docs/asciidoc-syntax-quick-reference/
@@ -82,9 +82,8 @@ An example of a document would be
 }
 ```
 === UserRecord 
-The _"user"_ Document is encoded to a native struct 
+The _"user"_ Document is encoded to a native struct named _UserRecord_
 
-TBD : Get right path
 [source,swift]
 ----
 include::{codedir}/model/UserRecord.swift[tags=userrecord]

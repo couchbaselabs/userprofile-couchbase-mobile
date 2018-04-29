@@ -88,22 +88,9 @@ extension DatabaseManager {
    
             print("Will open/create DB  at path \(userFolderPath)")
             // tag::dbcreate[]
-            if Database.exists(withName: kDBName, inDirectory: userFolderPath) == false {
-                // Load prebuilt database from App Bundle and copy over to Applications support path
-                if let prebuiltPath = Bundle.main.path(forResource: kDBName, ofType: "cblite2") {
-                    try Database.copy(fromPath: prebuiltPath, toDatabase: "\(kDBName)", withConfig: options)
-                    
-                }
-                // Get handle to DB  specified path
-                _db = try Database(name: kDBName, config: options)
-                
-            }
-            else
-            {
-                // Gets handle to existing DB at specified path
-                _db = try Database(name: kDBName, config: options)
-                
-            }
+            // Create a new DB or get handle to existing DB at specified path
+            _db = try Database(name: kDBName, config: options)
+            
             // end::dbcreate[]
             
             // register for DB change notifications

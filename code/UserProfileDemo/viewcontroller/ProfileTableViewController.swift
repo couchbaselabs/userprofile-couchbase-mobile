@@ -106,6 +106,12 @@ class ProfileTableViewController:UITableViewController, UserPresentingViewProtoc
         
     }
     
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+    
+        self.userPresenter.detachPresentingView(self)
+    }
+    
     
     private func initializeTable() {
         //    self.tableView.backgroundColor = UIColor.darkGray
@@ -194,10 +200,12 @@ extension ProfileTableViewController {
                 cell.selectionStyle = .none
                 userImageView = cell.imageEntryView
                 if let imageData = self.record?.imageData{
-                
                     cell.imageBlob  = UIImage.init(data: imageData)
-                    
                 }
+                else {
+                    cell.imageBlob  = UIImage.init(imageLiteralResourceName: "default-user-thumbnail")
+                }
+               
             return cell
             
             // Basic Info
@@ -219,6 +227,9 @@ extension ProfileTableViewController {
                    if let name = self.record?.name as? String {
                         nameTextEntry?.text = name
                     }
+                   else {
+                        nameTextEntry?.text = nil
+                    }
                     return cell
                 
                 case BasicRows.email.index :
@@ -234,7 +245,9 @@ extension ProfileTableViewController {
                     cell.selectionStyle = .none
                     if let email = self.record?.email as? String {
                         emailTextEntry?.text = email
-                      
+                    }
+                    else {
+                        emailTextEntry?.text = nil
                     }
                     return  cell
                 case BasicRows.address.index :
@@ -251,7 +264,9 @@ extension ProfileTableViewController {
                     cell.selectionStyle = .none
                     if let address = self.record?.address as? String {
                         addressTextEntry?.text = address
-                    
+                    }
+                    else {
+                        addressTextEntry?.text =  nil
                     }
                     return cell
                     
