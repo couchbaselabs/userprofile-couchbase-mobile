@@ -78,9 +78,11 @@ An example of a document would be
     "name":"Jane Doe",
     "email":"jame.doe@earth.org",
     "address":"101 Main Street",
-    "image":TBD
+    "image":CBLBlob (image/jpg) // <1>
 }
 ```
+<1> Special link:(https://developer.couchbase.com/documentation/mobile/2.0/couchbase-lite/swift.html#blobs)[`Blob`] data type that is associated with the profile image.  
+
 === UserRecord 
 The _"user"_ Document is encoded to a native struct named _UserRecord_
 
@@ -93,7 +95,7 @@ include::{codedir}/model/UserRecord.swift[tags=userrecord]
 In this section, we will do a code walkthrough of the basic Database operations
 
 === Open/ Create a Database
-When a user logs in, we create a Couchbase Lite Database for the user if one does not exist.
+When a user logs in, we create an empty Couchbase Lite Database for the user if one does not exist.
 
 * Open the *DatabaseManager.swift* file and locate the `openOrCreateDatabaseForUser()` function. 
 [source,swift]
@@ -107,7 +109,7 @@ include::{codedir}/model/DatabaseManager.swift[tags=openOrCreateDatabaseForUser]
 include::{codedir}/model/DatabaseManager.swift[tags=dbconfig]
 ----
 
-* Then we create a local Couchbase Lite database for the user. If a database already exists for the user, the existing version is returned. We track the `ListenerToken` as it is needed for removing the listener.
+* Then we create a local Couchbase Lite database for the user. If a database already exists for the user, the existing version is returned. 
 [source,swift]
 ----
 include::{codedir}/model/DatabaseManager.swift[tags=dbcreate]
@@ -122,14 +124,14 @@ You can be asynchornously notified of any change (add, delete, update) to the Da
 include::{codedir}/model/DatabaseManager.swift[tags=registerForDatabaseChanges]
 ----
 
-* We register a change listener with the database. This is an optional step. In our case, we would like to override the default path of the Database. Every user has their own instance of the Database that is located in a folder corresponding to the user.
+* We register a change listener with the database. This is an optional step. We track the `ListenerToken` as it is needed for removing the listener.
 [source,swift]
 ----
 include::{codedir}/model/DatabaseManager.swift[tags=adddbchangelistener]
 ----
 
 == Close a Database
-When a user logs out, we close the Couchbase Lite Database associated with the user and deregister any database change listener
+When a user logs out, we close the Couchbase Lite Database associated with the user and deregister any database change listeners
 
 * Open the *DatabaseManager.swift* file and locate the `closeDatabaseForCurrentUser()` function. 
 [source,swift]
@@ -158,8 +160,9 @@ include::{codedir}/model/DatabaseManager.swift[tags=removedbchangelistener]
 ----
 
 
-
 == Document CRUD Operations
+Once the user logs in and an instance of the Couchbase Lite Database corresponding to the user is created/opened, we can perform basic Document functions on the Database
+
 
 .Image caption
 image::image-file-name.png[I am the image alt text.]
