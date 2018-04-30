@@ -57,10 +57,6 @@ This is required if you would prefer to pull the source code from GitHub repo.
 
 - Download the  `User Profile Demo` project from link:https://github.com/couchbaselabs/userprofile-couchbase-mobile/archive/standalone.zip[here]
   
-[source,bash] 
-----
-  git clone -b standalone https://github.com/couchbaselabs/userprofile-couchbase-mobile.git
-----
 
 === Installing Couchbase Lite Framework
 - Next, we will download the Couchbase Lite 2.0 framework. The Couchbase Lite iOS framework is link:https://developer.couchbase.com/documentation/mobile/2.0/couchbase-lite/swift.html[distributed] via Cocoapods, Carthage or you can download the pre-built framework. In our example, we will be downloading the pre-built version of the framework. For this, do the following 
