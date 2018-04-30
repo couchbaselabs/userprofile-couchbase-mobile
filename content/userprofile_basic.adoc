@@ -18,7 +18,10 @@ Couchbase Mobile supports flexible deployment models. You can
 * Use Couchbase Lite enabled mobile clients with a Sync Gateway to sychronize data between your mobile clients or,
 * Use Couchbase Lite enabled clients with a Sync Gateway to sync data between mobicle clients and the Couchbase Server, which can persist data in the cloud (public or private) 
 
-This tutorial will walk you through a very basic example on how you can get started with *Couchbase Lite 2.0 in standalone mode* within your iOS App. In this mode, Couchbase Lite will server as a local, embedded data store within your iOS App and can be a replacement for SQLite or Core Data.
+This tutorial will walk you through a very basic example on how you can get use  *Couchbase Lite 2.0 in standalone mode* within your iOS App. In this mode, Couchbase Lite will server as a local, embedded data store within your iOS App and can be a replacement for SQLite or Core Data.
+You will learn the fundamentals of
+* Database Operations
+* Document CRUD Operations
 
 
 ====
@@ -32,7 +35,8 @@ This tutorial assumes familiarity with building swift apps with Xcode.
   Download latest version from the link:https://itunes.apple.com/us/app/xcode/id497799835?mt=12[Mac App Store]
             
                 
-* git
+* git (Optional)
+This is required if you would prefer to pull the source code from GitHub repo.
 ** Create a link:https://github.com[free github account] if you don't already have one
 ** git can be downloaded from link:https://git-scm.com/book/en/v2/Getting-Started-Installing-Git[git-scm.org]
 
@@ -40,6 +44,8 @@ This tutorial assumes familiarity with building swift apps with Xcode.
               
 
 == Installation
+=== Fetching App Source Code
+==== Option 1 : Git Clone
 - Clone the *_standalone_* branch of the `User Profile Demo` project from GitHub. Type the following command in your terminal
   
 [source,bash] 
@@ -47,7 +53,17 @@ This tutorial assumes familiarity with building swift apps with Xcode.
   git clone -b standalone https://github.com/couchbaselabs/userprofile-couchbase-mobile.git
 ----
 
-- Next, we will download the Couchbase Lite 2.0 framework. The Couchbase Lite iOS framework is link:TODO[distributed] via Cocoapods, Carthage or you can download the pre-built framework. In our example, we will be downloading the pre-built version of the framework. For this, do the following 
+==== Option 2 : Download .zip
+
+- Download the  `User Profile Demo` project from link:https://github.com/couchbaselabs/userprofile-couchbase-mobile/archive/standalone.zip[here]
+  
+[source,bash] 
+----
+  git clone -b standalone https://github.com/couchbaselabs/userprofile-couchbase-mobile.git
+----
+
+=== Installing Couchbase Lite Framework
+- Next, we will download the Couchbase Lite 2.0 framework. The Couchbase Lite iOS framework is link:https://developer.couchbase.com/documentation/mobile/2.0/couchbase-lite/swift.html[distributed] via Cocoapods, Carthage or you can download the pre-built framework. In our example, we will be downloading the pre-built version of the framework. For this, do the following 
 [source,bash] 
 ----
   cd /path/to/UserProfileDemo/code/
@@ -84,7 +100,7 @@ An example of a document would be
     "image":CBLBlob (image/jpg) // <1>
 }
 ```
-<1> Special link:(https://developer.couchbase.com/documentation/mobile/2.0/couchbase-lite/swift.html#blobs)[`Blob`] data type that is associated with the profile image.  
+<1> Special link:https://developer.couchbase.com/documentation/mobile/2.0/couchbase-lite/swift.html#blobs[`Blob`] data type that is associated with the profile image.  
 
 === UserRecord 
 The _"user"_ Document is encoded to a native struct named _UserRecord_
@@ -264,9 +280,7 @@ image::log_off_on.gif[Log Off and Log Back On]
 == Learn More
 Congratulations on completing this tutorial!
 
-This tutorial walked you through a very basic example of how to get up and running with Couchbase Lite as a local-only, standalone embedded data store to your iOS app. If you want to learn more about what web notifications can do, check out theses docs.
-
-If you are looking to deploy push on your site, you may be interested in adding support for older / non-standards compliant browsers which use GCM, learn more here.
+This tutorial walked you through a very basic example of how to get up and running with Couchbase Lite as a local-only, standalone embedded data store in your iOS app. If you want to learn more about Couchbase Mobile 2.0, check out the following links.
 
 === Further Reading
 * link:https://blog.couchbase.com/couchbase-mobile-2-0/[Introduction to Couchbase Mobile]
