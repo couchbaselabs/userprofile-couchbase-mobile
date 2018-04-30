@@ -18,7 +18,7 @@ Couchbase Mobile supports flexible deployment models. You can
 * Use Couchbase Lite enabled mobile clients with a Sync Gateway to sychronize data between your mobile clients or,
 * Use Couchbase Lite enabled clients with a Sync Gateway to sync data between mobicle clients and the Couchbase Server, which can persist data in the cloud (public or private) 
 
-This tutorial will walk you through a very basic example on how you can get use  *Couchbase Lite 2.0 in standalone mode* within your iOS App. In this mode, Couchbase Lite will server as a local, embedded data store within your iOS App and can be a replacement for SQLite or Core Data.
+This tutorial will walk you through a very basic example of how you can get use  *Couchbase Lite 2.0 in standalone mode* within your iOS App. Couchbase Lite will serve as a local, embedded data store within your iOS App and can be a replacement for SQLite or Core Data.
 You will learn the fundamentals of
 * Database Operations
 * Document CRUD Operations
