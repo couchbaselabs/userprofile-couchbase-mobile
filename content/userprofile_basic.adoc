@@ -18,7 +18,7 @@ Couchbase Mobile supports flexible deployment models. You can
 * Use Couchbase Lite enabled mobile clients with a Sync Gateway to sychronize data between your mobile clients or,
 * Use Couchbase Lite enabled clients with a Sync Gateway to sync data between mobicle clients and the Couchbase Server, which can persist data in the cloud (public or private) 
 
-This tutorial will walk you through a sample iOS app that will demonstrate how you can get started with Couchbase Lite 2.0 in *standalone mode* as a local embedded store.
+This tutorial will walk you through a sample iOS app that will demonstrate how you can get started with Couchbase Lite 2.0 in *standalone mode* as a local embedded store. Couchbase Lite in standalone mode can be a replacement to SQLite or Core Data.
 
 
 ====
@@ -260,3 +260,21 @@ image::image_selection.gif[Image Selection]
 * Confirm that you see the profile screen  with the _name_ and _image_ values that you set earlier. 
 
 image::log_off_on.gif[Log Off and Log Back On]
+
+== Learn More
+Congratulations on completing this tutorial!
+
+This tutorial walked you through a very basic example of how to get up and running with Couchbase Lite as a local-only, standalone embedded data store to your iOS app. If you want to learn more about what web notifications can do, check out theses docs.
+
+If you are looking to deploy push on your site, you may be interested in adding support for older / non-standards compliant browsers which use GCM, learn more here.
+
+=== Further Reading
+* link:https://blog.couchbase.com/couchbase-mobile-2-0/[Introduction to Couchbase Mobile]
+
+* link:https://blog.couchbase.com/couchbase-mobile-2-0/[Couchbase Mobile 2.0 Overview]
+
+* link:https://developer.couchbase.com/documentation/mobile/2.0/couchbase-lite/swift.html#getting-started[Getting Started with Couchbase Lite in iOS]
+
+* link:https://developer.couchbase.com/documentation/mobile/2.0/couchbase-lite/index.html[COuchbase Lite Reference Guide]
+
+* link:https://blog.couchbase.com/category/couchbase-mobile/[Couchbase Mobile Blogs]
