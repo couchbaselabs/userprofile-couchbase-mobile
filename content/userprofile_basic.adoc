@@ -62,7 +62,7 @@ Now, let's verify the installation
 ----
 open UserProfileDemo.xcodeproj
 ----
-* Build and run the project using simulator in Xcode
+* Build and run the project using the _simulator_ in Xcode. While you can run the app on a real device, we recommend the Simulator so you can see the debug logs in the output console.
 * Verify that you see the login screen
       
 image::user_profile_login.png[User Profile Login Screen Image]
@@ -97,7 +97,7 @@ include::{codedir}/model/UserRecord.swift[tags=userrecord]
 == Basic Database Operations
 In this section, we will do a code walkthrough of the basic Database operations
 
-=== Open/ Create a Database
+=== Create / Open a Database
 When a user logs in, we create an empty Couchbase Lite Database for the user if one does not exist.
 
 * Open the *DatabaseManager.swift* file and locate the `openOrCreateDatabaseForUser()` function. 
@@ -112,7 +112,7 @@ include::{codedir}/model/DatabaseManager.swift[tags=openOrCreateDatabaseForUser]
 include::{codedir}/model/DatabaseManager.swift[tags=dbconfig]
 ----
 
-* Then we create a local Couchbase Lite database for the user. If a database already exists for the user, the existing version is returned. 
+* Then we create a local Couchbase Lite database named *_"userprofile"_* for the user. If a database already exists for the user, the existing version is returned. 
 [source,swift]
 ----
 include::{codedir}/model/DatabaseManager.swift[tags=dbcreate]
@@ -133,7 +133,7 @@ include::{codedir}/model/DatabaseManager.swift[tags=registerForDatabaseChanges]
 include::{codedir}/model/DatabaseManager.swift[tags=adddbchangelistener]
 ----
 
-== Close a Database
+=== Close a Database
 When a user logs out, we close the Couchbase Lite Database associated with the user and deregister any database change listeners
 
 * Open the *DatabaseManager.swift* file and locate the `closeDatabaseForCurrentUser()` function. 
@@ -162,12 +162,25 @@ include::{codedir}/model/DatabaseManager.swift[tags=deregisterForDatabaseChanges
 include::{codedir}/model/DatabaseManager.swift[tags=removedbchangelistener]
 ----
 
+=== Try It Out
+* The app should be running in the simulator
+* Log into the app with any email Id and password. Let's use the values _"demo@example.com"_ and _"password"_ for user Id and password fields respectively. If this is the first time that the user is signing in, a new Database will be created. If not, the user's existing database will be opened.
+* Confirm that the console log output has a message similar to the one below. In my example, I am logging in with a user email Id of _"demo@example.com"_.
+[source,bash]
+----
+Will open/create DB  at path Will open/create DB  at path /Users/priya.rajagopal/Library/Developer/CoreSimulator/Devices/E4E62394-9940-4AF8-92FC-41E3C794B216/data/Containers/Data/Application/65EAD047-B29A-400C-803F-F799BAE99CBA/Library/Application Support/demo@example.com
+---- 
+* The above log message indicates the location of the Database for the user
+* Open the folder in your Finder app and verify that a Database with name _"userprofile"_ is exists for the user
+image::db_location.png[User Profile Database Location]
+
+
 
 == Document Operations
 Once an instance of the Couchbase Lite Database is created/opened for the specific user, we can perform basic Document functions on the Database. In this section, we will walkthrough the code that describes basic Document operations
 
 === Reading a Document
-Once the user logs in, the user is taken to the "Your Profile" screen. A request is made to load  <<The "User Profile" Document>>  for the user. The very first time that the user logs in, there would be no _user profile_ document for the user.
+Once the user logs in, the user is taken to the "Your Profile" screen. A request is made to load  <<The "User Profile" Document>>  for the user. When the user logs in the very first time, there would be no _user profile_ document for the user.
 
 * Open the *UserPresenter.swift* file and locate the `userProfileDocId` definition. This document Id is constructed by prefixing the term "user::" to the email Id of the user.  
 [source,swift]
@@ -189,15 +202,70 @@ include::{codedir}/presenter/UserPresenter.swift[tags=docfetch]
 ----
 <1> Create an instance of <<UserRecord>> object 
 <2> Set the `email` property of the UserRecord with the email Id of the logged in user. This value is not editable.
-<3> Fetch a immutable copy of the Document from the Database 
+<3> Fetch a *immutable* copy of the Document from the Database 
 <4> If document exists and is fetched succesfully, we use appropriate type-getters to fetch the various members of the Document based on the property name. Specifically, note the support of the `getBlob` type to fetch the value of a property of type `Blob` 
 
 
-* We try to fetch the document with specified `userProfileDocId` from the database. 
+
+=== Creating / Updating a Document
+A <<The "User Profile" Document>> is created for the user when the user taps the "Done" button on the "Profile Screen". 
+The function below applies whether you are creating a document or updating an existing version
+
+* Open the *UserPresenter.swift* file and locate the `setRecordForCurrentUser()` method.  
 [source,swift]
 ----
-include::{codedir}/model/DatabaseManager.swift[tags=fetchRecordForCurrentUser]
+include::{codedir}/presenter/UserPresenter.swift[tags=setRecordForCurrentUser]
 ----
+
+
+* We create a *mutable* instance of the Document. By default, all APIs in Couchbase Lite deal with immutable objects, thereby making them *thread-safe* by design. In order to mutate an object,  you must explicitly get a mutable copy of the object.
+Use appropriate type-setters to set the various properties of the Document 
+[source,swift]
+----
+include::{codedir}/presenter/UserPresenter.swift[tags=docset]
+----
+<1> Specifically, note the support of the `setBlob` type to fetch the value of a property of type `Blob`.
+
+* Save the document
+[source,swift]
+----
+include::{codedir}/presenter/UserPresenter.swift[tags=docsave]
+----
+
+
+=== Deleting a Document
+We don't delete a Document in this sample app. However, deletion of a document is pretty straightforward and this is how you would do it
+
+[source,swift]
+----
+ if let doc = db.document(withID: idOfDocToRemove) {
+    try db.deleteDocument(doc)
+ }
+
+----
+
+=== Try It Out
+* You should have followed the steps discussed in the "Try It Out" section under <<Create / Open a Database>>
+* Enter a "name" for the user in the Text Entry box and Tap "Done"
+* Confirm that you see an alert message "Succesfully Updated Profile". The first time, you update the profile screen, the Document will be created. 
+image::doc_create.png[User Profile Document Creation]
+
+* Now tap on the "Tap!" button and select an image from the Photo Album. Tap "Done".
+image::image_selection.gif[Image Selection]
+* Confirm that you see an alert message "Succesfully Updated Profile". The Document will be updated this time.
+* Tap "Log Off" and log out of the app
+* Log back into the app with the same user email Id and password that you used earlier. In my example, I used _"demo@example.com"_ and _"password"_. So I will log in with those credentials again.
+* Confirm that you see the profile screen  with the _name_ and _image_ values that you set earlier. 
+image::log_off_on.gif[Log Off and Log Back On]
+
+_"demo@example.com"_.rofi
+[source,bash]
+----
+Will open/create DB  at path Will open/create DB  at path /Users/priya.rajagopal/Library/Developer/CoreSimulator/Devices/E4E62394-9940-4AF8-92FC-41E3C794B216/data/Containers/Data/Application/65EAD047-B29A-400C-803F-F799BAE99CBA/Library/Application Support/demo@example.com
+---- 
+* The above log message indicates the location of the Database for the user
+* Open the folder in your Finder app and verify that a Database with name _"userprofile"_ is exists for the user
+image::db_location.png[User Profile Database Location]
 
 .Image caption
 image::image-file-name.png[I am the image alt text.]
