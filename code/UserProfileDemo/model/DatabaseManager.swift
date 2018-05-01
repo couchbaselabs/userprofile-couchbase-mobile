@@ -27,7 +27,10 @@ class DatabaseManager {
 
     // db name
     fileprivate let kDBName:String = "userprofile"
+    fileprivate let kUniversityDBName:String = "universities"
+    
     fileprivate var _db:Database?
+    fileprivate var _universitydb:Database?
     
     fileprivate var _applicationDocumentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).last
     
