@@ -123,7 +123,6 @@ extension DatabaseManager {
             // Get handle to DB  specified path
             if let db = self.db {
                 deregisterForDatabaseChanges()
-                    
                 // tag::dbclose[]
                 try db.close()
                 // end::dbclose[]
