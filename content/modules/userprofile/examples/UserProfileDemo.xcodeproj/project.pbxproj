@@ -29,6 +29,9 @@
 		5F9C43EE209A6148004607AE /* db.sqlite3-shm in Resources */ = {isa = PBXBuildFile; fileRef = 5F9C43EB209A6148004607AE /* db.sqlite3-shm */; };
 		5F9C43EF209A6148004607AE /* db.sqlite3-wal in Resources */ = {isa = PBXBuildFile; fileRef = 5F9C43EC209A6148004607AE /* db.sqlite3-wal */; };
 		5F9C43F0209A6148004607AE /* db.sqlite3 in Resources */ = {isa = PBXBuildFile; fileRef = 5F9C43ED209A6148004607AE /* db.sqlite3 */; };
+		5F9C43F2209A6FA1004607AE /* UniversityRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F9C43F1209A6FA1004607AE /* UniversityRecord.swift */; };
+		5F9C43F4209A7002004607AE /* UniversityTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F9C43F3209A7002004607AE /* UniversityTableViewController.swift */; };
+		5F9C43F6209A703C004607AE /* UniversityPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F9C43F5209A703C004607AE /* UniversityPresenter.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -69,6 +72,9 @@
 		5F9C43EB209A6148004607AE /* db.sqlite3-shm */ = {isa = PBXFileReference; lastKnownFileType = file; path = "db.sqlite3-shm"; sourceTree = "<group>"; };
 		5F9C43EC209A6148004607AE /* db.sqlite3-wal */ = {isa = PBXFileReference; lastKnownFileType = file; path = "db.sqlite3-wal"; sourceTree = "<group>"; };
 		5F9C43ED209A6148004607AE /* db.sqlite3 */ = {isa = PBXFileReference; lastKnownFileType = file; path = db.sqlite3; sourceTree = "<group>"; };
+		5F9C43F1209A6FA1004607AE /* UniversityRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversityRecord.swift; sourceTree = "<group>"; };
+		5F9C43F3209A7002004607AE /* UniversityTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversityTableViewController.swift; sourceTree = "<group>"; };
+		5F9C43F5209A703C004607AE /* UniversityPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversityPresenter.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,8 +103,9 @@
 		5F7CCFAD2048498B0019D450 /* presenter */ = {
 			isa = PBXGroup;
 			children = (
-				5F7CCFAE204849BE0019D450 /* UserPresenter.swift */,
 				5F7CCFB0204849DB0019D450 /* PresenterProtocol.swift */,
+				5F7CCFAE204849BE0019D450 /* UserPresenter.swift */,
+				5F9C43F5209A703C004607AE /* UniversityPresenter.swift */,
 			);
 			path = presenter;
 			sourceTree = "<group>";
@@ -153,6 +160,7 @@
 			children = (
 				5F86E84C2037E292007ED29E /* LoginViewController.swift */,
 				5F86E885203B788C007ED29E /* ProfileTableViewController.swift */,
+				5F9C43F3209A7002004607AE /* UniversityTableViewController.swift */,
 			);
 			path = viewcontroller;
 			sourceTree = "<group>";
@@ -162,6 +170,7 @@
 			children = (
 				5F86E883203B66B5007ED29E /* DatabaseManager.swift */,
 				5F61CCB9204F578100399C1D /* UserRecord.swift */,
+				5F9C43F1209A6FA1004607AE /* UniversityRecord.swift */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -257,12 +266,15 @@
 			files = (
 				5F86E87C203B659C007ED29E /* Notifications.swift in Sources */,
 				5F86E87E203B65D1007ED29E /* CustomErrors.swift in Sources */,
+				5F9C43F2209A6FA1004607AE /* UniversityRecord.swift in Sources */,
+				5F9C43F6209A703C004607AE /* UniversityPresenter.swift in Sources */,
 				5F7CCFB1204849DB0019D450 /* PresenterProtocol.swift in Sources */,
 				5F86E884203B66B5007ED29E /* DatabaseManager.swift in Sources */,
 				5F61CCB8204E47CD00399C1D /* CustomImageEntryTableViewCell.swift in Sources */,
 				5F86E84D2037E292007ED29E /* LoginViewController.swift in Sources */,
 				5F86E886203B788C007ED29E /* ProfileTableViewController.swift in Sources */,
 				5F7CCFAF204849BE0019D450 /* UserPresenter.swift in Sources */,
+				5F9C43F4209A7002004607AE /* UniversityTableViewController.swift in Sources */,
 				5F61CCBA204F578100399C1D /* UserRecord.swift in Sources */,
 				5F86E880203B65FF007ED29E /* StoryboardExtension.swift in Sources */,
 				5F61CCB2204C9F2C00399C1D /* CustomTextEntryTableViewCell.swift in Sources */,
