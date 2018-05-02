@@ -42,8 +42,12 @@ This is required if you would prefer to pull the source code from GitHub repo.
 ** Create a link:https://github.com[free github account] if you don't already have one
 ** git can be downloaded from link:https://git-scm.com/book/en/v2/Getting-Started-Installing-Git[git-scm.org]
 
+== App Overview
+We will be working with a very simple app. It does one thing -
 
-              
+* Allows users to log in and create or update his/her user profile information
+
+The user profile information is persisted as a Document in the local Couchbase Lite Database. So subsquently, when the user logs out and logs back in again, the profile information is loaded from the Database.
 
 == Installation
 === Fetching App Source Code
