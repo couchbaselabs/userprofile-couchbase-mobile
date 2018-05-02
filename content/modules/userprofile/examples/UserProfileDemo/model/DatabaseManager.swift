@@ -112,18 +112,12 @@ extension DatabaseManager {
             print(#function)
             // Get handle to DB  specified path
             if let db = self.db {
-                switch db.name {
-                case kDBName:
-                    deregisterForDatabaseChanges()
-                    
-                    // tag::dbclose[]
-                    try _db?.close()
-                    // end::dbclose[]
-                    _db = nil
-            
-                default:
-                    return false
-                }
+                deregisterForDatabaseChanges()
+                
+                // tag::dbclose[]
+                try db.close()
+                // end::dbclose[]
+                _db = nil
             }
             
             return true
