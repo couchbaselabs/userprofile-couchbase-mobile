@@ -17,6 +17,12 @@ class DatabaseManager {
             return _db
         }
     }
+    
+    var universityDB:Database? {
+        get {
+            return _universitydb
+        }
+    }
     var dbChangeListenerToken:ListenerToken?
     
     
@@ -28,6 +34,7 @@ class DatabaseManager {
     // db name
     fileprivate let kDBName:String = "userprofile"
     fileprivate let kUniversityDBName:String = "universities"
+    fileprivate let kPrebuiltDBFolder:String = "prebuilt"
     
     fileprivate var _db:Database?
     fileprivate var _universitydb:Database?
@@ -107,7 +114,7 @@ extension DatabaseManager {
             handler(lastError)
         }
     }
-    
+  
     // tag::closeDatabaseForCurrentUser[]
     func closeDatabaseForCurrentUser() -> Bool {
     // end::closeDatabaseForCurrentUser[]
@@ -115,18 +122,12 @@ extension DatabaseManager {
             print(#function)
             // Get handle to DB  specified path
             if let db = self.db {
-                switch db.name {
-                case kDBName:
-                    deregisterForDatabaseChanges()
+                deregisterForDatabaseChanges()
                     
-                    // tag::dbclose[]
-                    try _db?.close()
-                    // end::dbclose[]
-                    _db = nil
-            
-                default:
-                    return false
-                }
+                // tag::dbclose[]
+                try db.close()
+                // end::dbclose[]
+                _db = nil
             }
             
             return true
@@ -173,6 +174,96 @@ extension DatabaseManager {
    
         // end::removedbchangelistener[]
     }
+}
+
+// MARK: Prebuilt University Database
+extension DatabaseManager {
+    
+    // tag::openPrebuiltDatabase[]
+    fileprivate func openPrebuiltDatabase(handler:(_ error:Error?)->Void) {
+        // end::openPrebuiltDatabase[]
+        do {
+            // tag::dbconfig[]
+            var options = DatabaseConfiguration()
+            guard let defaultDBPath = _applicationSupportDirectory else {
+                fatalError("Could not open Application Support Directory for app!")
+                return
+            }
+            // Create a folder called "prebuilt" if one does not exist
+            let universityFolderUrl = defaultDBPath.appendingPathComponent(kPrebuiltDBFolder, isDirectory: true)
+            let universityFolderPath = universityFolderUrl.path
+            let fileManager = FileManager.default
+            if !fileManager.fileExists(atPath: universityFolderPath) {
+                try fileManager.createDirectory(atPath: universityFolderPath,
+                                                withIntermediateDirectories: true,
+                                                attributes: nil)
+                
+            }
+            // Set the folder path for the CBLite DB
+            options.directory = universityFolderPath
+            // end::dbconfig[]
+            
+            print("Will open Prebuilt DB  at path \(universityFolderPath)")
+            // tag::prebuiltdbopen[]
+            // Load the prebuilt "universities" database if it does not exist as the specified folder
+            if Database.exists(withName: kPrebuiltDBFolder, inDirectory: universityFolderPath) == false {
+                // Load prebuilt database from App Bundle and copy over to Applications support path
+                if let prebuiltPath = Bundle.main.path(forResource: kDBName, ofType: "cblite2") {
+                    try Database.copy(fromPath: prebuiltPath, toDatabase: "\(kDBName)", withConfig: options)
+                    
+                }
+                // Get handle to DB  specified path
+                _universitydb = try Database(name: kDBName, config: options)
+                
+                // Create indexes to facilitate queries
+                try createUniversityDatabaseIndexes()
+                
+            }
+            else
+            {
+                // Gets handle to existing DB at specified path
+                _universitydb = try Database(name: kDBName, config: options)
+                
+            }
+            
+            // end::prebuiltdbopen[]
+            
+            handler(nil)
+        }catch {
+            
+            lastError = error
+            handler(lastError)
+        }
+    }
+    
+    // tag::closePrebuiltDatabase[]
+    fileprivate func closePrebuiltDatabase() -> Bool {
+        // end::closePrebuiltDatabase[]
+        do {
+            print(#function)
+            // Get handle to DB  specified path
+            if let universitydb = self.universityDB {
+                // tag::dbclose[]
+                try universitydb.close()
+                // end::dbclose[]
+                _universitydb = nil
+            }
+            
+            return true
+        }
+        catch {
+            return false
+        }
+    }
+    
+    // tag::createUniversityDatabaseIndexes[]
+    fileprivate func createUniversityDatabaseIndexes()throws {
+        // For searches on type property
+        try _universitydb?.createIndex(IndexBuilder.valueIndex(items:  ValueIndexItem.expression(Expression.property("name"))), withName: "nameIndex")
+     
+    }
+    // tag::createUniversityDatabaseIndexes[]
+
 }
 
 // MARK: Utils
