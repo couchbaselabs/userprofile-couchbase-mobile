@@ -12,11 +12,11 @@ Couchbase Mobile brings the power of NoSQL to the edge. It is comprised of three
 * _Sync Gateway_, an internet-facing synchronization mechanism that securely syncs data between mobile clients and server, and
 * _Couchbase Server_, a highly scalable, distributed NoSQL database platform
 
-Couchbase Mobile supports flexible deployment models. You can  
+Couchbase Mobile supports flexible deployment models. You can deploy
 
-* Use Couchbase Lite as a standalone embedded database within your mobile apps or,
-* Use Couchbase Lite enabled mobile clients with a Sync Gateway to sychronize data between your mobile clients or,
-* Use Couchbase Lite enabled clients with a Sync Gateway to sync data between mobile clients and the Couchbase Server, which can persist data in the cloud (public or private) 
+* Couchbase Lite as a standalone embedded database within your mobile apps or,
+* Couchbase Lite enabled mobile clients with a Sync Gateway to sychronize data between your mobile clients or,
+* Couchbase Lite enabled clients with a Sync Gateway to sync data between mobile clients and the Couchbase Server, which can persist data in the cloud (public or private) 
 
 This tutorial will walk you through a very basic example of how you can use *Couchbase Lite 2.0 in standalone mode* within your Swift app. In this mode, Couchbase Lite will serve as a local, embedded data store within your iOS App and can be a replacement for SQLite or Core Data.
 
