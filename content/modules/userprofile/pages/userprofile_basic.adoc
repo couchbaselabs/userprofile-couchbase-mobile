@@ -57,7 +57,7 @@ The user profile information is persisted as a Document in the local Couchbase L
 === Fetching App Source Code
 ==== Option 1 : Git Clone
 - Clone the *_standalone_* branch of the `User Profile Demo` project from GitHub. Type the following command in your terminal
-  
++
 [source,bash] 
 ----
   git clone -b standalone https://github.com/couchbaselabs/userprofile-couchbase-mobile.git
@@ -69,7 +69,8 @@ The user profile information is persisted as a Document in the local Couchbase L
   
 
 === Installing Couchbase Lite Framework
-- Next, we will download the Couchbase Lite 2.0 framework. The Couchbase Lite iOS framework is link:https://developer.couchbase.com/documentation/mobile/2.0/couchbase-lite/swift.html[distributed] via Cocoapods, Carthage or you can download the pre-built framework. In our example, we will be downloading the pre-built version of the framework. For this, do the following 
+- Next, we will download the Couchbase Lite 2.0 framework. The Couchbase Lite iOS framework is link:https://developer.couchbase.com/documentation/mobile/2.0/couchbase-lite/swift.html[distributed] via Cocoapods, Carthage or you can download the pre-built framework. In our example, we will be downloading the pre-built version of the framework. For this, do the following
++
 [source,bash] 
 ----
   cd /path/to/UserProfileDemo/code/
@@ -110,7 +111,7 @@ An example of a document would be
 
 === UserRecord 
 The _"user"_ Document is encoded to a native struct named _UserRecord_
-
++
 [source,swift]
 ----
 include::{examplesdir}/UserProfileDemo/model/UserRecord.swift[tags=userrecord]
@@ -130,12 +131,14 @@ include::{examplesdir}/UserProfileDemo/model/DatabaseManager.swift[tags=openOrCr
 ----
 
 * We create an instance of the `DatabaseConfiguration`. This is an optional step. In our case, we would like to override the default path of the Database. Every user has their own instance of the Database that is located in a folder corresponding to the user.
++
 [source,swift]
 ----
 include::{examplesdir}/UserProfileDemo/model/DatabaseManager.swift[tags=dbconfig]
 ----
 
-* Then we create a local Couchbase Lite database named *_"userprofile"_* for the user. If a database already exists for the user, the existing version is returned. 
+* Then we create a local Couchbase Lite database named *_"userprofile"_* for the user. If a database already exists for the user, the existing version is returned.
++ 
 [source,swift]
 ----
 include::{examplesdir}/UserProfileDemo/model/DatabaseManager.swift[tags=dbcreate]
@@ -146,11 +149,13 @@ You can be asynchornously notified of any change (add, delete, update) to the Da
 
 * Open the *DatabaseManager.swift* file and locate the `registerForDatabaseChanges()` function. 
 [source,swift]
++
 ----
 include::{examplesdir}/UserProfileDemo/model/DatabaseManager.swift[tags=registerForDatabaseChanges]
 ----
 
 * We register a change listener with the database. This is an optional step. We track the `ListenerToken` as it is needed for removing the listener.
++
 [source,swift]
 ----
 include::{examplesdir}/UserProfileDemo/model/DatabaseManager.swift[tags=adddbchangelistener]
@@ -160,12 +165,14 @@ include::{examplesdir}/UserProfileDemo/model/DatabaseManager.swift[tags=adddbcha
 When a user logs out, we close the Couchbase Lite Database associated with the user and deregister any database change listeners
 
 * Open the *DatabaseManager.swift* file and locate the `closeDatabaseForCurrentUser()` function. 
++
 [source,swift]
 ----
 include::{examplesdir}/UserProfileDemo/model/DatabaseManager.swift[tags=closeDatabaseForCurrentUser]
 ----
 
 * Closing the database is pretty straightforward
++
 [source,swift]
 ----
 include::{examplesdir}/UserProfileDemo/model/DatabaseManager.swift[tags=dbclose]
@@ -174,12 +181,14 @@ include::{examplesdir}/UserProfileDemo/model/DatabaseManager.swift[tags=dbclose]
 === Deregistering for  Database Changes
 
 * Open the *DatabaseManager.swift* file and locate the `deregisterForDatabaseChanges()` function. 
++
 [source,swift]
 ----
 include::{examplesdir}/UserProfileDemo/model/DatabaseManager.swift[tags=deregisterForDatabaseChanges]
 ----
 
-* We stop listening to database changes by passing in the `ListenerToken` associated with the listener. 
+* We stop listening to database changes by passing in the `ListenerToken` associated with the listener.
++
 [source,swift]
 ----
 include::{examplesdir}/UserProfileDemo/model/DatabaseManager.swift[tags=removedbchangelistener]
@@ -189,6 +198,7 @@ include::{examplesdir}/UserProfileDemo/model/DatabaseManager.swift[tags=removedb
 * The app should be running in the simulator
 * Log into the app with any email Id and password. Let's use the values _"demo@example.com"_ and _"password"_ for user Id and password fields respectively. If this is the first time that the user is signing in, a new Database will be created. If not, the user's existing database will be opened.
 * Confirm that the console log output has a message similar to the one below. In my example, I am logging in with a user email Id of _"demo@example.com"_.
++
 [source,bash]
 ----
 Will open/create DB  at path Will open/create DB  at path /Users/priya.rajagopal/Library/Developer/CoreSimulator/Devices/E4E62394-9940-4AF8-92FC-41E3C794B216/data/Containers/Data/Application/65EAD047-B29A-400C-803F-F799BAE99CBA/Library/Application Support/demo@example.com
@@ -205,20 +215,23 @@ Once an instance of the Couchbase Lite Database is created/opened for the specif
 === Reading a Document
 Once the user logs in, the user is taken to the "Your Profile" screen. A request is made to load  <<The "User Profile" Document>>  for the user. When the user logs in the very first time, there would be no _user profile_ document for the user.
 
-* Open the *UserPresenter.swift* file and locate the `userProfileDocId` definition. This document Id is constructed by prefixing the term "user::" to the email Id of the user.  
+* Open the *UserPresenter.swift* file and locate the `userProfileDocId` definition. This document Id is constructed by prefixing the term "user::" to the email Id of the user.
++
 [source,swift]
 ----
 include::{examplesdir}/UserProfileDemo/presenter/UserPresenter.swift[tags=userProfileDocId]
 ----
 
-* In the *UserPresenter.swift* file, locate the `fetchRecordForCurrentUser()` function. 
+* In the *UserPresenter.swift* file, locate the `fetchRecordForCurrentUser()` function.
++
 [source,swift]
 ----
 include::{examplesdir}/UserProfileDemo/presenter/UserPresenter.swift[tags=fetchRecordForCurrentUser]
 ----
 
 
-* We try to fetch the document with specified `userProfileDocId` from the database. 
+* We try to fetch the document with specified `userProfileDocId` from the database.
++
 [source,swift]
 ----
 include::{examplesdir}/UserProfileDemo/presenter/UserPresenter.swift[tags=docfetch]
@@ -234,7 +247,8 @@ include::{examplesdir}/UserProfileDemo/presenter/UserPresenter.swift[tags=docfet
 A <<The "User Profile" Document>> is created for the user when the user taps the "Done" button on the "Profile Screen". 
 The function below applies whether you are creating a document or updating an existing version
 
-* Open the *UserPresenter.swift* file and locate the `setRecordForCurrentUser()` method.  
+* Open the *UserPresenter.swift* file and locate the `setRecordForCurrentUser()` method.
++ 
 [source,swift]
 ----
 include::{examplesdir}/UserProfileDemo/presenter/UserPresenter.swift[tags=setRecordForCurrentUser]
@@ -243,6 +257,7 @@ include::{examplesdir}/UserProfileDemo/presenter/UserPresenter.swift[tags=setRec
 
 * We create a *mutable* instance of the Document. By default, all APIs in Couchbase Lite deal with immutable objects, thereby making them *thread-safe* by design. In order to mutate an object,  you must explicitly get a mutable copy of the object.
 Use appropriate type-setters to set the various properties of the Document 
++
 [source,swift]
 ----
 include::{examplesdir}/UserProfileDemo/presenter/UserPresenter.swift[tags=docset]
@@ -250,6 +265,7 @@ include::{examplesdir}/UserProfileDemo/presenter/UserPresenter.swift[tags=docset
 <1> Specifically, note the support of the `setBlob` type to fetch the value of a property of type `Blob`.
 
 * Save the document
++
 [source,swift]
 ----
 include::{examplesdir}/UserProfileDemo/presenter/UserPresenter.swift[tags=docsave]
@@ -258,7 +274,7 @@ include::{examplesdir}/UserProfileDemo/presenter/UserPresenter.swift[tags=docsav
 
 === Deleting a Document
 We don't delete a Document in this sample app. However, deletion of a document is pretty straightforward and this is how you would do it
-
++
 [source,swift]
 ----
  if let doc = db.document(withID: idOfDocToRemove) {
