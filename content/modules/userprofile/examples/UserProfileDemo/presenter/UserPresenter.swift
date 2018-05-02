@@ -36,7 +36,6 @@ protocol UserPresentingViewProtocol:PresentingViewProtocol {
 
 // MARK: UserPresenter
 class UserPresenter:UserPresenterProtocol {
-    fileprivate var userQuery: Query?
     fileprivate var dbMgr:DatabaseManager = DatabaseManager.shared
     // tag::userProfileDocId[]
     lazy var userProfileDocId: String = {
