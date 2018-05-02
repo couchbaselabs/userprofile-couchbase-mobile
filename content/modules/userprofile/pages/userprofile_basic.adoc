@@ -125,19 +125,19 @@ When a user logs in, we create an empty Couchbase Lite Database for the user if 
 * Open the *DatabaseManager.swift* file and locate the `openOrCreateDatabaseForUser()` function. 
 [source,swift]
 ----
-include::{codedir}/model/DatabaseManager.swift[tags=openOrCreateDatabaseForUser]
+include::{examplesdir}/model/DatabaseManager.swift[tags=openOrCreateDatabaseForUser]
 ----
 
 * We create an instance of the `DatabaseConfiguration`. This is an optional step. In our case, we would like to override the default path of the Database. Every user has their own instance of the Database that is located in a folder corresponding to the user.
 [source,swift]
 ----
-include::{codedir}/model/DatabaseManager.swift[tags=dbconfig]
+include::{examplesdir}/model/DatabaseManager.swift[tags=dbconfig]
 ----
 
 * Then we create a local Couchbase Lite database named *_"userprofile"_* for the user. If a database already exists for the user, the existing version is returned. 
 [source,swift]
 ----
-include::{codedir}/model/DatabaseManager.swift[tags=dbcreate]
+include::{examplesdir}/model/DatabaseManager.swift[tags=dbcreate]
 ----
 
 === Listening to Database Changes
@@ -146,13 +146,13 @@ You can be asynchornously notified of any change (add, delete, update) to the Da
 * Open the *DatabaseManager.swift* file and locate the `registerForDatabaseChanges()` function. 
 [source,swift]
 ----
-include::{codedir}/model/DatabaseManager.swift[tags=registerForDatabaseChanges]
+include::{examplesdir}/model/DatabaseManager.swift[tags=registerForDatabaseChanges]
 ----
 
 * We register a change listener with the database. This is an optional step. We track the `ListenerToken` as it is needed for removing the listener.
 [source,swift]
 ----
-include::{codedir}/model/DatabaseManager.swift[tags=adddbchangelistener]
+include::{examplesdir}/model/DatabaseManager.swift[tags=adddbchangelistener]
 ----
 
 === Close a Database
@@ -161,13 +161,13 @@ When a user logs out, we close the Couchbase Lite Database associated with the u
 * Open the *DatabaseManager.swift* file and locate the `closeDatabaseForCurrentUser()` function. 
 [source,swift]
 ----
-include::{codedir}/model/DatabaseManager.swift[tags=closeDatabaseForCurrentUser]
+include::{examplesdir}/model/DatabaseManager.swift[tags=closeDatabaseForCurrentUser]
 ----
 
 * Closing the database is pretty straightforward
 [source,swift]
 ----
-include::{codedir}/model/DatabaseManager.swift[tags=dbclose]
+include::{examplesdir}/model/DatabaseManager.swift[tags=dbclose]
 ----
 
 === Deregistering for  Database Changes
@@ -175,13 +175,13 @@ include::{codedir}/model/DatabaseManager.swift[tags=dbclose]
 * Open the *DatabaseManager.swift* file and locate the `deregisterForDatabaseChanges()` function. 
 [source,swift]
 ----
-include::{codedir}/model/DatabaseManager.swift[tags=deregisterForDatabaseChanges]
+include::{examplesdir}/model/DatabaseManager.swift[tags=deregisterForDatabaseChanges]
 ----
 
 * We stop listening to database changes by passing in the `ListenerToken` associated with the listener. 
 [source,swift]
 ----
-include::{codedir}/model/DatabaseManager.swift[tags=removedbchangelistener]
+include::{examplesdir}/model/DatabaseManager.swift[tags=removedbchangelistener]
 ----
 
 === Try It Out
@@ -207,20 +207,20 @@ Once the user logs in, the user is taken to the "Your Profile" screen. A request
 * Open the *UserPresenter.swift* file and locate the `userProfileDocId` definition. This document Id is constructed by prefixing the term "user::" to the email Id of the user.  
 [source,swift]
 ----
-include::{codedir}/presenter/UserPresenter.swift[tags=userProfileDocId]
+include::{examplesdir}/presenter/UserPresenter.swift[tags=userProfileDocId]
 ----
 
 * In the *UserPresenter.swift* file, locate the `fetchRecordForCurrentUser()` function. 
 [source,swift]
 ----
-include::{codedir}/presenter/UserPresenter.swift[tags=fetchRecordForCurrentUser]
+include::{examplesdir}/presenter/UserPresenter.swift[tags=fetchRecordForCurrentUser]
 ----
 
 
 * We try to fetch the document with specified `userProfileDocId` from the database. 
 [source,swift]
 ----
-include::{codedir}/presenter/UserPresenter.swift[tags=docfetch]
+include::{examplesdir}/presenter/UserPresenter.swift[tags=docfetch]
 ----
 <1> Create an instance of <<UserRecord>> object 
 <2> Set the `email` property of the UserRecord with the email Id of the logged in user. This value is not editable.
@@ -236,7 +236,7 @@ The function below applies whether you are creating a document or updating an ex
 * Open the *UserPresenter.swift* file and locate the `setRecordForCurrentUser()` method.  
 [source,swift]
 ----
-include::{codedir}/presenter/UserPresenter.swift[tags=setRecordForCurrentUser]
+include::{examplesdir}/presenter/UserPresenter.swift[tags=setRecordForCurrentUser]
 ----
 
 
@@ -244,14 +244,14 @@ include::{codedir}/presenter/UserPresenter.swift[tags=setRecordForCurrentUser]
 Use appropriate type-setters to set the various properties of the Document 
 [source,swift]
 ----
-include::{codedir}/presenter/UserPresenter.swift[tags=docset]
+include::{examplesdir}/presenter/UserPresenter.swift[tags=docset]
 ----
 <1> Specifically, note the support of the `setBlob` type to fetch the value of a property of type `Blob`.
 
 * Save the document
 [source,swift]
 ----
-include::{codedir}/presenter/UserPresenter.swift[tags=docsave]
+include::{examplesdir}/presenter/UserPresenter.swift[tags=docsave]
 ----
 
 
