@@ -123,6 +123,7 @@ In this section, we will do a code walkthrough of the basic Database operations
 When a user logs in, we create an empty Couchbase Lite Database for the user if one does not exist.
 
 * Open the *DatabaseManager.swift* file and locate the `openOrCreateDatabaseForUser()` function. 
++
 [source,swift]
 ----
 include::{examplesdir}/UserProfileDemo/model/DatabaseManager.swift[tags=openOrCreateDatabaseForUser]
