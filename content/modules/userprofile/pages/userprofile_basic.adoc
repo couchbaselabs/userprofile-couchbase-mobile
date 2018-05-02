@@ -1,9 +1,13 @@
-:toc: left
-:toclevels: 3
-:codedir: ../code/UserProfileDemo
-toc::[]
+:idprefix:
+:idseparator: -
 :icons: font
 :quick-uri: https://asciidoctor.org/docs/asciidoc-syntax-quick-reference/
+ifndef::env-site,env-github[]
+:toc: left
+:toclevels: 3
+endif::[]
+
+toc::[]
 
 == Introduction
 Couchbase Mobile brings the power of NoSQL to the edge. It is comprised of three components:
@@ -109,7 +113,7 @@ The _"user"_ Document is encoded to a native struct named _UserRecord_
 
 [source,swift]
 ----
-include::{codedir}/model/UserRecord.swift[tags=userrecord]
+include::{examplesdir}/model/UserRecord.swift[tags=userrecord]
 ----
 
 == Basic Database Operations
