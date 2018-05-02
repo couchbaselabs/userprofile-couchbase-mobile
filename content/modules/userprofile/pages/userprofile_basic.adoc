@@ -109,7 +109,7 @@ The _"user"_ Document is encoded to a native struct named _UserRecord_
 
 [source,swift]
 ----
-include::{codedir}/model/UserRecord.swift[tags=userrecord]
+include::{examplesdir}/model/UserRecord.swift[tags=userrecord]
 ----
 
 == Basic Database Operations
