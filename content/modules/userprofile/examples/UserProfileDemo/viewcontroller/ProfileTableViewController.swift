@@ -283,7 +283,6 @@ extension ProfileTableViewController{
                     self.universityLabel = cell.detailTextLabel
                     cell.textLabel?.text = NSLocalizedString("University", comment: "")
                     cell.detailTextLabel?.text = selectedUniversity ?? self.record?.university
-                    cell.isUserInteractionEnabled = true
                     cell.selectionStyle = .gray
                     cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
                     
