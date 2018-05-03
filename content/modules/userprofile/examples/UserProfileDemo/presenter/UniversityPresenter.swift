@@ -49,29 +49,36 @@ extension UniversityPresenter {
             }
             
             // tag::buildquery[]
-            var whereQueryExpr = Expression.property(UniversityDocumentKeys.name.rawValue)
-                .equalTo(Expression.string(name))
+            var whereQueryExpr = Function.lower(Expression.property(UniversityDocumentKeys.name.rawValue))
+                .like(Expression.string("%\(name.lowercased())%")) // <1>
             
             if let countryExpr = countryStr {
-                let countryQueryExpr = Expression.property(UniversityDocumentKeys.country.rawValue)
-                    .equalTo(Expression.string(countryExpr))
-                whereQueryExpr = whereQueryExpr.and(countryQueryExpr) // <1>
+                let countryQueryExpr = Function.lower(Expression.property(UniversityDocumentKeys.country.rawValue))
+                    .like(Expression.string("%\(countryExpr.lowercased())%"))// <2>
+                
+                whereQueryExpr = whereQueryExpr.and(countryQueryExpr) // <3>
             }
             
-            let universityQuery = QueryBuilder.select(SelectResult.all()) // <2>
-                .from(DataSource.database(db)) // <3>
-                .where(whereQueryExpr) // <4>
+            let universityQuery = QueryBuilder.select(SelectResult.all()) // <4>
+                .from(DataSource.database(db)) // <5>
+                .where(whereQueryExpr) // <6>
             
+            print(try? universityQuery.explain())
             // end::buildquery[]
             
             // tag::runquery[]
             var universities = Universities()
             
             for result in try universityQuery.execute() {
-                if let university = result.dictionary(forKey: "universities")?.toDictionary(){
-                    var universityRecord = UniversityRecord()
+                if let university = result.dictionary(forKey: "universities"){
                     
-                    print (university)
+                    var universityRecord = UniversityRecord()
+                    universityRecord.name =  university.string(forKey: UniversityDocumentKeys.name.rawValue) // <1>
+                    universityRecord.country  =  university.string(forKey: UniversityDocumentKeys.country.rawValue) // <2>
+                    universityRecord.webPages  =  university.array(forKey: UniversityDocumentKeys.webPages.rawValue)?.toArray() as? [String] // <3>
+                    
+                    universities.append(universityRecord)
+
                 }
             }
             // end::runquery[]

@@ -179,17 +179,15 @@ extension DatabaseManager {
 extension DatabaseManager {
     
     // tag::openPrebuiltDatabase[]
-    fileprivate func openPrebuiltDatabase(handler:(_ error:Error?)->Void) {
+    func openPrebuiltDatabase(handler:(_ error:Error?)->Void) {
         // end::openPrebuiltDatabase[]
         do {
             // tag::dbconfig[]
             var options = DatabaseConfiguration()
-            guard let defaultDBPath = _applicationSupportDirectory else {
+            guard let universityFolderUrl = _applicationSupportDirectory else {
                 fatalError("Could not open Application Support Directory for app!")
                 return
             }
-            // Create a folder called "prebuilt" if one does not exist
-            let universityFolderUrl = defaultDBPath.appendingPathComponent(kPrebuiltDBFolder, isDirectory: true)
             let universityFolderPath = universityFolderUrl.path
             let fileManager = FileManager.default
             if !fileManager.fileExists(atPath: universityFolderPath) {
@@ -205,14 +203,14 @@ extension DatabaseManager {
             print("Will open Prebuilt DB  at path \(universityFolderPath)")
             // tag::prebuiltdbopen[]
             // Load the prebuilt "universities" database if it does not exist as the specified folder
-            if Database.exists(withName: kPrebuiltDBFolder, inDirectory: universityFolderPath) == false {
+            if Database.exists(withName: kUniversityDBName, inDirectory: universityFolderPath) == false {
                 // Load prebuilt database from App Bundle and copy over to Applications support path
-                if let prebuiltPath = Bundle.main.path(forResource: kDBName, ofType: "cblite2") {
-                    try Database.copy(fromPath: prebuiltPath, toDatabase: "\(kDBName)", withConfig: options)
+                if let prebuiltPath = Bundle.main.path(forResource: kUniversityDBName, ofType: "cblite2") {
+                    try Database.copy(fromPath: prebuiltPath, toDatabase: "\(kUniversityDBName)", withConfig: options)
                     
                 }
                 // Get handle to DB  specified path
-                _universitydb = try Database(name: kDBName, config: options)
+                _universitydb = try Database(name: kUniversityDBName, config: options)
                 
                 // Create indexes to facilitate queries
                 try createUniversityDatabaseIndexes()
@@ -221,7 +219,7 @@ extension DatabaseManager {
             else
             {
                 // Gets handle to existing DB at specified path
-                _universitydb = try Database(name: kDBName, config: options)
+                _universitydb = try Database(name: kUniversityDBName, config: options)
                 
             }
             
@@ -236,7 +234,7 @@ extension DatabaseManager {
     }
     
     // tag::closePrebuiltDatabase[]
-    fileprivate func closePrebuiltDatabase() -> Bool {
+    func closePrebuiltDatabase() -> Bool {
         // end::closePrebuiltDatabase[]
         do {
             print(#function)

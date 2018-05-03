@@ -360,7 +360,7 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vDU-Pr-BeW">
-                                            <rect key="frame" x="16" y="31" width="343" height="18"/>
+                                            <rect key="frame" x="16" y="31" width="299" height="18"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                             <color key="textColor" red="0.29803922770000002" green="0.29803922770000002" blue="0.29803922770000002" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
@@ -371,12 +371,21 @@
                                             <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
                                         </label>
+                                        <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="checkmark" translatesAutoresizingMaskIntoConstraints="NO" id="yOT-4R-WXW">
+                                            <rect key="frame" x="341" y="31" width="26" height="28"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="28" id="8iy-x7-2eS"/>
+                                                <constraint firstAttribute="width" constant="26" id="gw3-Y2-94k"/>
+                                            </constraints>
+                                        </imageView>
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="WF4-yB-goy" firstAttribute="leading" secondItem="jhG-qD-B3t" secondAttribute="leading" constant="16" id="Dbs-kn-aC3"/>
-                                        <constraint firstAttribute="trailing" secondItem="vDU-Pr-BeW" secondAttribute="trailing" constant="16" id="FHX-EC-A4r"/>
+                                        <constraint firstAttribute="trailing" secondItem="vDU-Pr-BeW" secondAttribute="trailing" constant="60" id="FHX-EC-A4r"/>
+                                        <constraint firstAttribute="trailing" secondItem="yOT-4R-WXW" secondAttribute="trailing" constant="8" id="OPI-ST-FNB"/>
                                         <constraint firstAttribute="trailing" secondItem="WF4-yB-goy" secondAttribute="trailing" constant="16" id="Po5-ot-KmY"/>
-                                        <constraint firstAttribute="trailing" secondItem="vDU-Pr-BeW" secondAttribute="trailing" constant="16" id="UZG-Hd-mCT"/>
+                                        <constraint firstAttribute="trailing" secondItem="vDU-Pr-BeW" secondAttribute="trailing" constant="60" id="UZG-Hd-mCT"/>
+                                        <constraint firstItem="yOT-4R-WXW" firstAttribute="top" secondItem="0jv-rD-z3r" secondAttribute="bottom" constant="-1" id="Ubh-nM-NmG"/>
                                         <constraint firstItem="vDU-Pr-BeW" firstAttribute="top" secondItem="0jv-rD-z3r" secondAttribute="bottom" constant="-1" id="WOP-8t-jHf"/>
                                         <constraint firstItem="0jv-rD-z3r" firstAttribute="leading" secondItem="jhG-qD-B3t" secondAttribute="leading" constant="16" id="Y1e-2t-S6U"/>
                                         <constraint firstItem="vDU-Pr-BeW" firstAttribute="leading" secondItem="jhG-qD-B3t" secondAttribute="leading" constant="16" id="Zgn-No-Gsj"/>
@@ -386,6 +395,7 @@
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
+                                    <outlet property="imageVal" destination="yOT-4R-WXW" id="vOx-Ca-r61"/>
                                     <outlet property="location" destination="vDU-Pr-BeW" id="dsl-qL-qKE"/>
                                     <outlet property="name" destination="0jv-rD-z3r" id="My3-Zz-aEo"/>
                                     <outlet property="url" destination="WF4-yB-goy" id="p1O-mf-WCc"/>
@@ -398,10 +408,15 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Universities" id="PY0-YB-Jbi">
-                        <barButtonItem key="leftBarButtonItem" title="Done" id="Y70-hk-UwA">
+                        <barButtonItem key="leftBarButtonItem" title="Cancel" id="Y70-hk-UwA">
                             <color key="tintColor" red="0.047058823530000002" green="0.67450980390000004" blue="0.87843137250000003" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
                                 <action selector="onCancelTapped:" destination="NxE-AI-yRE" id="Kz9-Jt-58C"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="Done" id="iRU-xi-vZ1">
+                            <connections>
+                                <action selector="onDoneTapped:" destination="NxE-AI-yRE" id="8VN-ox-249"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -413,6 +428,7 @@
     </scenes>
     <resources>
         <image name="blue" width="150" height="50"/>
+        <image name="checkmark" width="25" height="25"/>
         <image name="logo" width="60" height="60"/>
     </resources>
 </document>

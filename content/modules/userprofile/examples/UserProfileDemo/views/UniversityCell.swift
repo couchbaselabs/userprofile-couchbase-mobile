@@ -13,6 +13,7 @@ class UniversityCell: UITableViewCell {
     @IBOutlet weak var name:UILabel!
     @IBOutlet weak var url:UILabel!
     @IBOutlet weak var location:UILabel!
+    @IBOutlet weak var imageVal:UIImageView!
     var nameValue:String? {
         didSet {
             updateUI()
@@ -30,10 +31,12 @@ class UniversityCell: UITableViewCell {
     }
     
     
+    
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
         
         // Configure the view for the selected state
+        imageVal.isHidden = selected == false
     }
     
     private func updateUI() {

@@ -13,6 +13,7 @@ import UIKit
 class UniversityTableViewController:UITableViewController , PresentingViewProtocol{
     
     lazy var universityPresenter:UniversityPresenter = UniversityPresenter()
+    var currUniversitySelection:String?
     fileprivate var descriptionSearchBar:UISearchBar!
     fileprivate var locationSearchBar:UISearchBar!
     fileprivate var searchButton:UIButton!
@@ -22,7 +23,7 @@ class UniversityTableViewController:UITableViewController , PresentingViewProtoc
     var onDoneBlock : ((String?) -> Void)?
     
     
-    var selectedUniversity:UniversityRecord?
+    fileprivate var selectedUniversity:UniversityRecord?
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -68,7 +69,7 @@ class UniversityTableViewController:UITableViewController , PresentingViewProtoc
         descriptionSearchBar =  UISearchBar.init(frame: CGRect(x: 0, y: 5, width: self.view.frame.width , height: 40))
         view.backgroundColor = UIColor.white
         descriptionSearchBar.showsCancelButton = true
-        descriptionSearchBar.placeholder = NSLocalizedString("Name (optional)", comment: "")
+        descriptionSearchBar.placeholder = NSLocalizedString("Name (Required)", comment: "")
         view.addSubview(descriptionSearchBar)
         descriptionSearchBar.delegate = self
         
@@ -76,7 +77,7 @@ class UniversityTableViewController:UITableViewController , PresentingViewProtoc
         locationSearchBar =  UISearchBar.init(frame: CGRect(x: 0, y: 50, width: self.view.frame.width , height: 40))
         view.backgroundColor = UIColor.white
         locationSearchBar.showsCancelButton = true
-        locationSearchBar.placeholder = NSLocalizedString("Country : Eg.'United States', 'London'", comment: "")
+        locationSearchBar.placeholder = NSLocalizedString("Country (Optional) : Eg.'United States', 'London'", comment: "")
         view.addSubview(locationSearchBar)
         locationSearchBar.delegate = self
         
@@ -97,6 +98,12 @@ class UniversityTableViewController:UITableViewController , PresentingViewProtoc
     
     @IBAction func onCancelTapped(_ sender: UIBarButtonItem) {
         
+        onDoneBlock?(self.currUniversitySelection)
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    @IBAction func onDoneTapped(_ sender: UIBarButtonItem) {
+        
         onDoneBlock?(self.selectedUniversity?.name)
         self.dismiss(animated: true, completion: nil)
     }
@@ -104,11 +111,12 @@ class UniversityTableViewController:UITableViewController , PresentingViewProtoc
 
 extension UniversityTableViewController {
     @objc func onUniversitiesLookup(sender:UIButton) {
-        guard let locationStr = locationSearchBar.text else {
+        guard let nameStr = descriptionSearchBar.text else {
             return
         }
         
-        self.universityPresenter.fetchUniversitiesMatchingName(descriptionSearchBar.text ?? "", country: locationStr) { [weak self](universities, error) in
+        let locationStr = self.locationSearchBar.text == "" ? nil : self.locationSearchBar.text
+        self.universityPresenter.fetchUniversitiesMatchingName(nameStr, country: locationStr) { [weak self](universities, error) in
             
             guard let `self` = self else {
                 return
@@ -151,9 +159,9 @@ extension UniversityTableViewController:UISearchBarDelegate {
     
     func searchBar(_ searchBar: UISearchBar, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         let length = (searchBar.text?.count)! - range.length + text.count
-        let locationLength = (searchBar == self.locationSearchBar) ? length : self.locationSearchBar.text?.count
+        let nameLength = (searchBar == self.descriptionSearchBar) ? length : self.descriptionSearchBar.text?.count
         
-        self.searchButton.isEnabled = (locationLength! > 0 )
+        self.searchButton.isEnabled = (nameLength! > 0 )
         
         return true;
     }
@@ -189,7 +197,6 @@ extension UniversityTableViewController {
                 cell.nameValue = university.name ?? NSLocalizedString("Unavailable",comment:"")
                 cell.locationValue = university.country ?? NSLocalizedString("Unavailable",comment:"")
                 cell.urlValue = university.webPages?[0] ?? NSLocalizedString("Unavailable",comment:"")
-                
             }
         }
         cell.selectionStyle = .blue
@@ -204,9 +211,14 @@ extension UniversityTableViewController {
     public override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let selectedIndex  = indexOfSelectedUniverity {
             tableView.deselectRow(at: selectedIndex, animated: true)
+            indexOfSelectedUniverity = nil
+            self.selectedUniversity = nil
+
         }
-        indexOfSelectedUniverity = indexPath
-        self.selectedUniversity = universities?[indexPath.section]
+        else {
+            indexOfSelectedUniverity = indexPath
+            self.selectedUniversity = universities?[indexPath.section]
+        }
         
     }
     

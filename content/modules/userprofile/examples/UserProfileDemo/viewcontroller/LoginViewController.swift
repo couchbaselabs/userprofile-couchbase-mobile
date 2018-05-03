@@ -86,30 +86,48 @@ extension LoginViewController {
     @IBAction func onLoginTapped(_ sender: UIButton) {
         if let userName = self.userTextEntry.text, let password = self.passwordTextEntry.text {
             let cbMgr = DatabaseManager.shared
-            cbMgr.openOrCreateDatabaseForUser(userName, password: password, handler: { [weak self](error) in
-                
+            
+            // First open prebuilt DB with content common to all users
+            cbMgr.openPrebuiltDatabase(handler: { [weak self](error) in
                 guard let `self` = self else {
-                return
+                    return
                 }
-                
-                print(self.activitySpinner)
-                switch error {
-                  
-                case nil:
-                    self.activitySpinner.startAnimating()
-                    NotificationCenter.default.post(Notification.notificationForLoginSuccess(userName))
-                    self.activitySpinner.stopAnimating()
 
-                default:
-                    self.activitySpinner.startAnimating()
-                    NotificationCenter.default.post(Notification.notificationForLoginFailure(userName))
-                    self.activitySpinner.stopAnimating()
+                switch error {
                     
-                }
-            })
+                    case nil:
+                        self.activitySpinner.startAnimating()
+                        // Open / Create user specific database
+                        cbMgr.openOrCreateDatabaseForUser(userName, password: password, handler: { [weak self](error) in
+                            
+                            guard let `self` = self else {
+                                return
+                            }
+                            
+                            switch error {
+                                
+                            case nil:
+                                self.activitySpinner.startAnimating()
+                                NotificationCenter.default.post(Notification.notificationForLoginSuccess(userName))
+                                self.activitySpinner.stopAnimating()
+                                
+                            default:
+                                self.activitySpinner.startAnimating()
+                                NotificationCenter.default.post(Notification.notificationForLoginFailure(userName))
+                                self.activitySpinner.stopAnimating()
+                                
+                            }
+                        })
+                    
+                    default:
+                        self.activitySpinner.startAnimating()
+                        NotificationCenter.default.post(Notification.notificationForLoginFailure(userName))
+                        self.activitySpinner.stopAnimating()
+
+                    }
+                })
+            }
         }
-        
-    }
     
 }
 

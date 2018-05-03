@@ -26,13 +26,11 @@
 		5F86E886203B788C007ED29E /* ProfileTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F86E885203B788C007ED29E /* ProfileTableViewController.swift */; };
 		5F9C43E8209A2112004607AE /* CouchbaseLiteSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F9C43E6209A20BA004607AE /* CouchbaseLiteSwift.framework */; };
 		5F9C43E9209A2112004607AE /* CouchbaseLiteSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5F9C43E6209A20BA004607AE /* CouchbaseLiteSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		5F9C43EE209A6148004607AE /* db.sqlite3-shm in Resources */ = {isa = PBXBuildFile; fileRef = 5F9C43EB209A6148004607AE /* db.sqlite3-shm */; };
-		5F9C43EF209A6148004607AE /* db.sqlite3-wal in Resources */ = {isa = PBXBuildFile; fileRef = 5F9C43EC209A6148004607AE /* db.sqlite3-wal */; };
-		5F9C43F0209A6148004607AE /* db.sqlite3 in Resources */ = {isa = PBXBuildFile; fileRef = 5F9C43ED209A6148004607AE /* db.sqlite3 */; };
 		5F9C43F2209A6FA1004607AE /* UniversityRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F9C43F1209A6FA1004607AE /* UniversityRecord.swift */; };
 		5F9C43F4209A7002004607AE /* UniversityTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F9C43F3209A7002004607AE /* UniversityTableViewController.swift */; };
 		5F9C43F6209A703C004607AE /* UniversityPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F9C43F5209A703C004607AE /* UniversityPresenter.swift */; };
 		5F9C43F8209AA57D004607AE /* UniversityCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F9C43F7209AA57D004607AE /* UniversityCell.swift */; };
+		5F9C4403209B8122004607AE /* universities.cblite2 in Resources */ = {isa = PBXBuildFile; fileRef = 5F9C4402209B8122004607AE /* universities.cblite2 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -70,13 +68,11 @@
 		5F86E883203B66B5007ED29E /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
 		5F86E885203B788C007ED29E /* ProfileTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileTableViewController.swift; sourceTree = "<group>"; };
 		5F9C43E6209A20BA004607AE /* CouchbaseLiteSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CouchbaseLiteSwift.framework; path = iOS/CouchbaseLiteSwift.framework; sourceTree = "<group>"; };
-		5F9C43EB209A6148004607AE /* db.sqlite3-shm */ = {isa = PBXFileReference; lastKnownFileType = file; path = "db.sqlite3-shm"; sourceTree = "<group>"; };
-		5F9C43EC209A6148004607AE /* db.sqlite3-wal */ = {isa = PBXFileReference; lastKnownFileType = file; path = "db.sqlite3-wal"; sourceTree = "<group>"; };
-		5F9C43ED209A6148004607AE /* db.sqlite3 */ = {isa = PBXFileReference; lastKnownFileType = file; path = db.sqlite3; sourceTree = "<group>"; };
 		5F9C43F1209A6FA1004607AE /* UniversityRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversityRecord.swift; sourceTree = "<group>"; };
 		5F9C43F3209A7002004607AE /* UniversityTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversityTableViewController.swift; sourceTree = "<group>"; };
 		5F9C43F5209A703C004607AE /* UniversityPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversityPresenter.swift; sourceTree = "<group>"; };
 		5F9C43F7209AA57D004607AE /* UniversityCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversityCell.swift; sourceTree = "<group>"; };
+		5F9C4402209B8122004607AE /* universities.cblite2 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = universities.cblite2; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -133,6 +129,7 @@
 		5F86E8492037E292007ED29E /* UserProfileDemo */ = {
 			isa = PBXGroup;
 			children = (
+				5F9C43F9209B804F004607AE /* prebuilt */,
 				5F61CCB0204C9EF600399C1D /* views */,
 				5F7CCFAD2048498B0019D450 /* presenter */,
 				5F86E882203B669C007ED29E /* model */,
@@ -143,7 +140,6 @@
 				5F86E8512037E292007ED29E /* Assets.xcassets */,
 				5F86E8532037E292007ED29E /* LaunchScreen.storyboard */,
 				5F86E8562037E292007ED29E /* Info.plist */,
-				5F9C43EA209A6148004607AE /* universities.cblite2 */,
 			);
 			path = UserProfileDemo;
 			sourceTree = "<group>";
@@ -178,15 +174,12 @@
 			path = model;
 			sourceTree = "<group>";
 		};
-		5F9C43EA209A6148004607AE /* universities.cblite2 */ = {
+		5F9C43F9209B804F004607AE /* prebuilt */ = {
 			isa = PBXGroup;
 			children = (
-				5F9C43EB209A6148004607AE /* db.sqlite3-shm */,
-				5F9C43EC209A6148004607AE /* db.sqlite3-wal */,
-				5F9C43ED209A6148004607AE /* db.sqlite3 */,
+				5F9C4402209B8122004607AE /* universities.cblite2 */,
 			);
-			name = universities.cblite2;
-			path = ../../../../../code/UserProfileDemo/universities.cblite2;
+			path = prebuilt;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -250,13 +243,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				5F61CCB4204C9F4400399C1D /* CustomTextEntryTableViewCell.xib in Resources */,
-				5F9C43EE209A6148004607AE /* db.sqlite3-shm in Resources */,
-				5F9C43EF209A6148004607AE /* db.sqlite3-wal in Resources */,
 				5F86E8552037E292007ED29E /* LaunchScreen.storyboard in Resources */,
-				5F9C43F0209A6148004607AE /* db.sqlite3 in Resources */,
 				5F61CCB6204E47B500399C1D /* CustomImageEntryTableViewCell.xib in Resources */,
 				5F86E8522037E292007ED29E /* Assets.xcassets in Resources */,
 				5F86E8502037E292007ED29E /* Main.storyboard in Resources */,
+				5F9C4403209B8122004607AE /* universities.cblite2 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

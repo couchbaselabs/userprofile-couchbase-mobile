@@ -374,6 +374,7 @@ extension ProfileTableViewController {
         if let destNVC = storyboard?.instantiateViewController(withIdentifier: "UniversityNVC") as? UINavigationController {
             if let destVC = destNVC.topViewController as? UniversityTableViewController {
                 destVC.modalPresentationStyle = .formSheet
+                destVC.currUniversitySelection = self.universityLabel?.text
                 destVC.onDoneBlock = onUniversitySelectionMade
                 self.present(destNVC, animated: true, completion: {
                     
@@ -385,6 +386,7 @@ extension ProfileTableViewController {
     public func onUniversitySelectionMade(_ university:String?) {
         print("UNiversity \(university) selected")
         self.selectedUniversity = university
+        tableView.reloadRows(at: [IndexPath.init(row: 0, section: Section.basic.index)], with: .automatic)
         self.doneButton.isEnabled = true
     }
     
