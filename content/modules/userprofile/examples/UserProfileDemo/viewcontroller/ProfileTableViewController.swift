@@ -23,6 +23,8 @@ class ProfileTableViewController:UITableViewController, UserPresentingViewProtoc
     fileprivate var addressTextEntry:UITextView?
     fileprivate var userImageView: UIImageView!
     fileprivate var imageUpdated:Bool = false
+    fileprivate var universityLabel:UILabel?
+    fileprivate var selectedUniversity:String?
     
     let  baselineProfileSections:Int = 3
     
@@ -47,7 +49,7 @@ class ProfileTableViewController:UITableViewController, UserPresentingViewProtoc
             case .image:
                 return 1
             case .basic:
-                return 3
+                return 4
             case .extended:
                 return 0 // This can grow dynamically
             }
@@ -69,6 +71,7 @@ class ProfileTableViewController:UITableViewController, UserPresentingViewProtoc
         case name
         case email
         case address
+        case university
         
         var index:Int {
             switch self {
@@ -78,6 +81,8 @@ class ProfileTableViewController:UITableViewController, UserPresentingViewProtoc
                 return 1
             case .address:
                 return 2
+            case .university:
+                return 3
             }
         }
         
@@ -145,6 +150,8 @@ extension ProfileTableViewController {
         userProfile.email = self.emailTextEntry?.text
         userProfile.address = self.addressTextEntry?.text
         userProfile.name = self.nameTextEntry?.text
+        userProfile.university = self.selectedUniversity
+        
         
         if let imageVal = self.userImageView?.image, let imageData = UIImageJPEGRepresentation(imageVal, 0.75)  {
             userProfile.imageData = imageData
@@ -171,7 +178,7 @@ extension ProfileTableViewController {
 }
 
 //MARK:UITableViewDataSource
-extension ProfileTableViewController {
+extension ProfileTableViewController{
     public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case Section.basic.index:
@@ -269,7 +276,18 @@ extension ProfileTableViewController {
                         addressTextEntry?.text =  nil
                     }
                     return cell
+                case BasicRows.university.index :
+                    guard let cell = UITableViewCell(style: UITableViewCellStyle.value1, reuseIdentifier: "UniversitySelectionCell") as? UITableViewCell else {
+                        return UITableViewCell()
+                    }
+                    self.universityLabel = cell.detailTextLabel
+                    cell.textLabel?.text = NSLocalizedString("University", comment: "")
+                    cell.detailTextLabel?.text = selectedUniversity ?? self.record?.university
+                    cell.isUserInteractionEnabled = true
+                    cell.selectionStyle = .gray
+                    cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
                     
+                    return cell
                 default:
                      return UITableViewCell()
             }
@@ -316,6 +334,61 @@ extension ProfileTableViewController {
         }
         return self.baselineProfileSections + numExtn
     }
+    
+    public override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        switch indexPath.section {
+        // Profile Image
+        case Section.image.index:
+            return
+            
+        // Basic Info
+        case Section.basic.index:
+            switch indexPath.row {
+            case BasicRows.name.index :
+                return
+            case BasicRows.address.index :
+                return
+            case BasicRows.email.index :
+                return
+            case BasicRows.university.index :
+                self.navigateToViewControllerOnSelectUniversityAction()
+                return
+            default:
+                return
+                
+            }
+            
+        // Extended
+        case Section.extended.index:
+            return
+        default:
+            return
+            
+        }
+    }
+}
+
+
+// MARK: Navigation
+extension ProfileTableViewController {
+    fileprivate func navigateToViewControllerOnSelectUniversityAction() {
+        if let destNVC = storyboard?.instantiateViewController(withIdentifier: "UniversityNVC") as? UINavigationController {
+            if let destVC = destNVC.topViewController as? UniversityTableViewController {
+                destVC.modalPresentationStyle = .formSheet
+                destVC.onDoneBlock = onUniversitySelectionMade
+                self.present(destNVC, animated: true, completion: {
+                    
+                })
+            }
+        }
+    }
+    
+    public func onUniversitySelectionMade(_ university:String?) {
+        print("UNiversity \(university) selected")
+        self.selectedUniversity = university
+        self.doneButton.isEnabled = true
+    }
+    
 }
 
 // MARK : CustomImageEntryTableViewCellProtocol

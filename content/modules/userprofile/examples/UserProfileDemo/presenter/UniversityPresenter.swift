@@ -22,7 +22,7 @@ enum UniversityDocumentKeys:String {
 // MARK: UniversityPresenterProtocol
 // To be implemented by presenter
 protocol UniversityPresenterProtocol : PresenterProtocol {
-    func fetchUniversitiesMatchingDescription( _ descriptionStr:String?,location locationStr:String, handler:@escaping(_ universities:Universities?, _ error:Error?)->Void)
+    func fetchUniversitiesMatchingName( _ name:String,country countryStr:String?, handler:@escaping(_ universities:Universities?, _ error:Error?)->Void)
 }
 
 // MARK: UniversityPresentingViewProtocol
@@ -33,9 +33,7 @@ protocol UniversityPresentingViewProtocol:PresentingViewProtocol {
 
 // MARK: UniversityPresenter
 class UniversityPresenter:UniversityPresenterProtocol {
-    fileprivate var universityQuery: Query?
     fileprivate var dbMgr:DatabaseManager = DatabaseManager.shared
-    
     weak var associatedView: UniversityPresentingViewProtocol?
 }
 
@@ -43,53 +41,49 @@ class UniversityPresenter:UniversityPresenterProtocol {
 
 extension UniversityPresenter {
     // tag::fetchUniversityRecords[]
-    func fetchUniversitiesMatchingDescription( _ descriptionStr:String?,location locationStr:String, handler:@escaping(_ universities:Universities?, _ error:Error?)->Void) {
-        // end::fetchUniversityRecords[]
-        guard let db = dbMgr.db else {
-            fatalError("db is not initialized at this point!")
-        }
-        
-        // Create a reference to the university collection
-        let universityRef = db.collection("university")
-        
-        // Can only do exact match. No wildcard or any pattern matching.
-        // No search either (unless I configure ES etc)
-        
-        let query = universityRef.whereField("country", isEqualTo:locationStr)
-        
-        // No OR operation either
-        if let descriptionStr = descriptionStr {
-            universityRef.whereField("name", isEqualTo:descriptionStr)
-        }
-        
-        query.getDocuments { (snapshot, error) in
+    func fetchUniversitiesMatchingName( _ name:String,country countryStr:String?, handler:@escaping(_ universities:Universities?, _ error:Error?)->Void) {
+        do {
+            // end::fetchUniversityRecords[]
+            guard let db = dbMgr.universityDB else {
+                fatalError("db is not initialized at this point!")
+            }
             
-            guard let snapshotVal = snapshot else {
-                handler([],nil)
-                return
+            // tag::buildquery[]
+            var whereQueryExpr = Expression.property(UniversityDocumentKeys.name.rawValue)
+                .equalTo(Expression.string(name))
+            
+            if let countryExpr = countryStr {
+                let countryQueryExpr = Expression.property(UniversityDocumentKeys.country.rawValue)
+                    .equalTo(Expression.string(countryExpr))
+                whereQueryExpr = whereQueryExpr.and(countryQueryExpr) // <1>
             }
+            
+            let universityQuery = QueryBuilder.select(SelectResult.all()) // <2>
+                .from(DataSource.database(db)) // <3>
+                .where(whereQueryExpr) // <4>
+            
+            // end::buildquery[]
+            
+            // tag::runquery[]
             var universities = Universities()
-            for   document in snapshotVal.documents {
-                print("Document data: \(document.data())")
-                var university = UniversityRecord()
-                let docData = document.data()
-                university.name = docData[ UniversityDocumentKeys.name.rawValue] as? String
-                university.country  =  docData[UniversityDocumentKeys.country.rawValue] as? String
-                university.webPages  =  docData[UniversityDocumentKeys.webPages.rawValue] as? [String]
-                
-                universities.append(university)
+            
+            for result in try universityQuery.execute() {
+                if let university = result.dictionary(forKey: "universities")?.toDictionary(){
+                    var universityRecord = UniversityRecord()
+                    
+                    print (university)
+                }
             }
+            // end::runquery[]
             
             self.associatedView?.dataFinishedLoading()
             self.associatedView?.updateUIWithUniversityRecords(universities, error: nil)
             
         }
-        
-        // tag: docquery[]
-        
-        handler([],nil)
-        // end::docquery[]
-        
+        catch {
+            handler(nil,UserProfileError.DocumentFetchException)
+            return
+        }
     }
   
 }

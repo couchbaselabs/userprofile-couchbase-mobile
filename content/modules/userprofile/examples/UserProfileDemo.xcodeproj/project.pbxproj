@@ -32,6 +32,7 @@
 		5F9C43F2209A6FA1004607AE /* UniversityRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F9C43F1209A6FA1004607AE /* UniversityRecord.swift */; };
 		5F9C43F4209A7002004607AE /* UniversityTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F9C43F3209A7002004607AE /* UniversityTableViewController.swift */; };
 		5F9C43F6209A703C004607AE /* UniversityPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F9C43F5209A703C004607AE /* UniversityPresenter.swift */; };
+		5F9C43F8209AA57D004607AE /* UniversityCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F9C43F7209AA57D004607AE /* UniversityCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -75,6 +76,7 @@
 		5F9C43F1209A6FA1004607AE /* UniversityRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversityRecord.swift; sourceTree = "<group>"; };
 		5F9C43F3209A7002004607AE /* UniversityTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversityTableViewController.swift; sourceTree = "<group>"; };
 		5F9C43F5209A703C004607AE /* UniversityPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversityPresenter.swift; sourceTree = "<group>"; };
+		5F9C43F7209AA57D004607AE /* UniversityCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversityCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +98,7 @@
 				5F61CCB3204C9F4400399C1D /* CustomTextEntryTableViewCell.xib */,
 				5F61CCB7204E47CD00399C1D /* CustomImageEntryTableViewCell.swift */,
 				5F61CCB5204E47B500399C1D /* CustomImageEntryTableViewCell.xib */,
+				5F9C43F7209AA57D004607AE /* UniversityCell.swift */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -265,6 +268,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5F86E87C203B659C007ED29E /* Notifications.swift in Sources */,
+				5F9C43F8209AA57D004607AE /* UniversityCell.swift in Sources */,
 				5F86E87E203B65D1007ED29E /* CustomErrors.swift in Sources */,
 				5F9C43F2209A6FA1004607AE /* UniversityRecord.swift in Sources */,
 				5F9C43F6209A703C004607AE /* UniversityPresenter.swift in Sources */,

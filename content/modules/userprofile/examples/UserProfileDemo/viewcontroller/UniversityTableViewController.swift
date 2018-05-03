@@ -12,8 +12,6 @@ import Foundation
 import UIKit
 class UniversityTableViewController:UITableViewController , PresentingViewProtocol{
     
-    
-    
     lazy var universityPresenter:UniversityPresenter = UniversityPresenter()
     fileprivate var descriptionSearchBar:UISearchBar!
     fileprivate var locationSearchBar:UISearchBar!
@@ -110,20 +108,22 @@ extension UniversityTableViewController {
             return
         }
         
-        self.universityPresenter.fetchUniversitiesMatchingDescription(descriptionSearchBar.text, location: locationStr, handler: { [weak self](universities, error) in
+        self.universityPresenter.fetchUniversitiesMatchingName(descriptionSearchBar.text ?? "", country: locationStr) { [weak self](universities, error) in
+            
+            guard let `self` = self else {
+                return
+            }
             switch error {
             case nil:
-                self?.universities = universities
-                self?.tableView.reloadData()
+                self.universities = universities
+                self.tableView.reloadData()
             default:
-                self?.showAlertWithTitle(NSLocalizedString("Failed to Fetch Hotel Info!", comment: ""), message: error?.localizedDescription ?? "")
+                self.showAlertWithTitle(NSLocalizedString("Failed to University Info!", comment: ""), message: error?.localizedDescription ?? "")
                 
                 print("Error when fetching hotels \(error?.localizedDescription)")
                 
             }
-        })
-        
-        
+        }
     }
 }
 
@@ -138,7 +138,7 @@ extension UniversityTableViewController:UniversityPresentingViewProtocol {
         default:
             self.universities = records
             self.tableView.reloadData()
-            self.showAlertWithTitle(NSLocalizedString("", comment: ""), message: (error?.localizedDescription) ?? "Failed to fetch date user record")
+            self.showAlertWithTitle(NSLocalizedString("", comment: ""), message: (error?.localizedDescription) ?? "Failed to fetch university record")
         }
     }
 }
@@ -146,7 +146,7 @@ extension UniversityTableViewController:UniversityPresentingViewProtocol {
 extension UniversityTableViewController:UISearchBarDelegate {
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
         let searchText = searchBar.text
-        print("FTS on hotels for \(String(describing: searchText))")
+        print("Query on universities for \(String(describing: searchText))")
     }
     
     func searchBar(_ searchBar: UISearchBar, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {

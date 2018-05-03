@@ -17,6 +17,7 @@ enum UserRecordDocumentKeys:String {
     case email
     case address
     case image
+    case university
     case extended
 }
 
@@ -68,6 +69,7 @@ extension UserPresenter {
             profile.email  =  doc.string(forKey: UserRecordDocumentKeys.email.rawValue)
             profile.address = doc.string(forKey:UserRecordDocumentKeys.address.rawValue)
             profile.name =  doc.string(forKey: UserRecordDocumentKeys.name.rawValue)
+            profile.university = doc.string(forKey: UserRecordDocumentKeys.university.rawValue)
             profile.imageData = doc.blob(forKey:UserRecordDocumentKeys.image.rawValue)?.content //<4>
             
         }
@@ -102,6 +104,10 @@ extension UserPresenter {
         
         if let name = record?.name {
             mutableDoc.setString(name, forKey: UserRecordDocumentKeys.name.rawValue)
+        }
+        
+        if let university = record?.university {
+            mutableDoc.setString(university, forKey: UserRecordDocumentKeys.university.rawValue)
         }
        
         if let imageData = record?.imageData {
