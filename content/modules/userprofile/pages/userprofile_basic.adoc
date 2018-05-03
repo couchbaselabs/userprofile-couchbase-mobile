@@ -73,14 +73,14 @@ The user profile information is persisted as a Document in the local Couchbase L
 +
 [source,bash] 
 ----
-  cd /path/to/UserProfileDemo/code/
+  cd /path/to/UserProfileDemo/content/modules/userprofile/examples
 
   sh install_9.sh
 ----
 Now, let's verify the installation
 
 === Try it Out
-* Open the `UserProfileDemo.xcodeproj`. The project would be located at `/path/to/UserProfileDemo/code/`
+* Open the `UserProfileDemo.xcodeproj`. The project would be located at `/path/to/UserProfileDemo/content/modules/userprofile/examples`
 [source,bash]
 ----
 open UserProfileDemo.xcodeproj
@@ -312,6 +312,6 @@ This tutorial walked you through a very basic example of how to get up and runni
 
 * link:https://developer.couchbase.com/documentation/mobile/2.0/couchbase-lite/swift.html#getting-started[Getting Started with Couchbase Lite in iOS]
 
-* link:https://developer.couchbase.com/documentation/mobile/2.0/couchbase-lite/index.html[COuchbase Lite Reference Guide]
+* link:https://developer.couchbase.com/documentation/mobile/2.0/couchbase-lite/index.html[Couchbase Lite Reference Guide]
 
 * link:https://blog.couchbase.com/category/couchbase-mobile/[Couchbase Mobile Blogs]

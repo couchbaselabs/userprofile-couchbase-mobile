@@ -42,7 +42,7 @@ class UserPresenter:UserPresenterProtocol {
         let userId = dbMgr.currentUserCredentials?.user
         return "user::\(userId ?? "")"
     }()
-    // tag::userProfileDocId[]
+    // end::userProfileDocId[]
     weak var associatedView: UserPresentingViewProtocol?
 }
 
