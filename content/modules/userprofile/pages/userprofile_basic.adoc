@@ -53,7 +53,7 @@ We will be working with a very simple app. It does one thing -
 
 The user profile information is persisted as a Document in the local Couchbase Lite Database. So subsquently, when the user logs out and logs back in again, the profile information is loaded from the Database.
 
-image::user_profile.gif[App Overview]
+image::https://cl.ly/1O1c3p1t0P16/user_profile.gif[App Overview]
 
 == Installation
 
