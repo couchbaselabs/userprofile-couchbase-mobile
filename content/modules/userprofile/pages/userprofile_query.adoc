@@ -210,43 +210,47 @@ Will open Prebuilt DB  at path /Users/priya.rajagopal/Library/Developer/CoreSimu
 2018-05-04 17:04:16.319721-0400 UserProfileDemo[54115:13479070] CouchbaseLite minimum log level is Verbose
 Will open/create DB  at path /Users/priya.rajagopal/Library/Developer/CoreSimulator/Devices/E4E62394-9940-4AF8-92FC-41E3C794B216/data/Containers/Data/Application/A9425551-7F52-461D-B4F5-CC04315154D6/Library/Application Support/demo@example.com
 ---- 
-* The above log message indicate the location of the Prebuilt database as well as the  Database for the user
+* The above log message indicate the location of the Prebuilt database as well as the Database for the user. This would be within the _Application Support_ folder.
 * Open the folder in your Finder app and verify that a Database with name _"univerities"_ exists along with a user specific Database with name _"userprofile"_
+
 +
-image::db_location.png[User Profile Database Location]
+image::db_locations.png[Database Locations]
 
-== Document Operations
-Once an instance of the Couchbase Lite Database is created/opened for the specific user, we can perform basic Document functions on the Database. In this section, we will walkthrough the code that describes basic Document operations
+== Exploring the Query API
+The Query API in Couchbase Lite 2.0 is extensive. In our app, we will be using the `QueryBuilder` API to make a simple _pattern matching_ query using the `like` Query Expression. 
 
-=== Reading a Document
-Once the user logs in, the user is taken to the "Your Profile" screen. A request is made to load  <<The "User Profile" Document>>  for the user. When the user logs in the very first time, there would be no _user profile_ document for the user.
+=== Fetching University Document
+Once the user logs in, the user is taken to the "Your Profile" screen. When the user taps on the "University" cell, a search screen is displayed where the user can enter the search criteria (name and optionally, the location) for the university. When the search criteria is entered, the local _"universities"_ Database is queried for <<The "University" Document>> documents that match the specified search criteria. 
 
-* Open the *UserPresenter.swift* file and locate the `userProfileDocId` definition. This document Id is constructed by prefixing the term "user::" to the email Id of the user.
-+
-[source,swift]
-----
-include::{examplesdir}/UserProfileDemo/presenter/UserPresenter.swift[tags=userProfileDocId]
-----
-
-* In the *UserPresenter.swift* file, locate the `fetchRecordForCurrentUser()` function.
+* Open the *UniversityPresenter.swift* file and locate the `fetchUniversityRecords()` function.
 +
 [source,swift]
 ----
-include::{examplesdir}/UserProfileDemo/presenter/UserPresenter.swift[tags=fetchRecordForCurrentUser]
+include::{examplesdir}/UserProfileDemo/presenter/UniversityPresenter.swift[tags=fetchUniversityRecords]
 ----
 
-
-* We try to fetch the document with specified `userProfileDocId` from the database.
+* We build the Query using the `QueryBuilder` API that will look for Documents that match the specified criteria.
 +
 [source,swift]
 ----
-include::{examplesdir}/UserProfileDemo/presenter/UserPresenter.swift[tags=docfetch]
+include::{examplesdir}/UserProfileDemo/presenter/UniversityPresenter.swift[tags=buildquery]
 ----
-<1> Create an instance of <<UserRecord>> object 
-<2> Set the `email` property of the UserRecord with the email Id of the logged in user. This value is not editable.
-<3> Fetch a *immutable* copy of the Document from the Database 
-<4> If document exists and is fetched succesfully, we use appropriate type-getters to fetch the various members of the Document based on the property name. Specifically, note the support of the `getBlob` type to fetch the value of a property of type `Blob` 
+<1> Build a `QueryExpression` that uses the `like` operator to look for the specified _"name"_ string in the _"name"_ property. Notice couple of things here - (a) The use of *wildcard "%" operator* to denote that we are looking for the presence of the string anywhere in the _"name"_ property and (b) The use of `Function.lowercase()` to convert the search string into lowercase equivalent. Since `like` operator does _case-senstive matching_, we convert the search string and the property value to lowercase equivalents and compare the two.
+<2> If the location criteria was specified in the search, then Build a `QueryExpression` that uses the `like` operator to look for the specified _"location"_ string in the _"location"_ property.
+<3> The `SelectResult.all()` specifiees that we are interested in all properties in Documents that match the specified criteria
+<4> The `DataSource.database(db)` specified the Data Source
+<5> We include the `where` clause that is the logical ANDing of the QueryExpression in <1> and <2>
 
+
+* We run the Query by calling the `execute()` method on the Query that was constructed in the previous step
++
+[source,swift]
+----
+include::{examplesdir}/UserProfileDemo/presenter/UniversityPresenter.swift[tags=runquery]
+----
+<1> Create an instance of <<UniversityRecord>> type
+<1> Use specific type getters to fetch property values. These <<UniversityRecord>> instance is populated with these property values.
+<2> Getters also available for `array` types. This returns a Couchbase Lite `ArrayObject` type. So you would have to use `toArray()` to convert the Couchbase Lite native array equivalent.
 
 
 === Creating / Updating a Document

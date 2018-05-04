@@ -72,9 +72,9 @@ extension UniversityPresenter {
             for result in try universityQuery.execute() {
                 if let university = result.dictionary(forKey: "universities"){
                     
-                    var universityRecord = UniversityRecord()
-                    universityRecord.name =  university.string(forKey: UniversityDocumentKeys.name.rawValue) // <1>
-                    universityRecord.country  =  university.string(forKey: UniversityDocumentKeys.country.rawValue) // <2>
+                    var universityRecord = UniversityRecord() // <1>
+                    universityRecord.name =  university.string(forKey: UniversityDocumentKeys.name.rawValue) // <2>
+                    universityRecord.country  =  university.string(forKey: UniversityDocumentKeys.country.rawValue) // <1>
                     universityRecord.webPages  =  university.array(forKey: UniversityDocumentKeys.webPages.rawValue)?.toArray() as? [String] // <3>
                     
                     universities.append(universityRecord)
