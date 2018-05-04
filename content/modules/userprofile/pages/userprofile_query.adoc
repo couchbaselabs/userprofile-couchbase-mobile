@@ -212,7 +212,6 @@ Will open/create DB  at path /Users/priya.rajagopal/Library/Developer/CoreSimula
 ---- 
 * The above log message indicate the location of the Prebuilt database as well as the Database for the user. This would be within the _Application Support_ folder.
 * Open the folder in your Finder app and verify that a Database with name _"univerities"_ exists along with a user specific Database with name _"userprofile"_
-
 +
 image::db_locations.png[Database Locations]
 
@@ -252,68 +251,34 @@ include::{examplesdir}/UserProfileDemo/presenter/UniversityPresenter.swift[tags=
 <1> Use specific type getters to fetch property values. These <<UniversityRecord>> instance is populated with these property values.
 <2> Getters also available for `array` types. This returns a Couchbase Lite `ArrayObject` type. So you would have to use `toArray()` to convert the Couchbase Lite native array equivalent.
 
-
-=== Creating / Updating a Document
-A <<The "User Profile" Document>> is created for the user when the user taps the "Done" button on the "Profile Screen". 
-The function below applies whether you are creating a document or updating an existing version
-
-* Open the *UserPresenter.swift* file and locate the `setRecordForCurrentUser()` method.
-+ 
-[source,swift]
-----
-include::{examplesdir}/UserProfileDemo/presenter/UserPresenter.swift[tags=setRecordForCurrentUser]
-----
-
-
-* We create a *mutable* instance of the Document. By default, all APIs in Couchbase Lite deal with immutable objects, thereby making them *thread-safe* by design. In order to mutate an object,  you must explicitly get a mutable copy of the object.
-Use appropriate type-setters to set the various properties of the Document 
-+
-[source,swift]
-----
-include::{examplesdir}/UserProfileDemo/presenter/UserPresenter.swift[tags=docset]
-----
-<1> Specifically, note the support of the `setBlob` type to fetch the value of a property of type `Blob`.
-
-* Save the document
-+
-[source,swift]
-----
-include::{examplesdir}/UserProfileDemo/presenter/UserPresenter.swift[tags=docsave]
-----
-
-
-=== Deleting a Document
-We don't delete a Document in this sample app. However, deletion of a document is pretty straightforward and this is how you would do it.
-
-[source,swift]
-----
-if let doc = db.document(withID: idOfDocToRemove) {
-	try db.deleteDocument(doc)
-}
-----
-
 === Try It Out
-* You should have followed the steps discussed in the "Try It Out" section under <<Create / Open a Database>>
-* Enter a "name" for the user in the Text Entry box and Tap "Done"
-* Confirm that you see an alert message "Succesfully Updated Profile". The first time, you update the profile screen, the Document will be created. 
+* You should have followed the steps discussed in the "Try It Out" section under <<Loading the Prebuilt Database>>
+* Tap on "University" table cell
+* You should see a screen show that allows you enter the search criteria for the university
+* Enter "Harv" for name . You can optionally enter "united states" for location
+* Confirm that you see a list of universities that match the criteria
 +
-image::doc_create.png[User Profile Document Creation]
+image::https://raw.githubusercontent.com/couchbaselabs/userprofile-couchbase-mobile/standalone/content/modules/userprofile/assets/images/image_selection.gif[University List]
 +
-* Now tap on the "Tap!" button and select an image from the Photo Album. Tap "Done".
+* Select a university 
+* Press "Done" button
+* Confirm that the university you selected shows up in the University table cell
 +
 image::https://raw.githubusercontent.com/couchbaselabs/userprofile-couchbase-mobile/standalone/content/modules/userprofile/assets/images/image_selection.gif[Image Selection]
 +
+* You can optionally fill in other entries in the User Profile screen
+* Tap "Done" button
 * Confirm that you see an alert message "Succesfully Updated Profile". The Document will be updated this time.
 * Tap "Log Off" and log out of the app
 * Log back into the app with the same user email Id and password that you used earlier. In my example, I used _"demo@example.com"_ and _"password"_. So I will log in with those credentials again.
-* Confirm that you see the profile screen  with the _name_ and _image_ values that you set earlier. 
+* Confirm that you see the profile screen  with the _university_ value that you set earlier. 
 +
 image::https://raw.githubusercontent.com/couchbaselabs/userprofile-couchbase-mobile/standalone/content/modules/userprofile/assets/images/log_off_on.gif[Log Off and Log Back On]
 
 == Learn More
 Congratulations on completing this tutorial!
 
-This tutorial walked you through a very basic example of how to get up and running with Couchbase Lite as a local-only, standalone embedded data store in your iOS app. If you want to learn more about Couchbase Mobile 2.0, check out the following links.
+This tutorial walked you through a basic example of how to get up and running with Couchbase Lite as a local-only, standalone embedded data store in your iOS app. If you want to learn more about Couchbase Mobile 2.0, check out the following links.
 
 === Further Reading
 * link:https://blog.couchbase.com/couchbase-mobile-2-0/[Introduction to Couchbase Mobile]
