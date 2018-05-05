@@ -45,7 +45,7 @@ This app does the following
 
 The list of matching univerisities is queried (using the new Query API) from a local pre-built "University" Couchbase Lite Database that is bundled in the app. The user profile information is persisted as a Document in the local Couchbase Lite Database. So subsquently, when the user logs out and logs back in again, the profile information is loaded from the Database.
 
-image::https://raw.githubusercontent.com/couchbaselabs/userprofile-couchbase-mobile/standalone/content/modules/userprofile/assets/images/user_profile.gif[App Overview]
+image::https://raw.githubusercontent.com/couchbaselabs/userprofile-couchbase-mobile/standalone/content/modules/userprofile/assets/images/university_app_overview.gif[App Overview]
 
 == Installation
 
@@ -258,13 +258,13 @@ include::{examplesdir}/UserProfileDemo/presenter/UniversityPresenter.swift[tags=
 * Enter "Harv" for name . You can optionally enter "united states" for location
 * Confirm that you see a list of universities that match the criteria
 +
-image::https://raw.githubusercontent.com/couchbaselabs/userprofile-couchbase-mobile/standalone/content/modules/userprofile/assets/images/image_selection.gif[University List]
+image::https://raw.githubusercontent.com/couchbaselabs/userprofile-couchbase-mobile/standalone/content/modules/userprofile/assets/images/university_list.gif[University List]
 +
 * Select a university 
 * Press "Done" button
 * Confirm that the university you selected shows up in the University table cell
 +
-image::https://raw.githubusercontent.com/couchbaselabs/userprofile-couchbase-mobile/standalone/content/modules/userprofile/assets/images/image_selection.gif[Image Selection]
+image::https://raw.githubusercontent.com/couchbaselabs/userprofile-couchbase-mobile/standalone/content/modules/userprofile/assets/images/university_selection.gif[University Selection]
 +
 * You can optionally fill in other entries in the User Profile screen
 * Tap "Done" button
@@ -273,20 +273,20 @@ image::https://raw.githubusercontent.com/couchbaselabs/userprofile-couchbase-mob
 * Log back into the app with the same user email Id and password that you used earlier. In my example, I used _"demo@example.com"_ and _"password"_. So I will log in with those credentials again.
 * Confirm that you see the profile screen  with the _university_ value that you set earlier. 
 +
-image::https://raw.githubusercontent.com/couchbaselabs/userprofile-couchbase-mobile/standalone/content/modules/userprofile/assets/images/log_off_on.gif[Log Off and Log Back On]
+image::https://raw.githubusercontent.com/couchbaselabs/userprofile-couchbase-mobile/standalone/content/modules/userprofile/assets/images/profile_update.gif[Log Off and Log Back On]
 
 == Learn More
 Congratulations on completing this tutorial!
 
-This tutorial walked you through a basic example of how to get up and running with Couchbase Lite as a local-only, standalone embedded data store in your iOS app. If you want to learn more about Couchbase Mobile 2.0, check out the following links.
+This tutorial walked you through an example of how to use a pre-built Couchbase Lite database. We looked at a simple Query example. Check out the following links for further details on the Query API including a Xcode playground for testing the APIs.
 
 === Further Reading
-* link:https://blog.couchbase.com/couchbase-mobile-2-0/[Introduction to Couchbase Mobile]
+* link:https://blog.couchbase.com/xcode-playground-couchbase-mobile/[Xcode Playground For Couchbase Lite 2.0]
 
-* link:https://blog.couchbase.com/couchbase-mobile-2-0/[Couchbase Mobile 2.0 Overview]
+* link:https://blog.couchbase.com/sql-for-json-query-interface-couchbase-mobile/[Fundamentals of the Couchbase Lite 2.0 Query API]
 
-* link:https://developer.couchbase.com/documentation/mobile/2.0/couchbase-lite/swift.html#getting-started[Getting Started with Couchbase Lite in iOS]
+* link:https://blog.couchbase.com/querying-array-collections-couchbase-mobile/[Handling Arrays in Queries]
 
-* link:https://developer.couchbase.com/documentation/mobile/2.0/couchbase-lite/index.html[Couchbase Lite Reference Guide]
+* link:https://blog.couchbase.com/full-text-search-couchbase-mobile-2-0/[Couchbase Lite 2.0 Full Text Search API]
 
-* link:https://blog.couchbase.com/category/couchbase-mobile/[Couchbase Mobile Blogs]
+* link:https://blog.couchbase.com/join-queries-couchbase-mobile/[Couchbase Lite 2.0 JOIN Query]

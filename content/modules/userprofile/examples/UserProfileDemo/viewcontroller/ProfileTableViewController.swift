@@ -113,7 +113,7 @@ class ProfileTableViewController:UITableViewController, UserPresentingViewProtoc
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-    
+        selectedUniversity = nil
         self.userPresenter.detachPresentingView(self)
     }
     
@@ -150,7 +150,7 @@ extension ProfileTableViewController {
         userProfile.email = self.emailTextEntry?.text
         userProfile.address = self.addressTextEntry?.text
         userProfile.name = self.nameTextEntry?.text
-        userProfile.university = self.selectedUniversity
+        userProfile.university = self.universityLabel?.text
         
         
         if let imageVal = self.userImageView?.image, let imageData = UIImageJPEGRepresentation(imageVal, 0.75)  {
@@ -282,7 +282,7 @@ extension ProfileTableViewController{
                     }
                     self.universityLabel = cell.detailTextLabel
                     cell.textLabel?.text = NSLocalizedString("University", comment: "")
-                    cell.detailTextLabel?.text = selectedUniversity ?? self.record?.university
+                    cell.detailTextLabel?.text = selectedUniversity ?? self.record?.university ?? nil
                     cell.selectionStyle = .gray
                     cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
                     
