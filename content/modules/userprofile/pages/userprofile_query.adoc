@@ -14,9 +14,9 @@ Couchbase Lite 2.0 brings powerful querying and Full-Text-Search(FTS) capabiltie
 
 Couchbase Mobile supports flexible link:https://developer.couchbase.com/documentation/mobile/2.0/userprofile_basic.html[deployment models]. 
 
-This tutorial will walkthrough a simple swift app that will 
+This tutorial will walk through a simple swift app that will 
 
-* Demonstrate how you can bundle and load _pre-built_ instance of Couchbase Lite 2.0 
+* Demonstrate how you can bundle, load and use a  _pre-built_ instance of Couchbase Lite 2.0 
 * Introduce you to the basics of the `QueryBuilder` interface
 
 ====
@@ -149,6 +149,8 @@ include::{examplesdir}/UserProfileDemo/model/UserRecord.swift[tags=universityrec
 
 == Using a Prebuilt Database
 There are several reasons why you may want to bundle your app with a prebuilt database. This would be suited for data that does not change or change that often, so you can avoid the bandwidth and latency involved in fetching/syncing this data from a remote server. This also improves the overall user experience by reducing the start-up time.
+
+In our app, the instance of Couchbase Lite that holds the pre-loaded _"university"_ data is separate from the Couchbase Lite instance that holds _"user"_ data hold the pre-loaded data.  A separate Couchbase Lite instance is not required. However, in our case, since there can be many users potentially using the app on a given device,  it makes more sense to keep it separate. This is to avoid duplication of pre-loaded data for every user.
 
 === Location of the cblite file
 The pre-built database will be in the form of a `cblite` file. It should be copied into you app project bundle
