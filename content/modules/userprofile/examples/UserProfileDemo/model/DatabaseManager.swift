@@ -39,9 +39,12 @@ class DatabaseManager {
     fileprivate var _db:Database?
     fileprivate var _universitydb:Database?
     
+    // replication related
+    // tag:replicationdefs
     fileprivate var _pushPullRepl:Replicator?
     fileprivate var _pushPullReplListener:ListenerToken?
-    
+    fileprivate var kRemoteSyncUrl = "ws://localhost:4984" // <1>
+    // end:replicationdefs
     
     fileprivate var _applicationDocumentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).last
     fileprivate var _applicationSupportDirectory = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).last
@@ -266,6 +269,99 @@ extension DatabaseManager {
 
 }
 
+// MARK: Replication
+extension DatabaseManager {
+    //tag: startPushAndPullReplicationForCurrentUser
+    func startPushAndPullReplicationForCurrentUser() {
+        //end: startPushAndPullReplicationForCurrentUser
+        guard let remoteUrl = URL.init(string: kRemoteSyncUrl) else {
+            lastError = UserProfileError.RemoteDatabaseNotReachable
+            return
+        }
+        
+        guard let user = self.currentUserCredentials?.user,let password = self.currentUserCredentials?.password  else {
+            lastError = UserProfileError.UserCredentialsNotProvided
+            return
+        }
+        
+        guard let db = db else {
+            lastError = UserProfileError.DatabaseNotInitialized
+            return
+        }
+        
+        if _pushPullRepl != nil {
+            // Replication is already started
+            return
+        }
+        
+        //tag: replicationconfig
+        let dbUrl = remoteUrl.appendingPathComponent(kDBName)
+        let config = ReplicatorConfiguration.init(database: db, target: URLEndpoint.init(url:dbUrl)) //<1>
+        
+        config.replicatorType = .pushAndPull // <2>
+        config.continuous =  true // <3>
+        config.authenticator =  BasicAuthenticator(username: user, password: password) // <4>
+        
+        
+        // This should match what is specified in the sync gateway config
+        // Only pull documents from this user's channel
+        let userChannel = "channel.\(user)"
+        config.channels = [userChannel] // <5>
+        
+        //end: replicationconfig
+        
+        //tag: replicationinit
+        _pushPullRepl = Replicator.init(config: config)
+        //end: replicationinit
+        
+        //tag: replicationlistener
+        _pushPullReplListener = _pushPullRepl?.addChangeListener({ (change) in
+            let s = change.status
+            switch s.activity {
+            case .busy:
+                print("Busy transferring data")
+            case .connecting:
+                print("Connecting to Sync Gateway")
+            case .idle:
+                print("Replicator in Idle state")
+            case .offline:
+                print("Replicator in offline state")
+            case .stopped:
+                print("Completed syncing documents")
+            }
+          
+            // Workarond for BUG :https://github.com/couchbase/couchbase-lite-ios/issues/1816.
+            if s.progress.completed == s.progress.total {
+                print("All documents synced")
+            }
+            else {
+                 print("Documents \(s.progress.total - s.progress.completed) still pending sync")
+            }
+        })
+        
+        //tag: replicationstart
+        _pushPullRepl?.start()
+        //tag: replicationend
+        
+    }
+    
+    
+    //tag: stopAllReplicationForCurrentUser
+    func stopAllReplicationForCurrentUser() {
+        //end:stopAllReplicationForCurrentUser
+        //tag:replicationstop
+        _pushPullRepl?.stop()
+        if let pushPullReplListener = _pushPullReplListener{
+            print(#function)
+            _pushPullRepl?.removeChangeListener(withToken:  pushPullReplListener)
+            _pushPullRepl = nil
+            _pushPullReplListener = nil
+        }
+        //end:replicationstop
+    }
+    
+    
+}
 // MARK: Utils
 extension DatabaseManager {
     

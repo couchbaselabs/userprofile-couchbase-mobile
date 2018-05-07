@@ -82,9 +82,16 @@ extension AppDelegate {
         
     }
     
+    func login() {
+        self.cbMgr.startPushAndPullReplicationForCurrentUser()
+        loadProfileViewController()
+    }
+    
     func logout() {
         self.deregisterNotificationObservers()
-        DatabaseManager.shared.closeDatabaseForCurrentUser()
+        self.cbMgr.stopAllReplicationForCurrentUser()
+        _ = self.cbMgr.closeDatabaseForCurrentUser()
+    
         loadLoginViewController()
     }
     
@@ -101,12 +108,12 @@ extension AppDelegate {
         if isObservingForLoginEvents == false {
             NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: AppNotifications.loginInSuccess.name.rawValue), object: nil, queue: nil) { [weak self] (notification) in
                 guard let `self` = self else { return }
-                print("Log in success")
-                self.loadProfileViewController()
+                self.login()
                 
             }
             
-            NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: AppNotifications.loginInFailure.name.rawValue), object: nil, queue: nil) {[unowned self] (notification) in
+            NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: AppNotifications.loginInFailure.name.rawValue), object: nil, queue: nil) {[weak self] (notification) in
+                guard let `self` = self else { return }
                 if let userInfo = (notification as NSNotification).userInfo as? Dictionary<String,String> {
                     if let _ = userInfo[AppNotifications.loginInSuccess.userInfoKeys.user.rawValue]{
                         self.logout()
@@ -114,7 +121,8 @@ extension AppDelegate {
                 }
             }
             
-            NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: AppNotifications.logout.name.rawValue), object: nil, queue: nil) { [unowned self] (notification) in
+            NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: AppNotifications.logout.name.rawValue), object: nil, queue: nil) { [weak self] (notification) in
+                guard let `self` = self else { return }
                 self.logout()
             }
             
