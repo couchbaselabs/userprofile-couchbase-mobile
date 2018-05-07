@@ -386,7 +386,7 @@ extension ProfileTableViewController {
     public func onUniversitySelectionMade(_ university:String?) {
         print("UNiversity \(university) selected")
         self.selectedUniversity = university
-        tableView.reloadRows(at: [IndexPath.init(row: 0, section: Section.basic.index)], with: .automatic)
+        tableView.reloadRows(at: [IndexPath.init(row: BasicRows.university.index, section: Section.basic.index)], with: .automatic)
         self.doneButton.isEnabled = true
     }
     
