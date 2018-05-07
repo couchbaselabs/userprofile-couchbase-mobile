@@ -59,6 +59,10 @@ extension UniversityPresenter {
                 whereQueryExpr = whereQueryExpr.and(countryQueryExpr) // <3>
             }
             
+            let expr1 = Expression.property("title").equalTo(Expression.string("Hello")).or(Expression.property("title").equalTo(Expression.string("world")))
+            let expr2 = Expression.property("author").equalTo(Expression.string("john")).or(Expression.property("author").equalTo(Expression.string("ken")))
+            
+            let expr = expr1.and(expr2)
             let universityQuery = QueryBuilder.select(SelectResult.all()) // <4>
                 .from(DataSource.database(db)) // <5>
                 .where(whereQueryExpr) // <6>
