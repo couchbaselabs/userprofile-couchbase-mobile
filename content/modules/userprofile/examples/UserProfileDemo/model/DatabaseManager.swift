@@ -39,8 +39,11 @@ class DatabaseManager {
     fileprivate var _db:Database?
     fileprivate var _universitydb:Database?
     
-    fileprivate var _applicationDocumentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).last
+    fileprivate var _pushPullRepl:Replicator?
+    fileprivate var _pushPullReplListener:ListenerToken?
     
+    
+    fileprivate var _applicationDocumentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).last
     fileprivate var _applicationSupportDirectory = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).last
     
     static let shared:DatabaseManager = {

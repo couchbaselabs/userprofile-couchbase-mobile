@@ -99,15 +99,7 @@ class ProfileTableViewController:UITableViewController, UserPresentingViewProtoc
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
         self.userPresenter.attachPresentingView(self)
-        self.userPresenter.fetchRecordForCurrentUser(handler: { [weak self](record, error) in
-            switch error {
-            case nil:
-                self?.record = record
-                self?.tableView.reloadData()
-            default:
-                self?.showAlertWithTitle(NSLocalizedString("Error!", comment: ""), message: (error?.localizedDescription) ?? "Unknown error while fetching user record")
-            }
-        })
+        self.userPresenter.fetchRecordForCurrentUserWithLiveModeEnabled(__: true)
         
     }
     
