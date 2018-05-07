@@ -144,6 +144,7 @@ Now, let's verify the installation
 
 
 == Data Model
+If have followed along the tutorial on link:[Query Basics], you can skip this section and procees to <<Sync Gateway Configuration File>>. We have not made any changes to the Data model for this tutorial.
 Couchbase Lite is a JSON Document Store. A Document is a logical collection of named fields and values.The values are any valid JSON types. In addition to the standard JSON types, Couchbase Lite supports some special types like `Date` and `Blob`.
 While it is not required or enforced, it is a recommended practice to include a _"type"_ property that can serve as a namespace for related. 
 
@@ -198,6 +199,26 @@ The _"university"_ Document is encoded to a native struct named _UniversityRecor
 ----
 include::{examplesdir}/UserProfileDemo/model/UserRecord.swift[tags=universityrecord]
 ----
+
+== Sync Gateway Configuration File
+The Sync Gateway Configuration File determines the run time behavior of the Sync Gateway.
+
+* Open the `*sync-gateway-config-userprofile-walrus.json*` file using any text editor of your choice. The `sync-gateway-config-userprofile-walrus.json` is located in the app bundle at `/path/to/UserProfileDemo/content/modules/userprofile/examples`
+
+* The *user* setting. 
++
+For simplicity, we have hardcoded the user that we will be using in our system to be _"demo@example.com"_ with a password of _"password"_. In a production app, you can dynamically configure the user on the Sync Gateway through the link:https://developer.couchbase.com/documentation/mobile/2.0/references/sync-gateway/admin-rest-api/index.html#/user/post__db___user_[User Admin REST API]. If you want to want to use a different user, then add the credentials of that user to the config file and restart the Sync Gateway. 
++
+[source,json]
+----
+"userprofile": {
+      "users": { "demo@example.com": { "password": "password"} },
+      ....
+}
+----
+
+ * The *walrus* mode
+ In a production deployment, the Sync Gatway should be backed up by a C
 
 == Using a Prebuilt Database
 There are several reasons why you may want to bundle your app with a prebuilt database. This would be suited for data that does not change or change that often, so you can avoid the bandwidth and latency involved in fetching/syncing this data from a remote server. This also improves the overall user experience by reducing the start-up time.
