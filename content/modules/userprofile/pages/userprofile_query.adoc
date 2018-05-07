@@ -182,10 +182,20 @@ If the database is already present at the specified Database location, we simply
 include::{examplesdir}/UserProfileDemo/model/DatabaseManager.swift[tags=prebuiltdbopen]
 ----
 
+=== Indexing the Prebuilt Database
+* Creating indexes for non-FTS based queries is optional. However, in order to speed up queries, you can create indexes on the properties that you would query against. Indexing is handled eagerly.
+
+* In the *DatabaseManager.swift* file, locate the `createUniversityDatabaseIndexes()` function. We create an index on the `name` and `location` properties of the documents in the _university_ database.
++
+[source,swift]
+----
+include::{examplesdir}/UserProfileDemo/model/DatabaseManager.swift[tags=createUniversityDatabaseIndexes]
+----
+
 === Closing the Database
 When a user logs out, we close the Prebuilt Database along with other user-specific databases
 
-* Open the *DatabaseManager.swift* file and locate the `closePrebuiltDatabase()` function. 
+* In the *DatabaseManager.swift* file, locate the `closePrebuiltDatabase()` function. 
 +
 [source,swift]
 ----

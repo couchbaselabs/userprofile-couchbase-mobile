@@ -256,7 +256,7 @@ extension DatabaseManager {
     // tag::createUniversityDatabaseIndexes[]
     fileprivate func createUniversityDatabaseIndexes()throws {
         // For searches on type property
-        try _universitydb?.createIndex(IndexBuilder.valueIndex(items:  ValueIndexItem.expression(Expression.property("name"))), withName: "nameIndex")
+        try _universitydb?.createIndex(IndexBuilder.valueIndex(items:  ValueIndexItem.expression(Expression.property("name")),ValueIndexItem.expression(Expression.property("location"))), withName: "NameLocationIndex")
      
     }
     // tag::createUniversityDatabaseIndexes[]
