@@ -93,21 +93,20 @@ class ProfileTableViewController:UITableViewController, UserPresentingViewProtoc
         self.title = NSLocalizedString("Your Profile", comment: "")
         self.initializeTable()
         self.registerCells()
+        self.userPresenter.attachPresentingView(self)
+        self.userPresenter.fetchRecordForCurrentUserWithLiveModeEnabled(__: true)
+
         
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
-        self.userPresenter.attachPresentingView(self)
-        self.userPresenter.fetchRecordForCurrentUserWithLiveModeEnabled(__: true)
         
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        selectedUniversity = nil
-        self.userPresenter.detachPresentingView(self)
-    }
+      }
     
     
     private func initializeTable() {
@@ -131,6 +130,14 @@ class ProfileTableViewController:UITableViewController, UserPresentingViewProtoc
         self.tableView?.register(imageNib, forCellReuseIdentifier: "ImageCell")
         
     }
+    
+    deinit {
+        selectedUniversity = nil
+        self.userPresenter.detachPresentingView(self)
+
+    }
+    
+   
 }
 
 // MARK: IBActions
@@ -275,6 +282,13 @@ extension ProfileTableViewController{
                     self.universityLabel = cell.detailTextLabel
                     cell.textLabel?.text = NSLocalizedString("University", comment: "")
                     cell.detailTextLabel?.text = selectedUniversity ?? self.record?.university ?? nil
+//                    if let selectedUniversity = selectedUniversity {
+//                        cell.detailTextLabel?.text = selectedUniversity
+//                    }
+//                    else {
+//                        cell.detailTextLabel?.text = self.record?.university ?? nil
+//                    }
+                    
                     cell.selectionStyle = .gray
                     cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
                     
@@ -378,7 +392,7 @@ extension ProfileTableViewController {
     public func onUniversitySelectionMade(_ university:String?) {
         print("UNiversity \(university) selected")
         self.selectedUniversity = university
-        tableView.reloadRows(at: [IndexPath.init(row: 0, section: Section.basic.index)], with: .automatic)
+        tableView.reloadRows(at: [IndexPath.init(row: BasicRows.university.index, section: Section.basic.index)], with: .automatic)
         self.doneButton.isEnabled = true
     }
     
@@ -454,6 +468,7 @@ extension ProfileTableViewController {
         switch error {
         case nil:
             self.record = record
+            self.selectedUniversity = record?.university
             self.tableView.reloadData()
         default:
             self.showAlertWithTitle(NSLocalizedString("Error!", comment: ""), message: (error?.localizedDescription) ?? "Failed to fetch date user record")
