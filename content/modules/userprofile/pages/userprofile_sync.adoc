@@ -18,11 +18,11 @@ It provides
 
 A Sync Gateway is configured using a link:https://developer.couchbase.com/documentation/mobile/2.0/guides/sync-gateway/config-properties/index.html[Sync Configuration File] that specifies it's run-time behavior. 
 
-This tutorial will walk through a simple swift app that will 
+This tutorial will walk through a simple swift app that will demonstrate
 
-* Demonstrate how you can use the Sync Gateway (in walrus mode) to sync content between multiple Couchbase Lite enabled clients. This will cover the basics of the `Sync Function`
-* How to configure your Couchbase Lite clients for replication
-* How to set up Live Queries within your Couchbase Lite clients
+* how to use the Sync Gateway (in walrus mode) to sync content between multiple Couchbase Lite enabled clients. This will cover the basics of the Sync Gateway Configuration and `Sync Function API`
+* how to configure your Couchbase Lite clients for replication
+* how to set up Live Queries within your Couchbase Lite clients so they are asyncronously notified of changes
 
 ====
 You can learn more about the Sync Gateway https://developer.couchbase.com/documentation/mobile/2.0/guides/sync-gateway/index.html[here]
@@ -44,19 +44,18 @@ This is required if you would prefer to pull the source code from GitHub repo.
 ** Create a link:https://github.com[free github account] if you don't already have one
 ** git can be downloaded from link:https://git-scm.com/book/en/v2/Getting-Started-Installing-Git[git-scm.org]
 
-== App Overview
-We will be working with a very simple "User Profile" app. If you had walked through the link:https://developer.couchbase.com/documentation/mobile/2.0/userprofile_basic.html[Fundamentals tutorial], you would quickly realize that this version extends the funcationality introduced in the version introduced in that tutorial.
+== System Overview
+We will be working with a simple "User Profile" app. The version of the app extends the version introduced in the link:https://developer.couchbase.com/documentation/mobile/2.0/userprofile_basic.html[Query tutorial].
 
-This app does the following 
+The app does the following 
 
-* Allows users to log in and create or update his/her user profile information. You could do that in the link:https://developer.couchbase.com/documentation/mobile/2.0/userprofile_basic.html[Fundamentals tutorial]
-* As part of profile information, users can now selecting a "university" from a list of possible options
+* Allows users to log in and create or update his/her user profile information. The user profile view is _automatically_ updated everytime the profile information changes
+* The user profile information is synced with a remote Sync Gateway which syncs it to other apps (subject to conditions specified in the `sync function`)
 
-The list of matching univerisities is queried (using the new Query API) from a local pre-built "University" Couchbase Lite Database that is bundled in the app. The user profile information is persisted as a Document in the local Couchbase Lite Database. So subsquently, when the user logs out and logs back in again, the profile information is loaded from the Database.
 
-image::https://raw.githubusercontent.com/couchbaselabs/userprofile-couchbase-mobile/standalone/content/modules/userprofile/assets/images/university_app_overview.gif[App Overview]
+image::https://raw.githubusercontent.com/couchbaselabs/userprofile-couchbase-mobile/standalone/content/modules/userprofile/assets/images/university_app_overview.gif[App with Sync]
 
-== Installation
+== App Installation
 
 === Fetching App Source Code
 
@@ -71,7 +70,7 @@ image::https://raw.githubusercontent.com/couchbaselabs/userprofile-couchbase-mob
 
 ==== Option 2 : Download .zip
 
-- Download the  `User Profile Demo` project from link:https://github.com/couchbaselabs/userprofile-couchbase-mobile/archive/query.zip[here]
+- Download the  `User Profile Demo` project from link:https://github.com/couchbaselabs/userprofile-couchbase-mobile/archive/sync.zip[here]
 
 === Installing Couchbase Lite Framework
 
@@ -98,6 +97,51 @@ open UserProfileDemo.xcodeproj
 * Verify that you see the login screen
 +
 image::user_profile_login.png[User Profile Login Screen Image]
+
+== Sync Gateway 2.0 Installation
+There are several link:https://developer.couchbase.com/documentation/mobile/2.0/installation/sync-gateway/index.html[deployment] options for the Sync Gateway. In our tutorial, we will be installing the Sync Gateway installer on the same _localhost_ as the mobile app
+
+=== Download the Installer
+* Download the Sync Gateway 2.0.0 installer from link:https://www.couchbase.com/downloads#couchbase-mobile[Downloads] page. Be sure to select the *"Mobile"* tab.
+
+* Launch the Sync Gateway with the *sync-gateway-config-userprofile-walrus.json* config file that is bundled with the User Profile mobile App that you installed as per instructions in <<Fetching App Source Code>> section. The `sync-gateway-config-userprofile-walrus.json` will be located in the `/path/to/UserProfileDemo/content/modules/userprofile/examples/` folder 
++
+[source,bash]
+----
+cd  /path/to/sync-gateway-installation/couchbase-sync-gateway/bin
+
+./sync_gateway /path/to/UserProfileDemo/content/modules/userprofile/examples/sync-gateway-config-userprofile-walrus.json
+----
++
+* You should see a bunch of logs output to the console, similar to one below. For brevity, some of the log messages have been trimmed from output below
++
+[source,bash]
+----
+~/couchbase-sync-gateway/bin | => ./sync_gateway ~/projects/ios/UserProfileDemo/content/modules/userprofile/examples/sync-gateway-config-userprofile-walrus.json 
+2018-05-07T15:25:02.924-04:00 Enabling logging: [*]
+2018-05-07T15:25:02.924-04:00 ==== Couchbase Sync Gateway/2.0.0(832;2d8a6c0) ====
+2018-05-07T15:25:03.028-04:00     Created user "demo@example.com"
+2018-05-07T15:25:03.028-04:00 Starting admin server on 127.0.0.1:4985
+2018-05-07T15:25:03.028-04:00 Changes+: Notifying that "userprofile" changed (keys="{_sync:user:demo@example.com}") count=2
+2018-05-07T15:25:03.028-04:00 Cache: Received #1 ("_user/demo@example.com")
+2018-05-07T15:25:03.028-04:00 Cache: Initialized cache for channel "*" with options: &{ChannelCacheMinLength:50 ChannelCacheMaxLength:500 ChannelCacheAge:1m0s}
+2018-05-07T15:25:03.028-04:00 Cache:     #1 ==> channel "*"
+2018-05-07T15:25:03.028-04:00 Changes+: Notifying that "userprofile" changed (keys="{*}") count=3
+2018-05-07T15:25:03.031-04:00 Starting server on :4984 ...
+
+----
+
+Now, let's verify the installation
+
+=== Try it Out
+* Open a browser and enter `http://localhost:4984` in the address bar
+* You should see a message similar one below
++
+[source,bash]
+----
+{"couchdb":"Welcome","vendor":{"name":"Couchbase Sync Gateway","version":"2.0"},"version":"Couchbase Sync Gateway/2.0.0(832;2d8a6c0)"}
+----
+
 
 == Data Model
 Couchbase Lite is a JSON Document Store. A Document is a logical collection of named fields and values.The values are any valid JSON types. In addition to the standard JSON types, Couchbase Lite supports some special types like `Date` and `Blob`.
