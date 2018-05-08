@@ -144,7 +144,7 @@ The _"university"_ Document is encoded to a native struct named _UniversityRecor
 
 [source,swift]
 ----
-include::{examplesdir}/UserProfileDemo/model/UserRecord.swift[tags=universityrecord]
+include::{examplesdir}/UserProfileDemo/model/UniversityRecord.swift[tags=universityrecord]
 ----
 
 == Using a Prebuilt Database
