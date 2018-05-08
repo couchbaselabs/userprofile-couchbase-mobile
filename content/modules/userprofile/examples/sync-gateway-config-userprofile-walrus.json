@@ -9,9 +9,7 @@
 function sync(doc, oldDoc) {
    
    /* Authorization */
-         // Subsequent updates to document must be authorized
-         var email = getEmail();
-
+      
          // Verify the user making the request is the same as the one in doc's email
          requireUser(doc.email);
    /* Data Validation */
@@ -42,6 +40,9 @@ function sync(doc, oldDoc) {
 
 
   /* Routing */
+  // Subsequent updates to document must be authorized
+  var email = getEmail();
+
   // Add doc to the user's channel.
   channel("channel." + email);
 

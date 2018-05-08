@@ -49,7 +49,7 @@ We will be working with a simple "User Profile" app. The version of the app exte
 
 The app does the following 
 
-* Allows users to log in and create or update his/her user profile information. The user profile view is _automatically_ updated everytime the profile information changes
+* Allows users to log in and create or update his/her user profile information. The user profile view is _automatically_ updated everytime the profile information changes in the underlying database
 * The user profile information is synced with a remote Sync Gateway which syncs it to other apps (subject to conditions specified in the `sync function`)
 
 
@@ -200,14 +200,16 @@ The _"university"_ Document is encoded to a native struct named _UniversityRecor
 include::{examplesdir}/UserProfileDemo/model/UserRecord.swift[tags=universityrecord]
 ----
 
-== Sync Gateway Configuration File
-The Sync Gateway Configuration File determines the run time behavior of the Sync Gateway.
+== Sync Gateway Configuration 
+The link:https://developer.couchbase.com/documentation/mobile/2.0/guides/sync-gateway/config-properties/index.html[Sync Gateway Configuration] determines the run time behavior of the Sync Gateway and is typically specified in a JSON file. You can also use the link:https://developer.couchbase.com/documentation/mobile/2.0/references/sync-gateway/admin-rest-api/index.html#/database/put__db___config[Sync Gateway Config REST Endpoint] to specify the configuration. In our application, we will be defining it in the `*sync-gateway-config-userprofile-walrus.json*` file.
 
-* Open the `*sync-gateway-config-userprofile-walrus.json*` file using any text editor of your choice. The `sync-gateway-config-userprofile-walrus.json` is located in the app bundle at `/path/to/UserProfileDemo/content/modules/userprofile/examples`
+* Open the `*sync-gateway-config-userprofile-walrus.json*` file using any text editor of your choice. The `sync-gateway-config-userprofile-walrus.json` is located in the app bundle at `/path/to/UserProfileDemo/content/modules/userprofile/examples`. Locate the following settings.
 
-* The *user* setting. 
+* The *users* setting. 
 +
-For simplicity, we have hardcoded the user that we will be using in our system to be _"demo@example.com"_ with a password of _"password"_. In a production app, you can dynamically configure the user on the Sync Gateway through the link:https://developer.couchbase.com/documentation/mobile/2.0/references/sync-gateway/admin-rest-api/index.html#/user/post__db___user_[User Admin REST API]. If you want to want to use a different user, then add the credentials of that user to the config file and restart the Sync Gateway. 
+For simplicity, we have hardcoded the `user` to be _"demo@example.com"_ and the `password` of _"password"_. In a production app, you would typically configure the user on the Sync Gateway through the link:https://developer.couchbase.com/documentation/mobile/2.0/references/sync-gateway/admin-rest-api/index.html#/user/post__db___user_[User Admin REST API] and not hardcode it this way.
++
+This is specified using the `users` config setting
 +
 [source,json]
 ----
@@ -216,11 +218,109 @@ For simplicity, we have hardcoded the user that we will be using in our system t
       ....
 }
 ----
++
+NOTE: If you want to want to use a different user, then specify the credentials of that user to the config file and restart the Sync Gateway. 
 
- * The *walrus* mode
- In a production deployment, the Sync Gatway should be backed up by a C
+* The *server* setting
+We have specified this to be `*walrus*`. This is an _in-memory-only_ mode that is only recommended for development environments. We will be configuring Sync Gateway to operate in this mode. 
+In a production deployment, the Sync Gatway should be backed up by a Couchbase Server.
++
+This is specified using the `server` config setting
++
+[source,json]
+----
+"userprofile": {
+      "server": "walrus:",
+      ....
+}
+----
 
-== Using a Prebuilt Database
+====
+ You can learn more about the walrus mode  in this link:https://developer.couchbase.com/documentation/mobile/current/installation/sync-gateway/index.html#walrus-mode[guide].
+====
+
+== Sync Function
+The Sync Function is a Javascript function that is specified as part of the <<Sync Gateway Configuration>>. The Sync Function handles data validation, authorization, access control and data routing. 
+
+* Open the `*sync-gateway-config-userprofile-walrus.json*` file using any text editor of your choice. The `sync-gateway-config-userprofile-walrus.json` is located in the app bundle at `/path/to/UserProfileDemo/content/modules/userprofile/examples`. 
+** Locate the `sync` setting and follow along with the rest of the sections below
+
+=== Authorization
+We use the link:https://developer.couchbase.com/documentation/mobile/2.0/guides/sync-gateway/sync-function-api-guide/index.html#requireaccesschannels[`requireUser()`] API to verify that the `email` property specified in the Document matches the Id of the user making the request. The Id of the user making the request is specified in the `Authorization` header. We will be using _Basic Authentication_ in our application. 
+[source,javascript]
+----
+function sync(doc, oldDoc) {
+   ....
+   /* Authorization */
+
+  // Verify the user making the request is the same as the one in doc's email
+  requireUser(doc.email);
+  .....
+}
+----
+
+=== Data Validation
+In this case, we are doing some basic validation of the contents of the Document
+[source,javascript]
+----
+function sync(doc, oldDoc) {
+   ... 
+   /* Data Validation */
+
+   if (!isDelete()) {
+      // Validate the presence of email fields
+      validateNotEmpty("email", doc.email); // <1>
+
+      // Check if document is being created / added for first time
+      // We allow any user to create the document
+      if (isCreate()) {
+
+        // Validate that the document Id _id is prefixed by owner.
+        var expectedDocId = "user" + "::" + doc.email;
+
+        if (expectedDocId != doc._id) { // <2>
+            throw({forbidden: "user doc Id must be of form user:email"});
+        }
+      
+      } else {       
+         // Validate that the email hasn't changed.
+        validateReadOnly("email", doc.email, oldDoc.email); // <3>
+      }
+
+    }
+
+
+  // Verify that specified property exists
+  function validateNotEmpty(key, value) {
+    if (!value) {
+      throw({forbidden: key + " is not provided."});
+    }
+  }
+
+  // Verify that specified property value has not changed during update
+  function validateReadOnly(name, value, oldValue) {
+    if (value != oldValue) {
+      throw({forbidden: name + " is read-only."});
+    }
+  }
+----
+
+<1> Verify that the `email` property is not null
+<2> If this a new document, then verify that the `Id` of the Document is of the required format (i.e. _"user::<email>"_)
+<3> If this is a document update, then verify that the `email` property value has not changed 
+
+
+====
+
+You can learn more about the Sync Function in this link:https://developer.couchbase.com/documentation/mobile/2.0/guides/sync-gateway/sync-function-api-guide/index.html[guide]
+====
+
+=== Data Routing
+link:[`channels`] are a mechanism to "tag" documents and is typically used to seggregate documents based on the contents of the document. Combined with link:https://developer.couchbase.com/documentation/mobile/2.0/guides/sync-gateway/sync-function-api-guide/index.html#access-username-channelname[access API] and link:[`requireAccess API`], it can be used to enforce <<Access Control>>. As we shall see in a later section, clients can use channels to pull only a subset of documents.
+
+=== Access Control
+
+== Enabling Replication
 There are several reasons why you may want to bundle your app with a prebuilt database. This would be suited for data that does not change or change that often, so you can avoid the bandwidth and latency involved in fetching/syncing this data from a remote server. This also improves the overall user experience by reducing the start-up time.
 
 In our app, the instance of Couchbase Lite that holds the pre-loaded _"university"_ data is separate from the Couchbase Lite instance that holds _"user"_ data hold the pre-loaded data.  A separate Couchbase Lite instance is not required. However, in our case, since there can be many users potentially using the app on a given device,  it makes more sense to keep it separate. This is to avoid duplication of pre-loaded data for every user.
@@ -291,7 +391,7 @@ Will open/create DB  at path /Users/priya.rajagopal/Library/Developer/CoreSimula
 +
 image::db_locations.png[Database Locations]
 
-== Exploring the Query API
+== Live Queries
 The Query API in Couchbase Lite 2.0 is extensive. In our app, we will be using the `QueryBuilder` API to make a simple _pattern matching_ query using the `like` Query Expression. 
 
 === Fetching University Document
@@ -351,6 +451,7 @@ image::https://raw.githubusercontent.com/couchbaselabs/userprofile-couchbase-mob
 +
 image::https://raw.githubusercontent.com/couchbaselabs/userprofile-couchbase-mobile/standalone/content/modules/userprofile/assets/images/profile_update.gif[Log Off and Log Back On]
 
+== Syncing Images
 == Learn More
 Congratulations on completing this tutorial!
 
