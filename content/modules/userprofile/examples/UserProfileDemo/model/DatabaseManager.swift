@@ -188,7 +188,7 @@ extension DatabaseManager {
     func openPrebuiltDatabase(handler:(_ error:Error?)->Void) {
         // end::openPrebuiltDatabase[]
         do {
-            // tag::dbconfig[]
+            // tag::prebuiltdbconfig[]
             var options = DatabaseConfiguration()
             guard let universityFolderUrl = _applicationSupportDirectory else {
                 fatalError("Could not open Application Support Directory for app!")
@@ -204,7 +204,7 @@ extension DatabaseManager {
             }
             // Set the folder path for the CBLite DB
             options.directory = universityFolderPath
-            // end::dbconfig[]
+            // end::prebuiltdbconfig[]
             
             print("Will open Prebuilt DB  at path \(universityFolderPath)")
             // tag::prebuiltdbopen[]
@@ -265,7 +265,7 @@ extension DatabaseManager {
         try _universitydb?.createIndex(IndexBuilder.valueIndex(items:  ValueIndexItem.expression(Expression.property("name")),ValueIndexItem.expression(Expression.property("location"))), withName: "NameLocationIndex")
      
     }
-    // tag::createUniversityDatabaseIndexes[]
+    // end::createUniversityDatabaseIndexes[]
 
 }
 
