@@ -93,21 +93,22 @@ class ProfileTableViewController:UITableViewController, UserPresentingViewProtoc
         self.title = NSLocalizedString("Your Profile", comment: "")
         self.initializeTable()
         self.registerCells()
-        self.userPresenter.attachPresentingView(self)
-        self.userPresenter.fetchRecordForCurrentUserWithLiveModeEnabled(__: true)
-
+     
         
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
-        
+        self.userPresenter.attachPresentingView(self)
+        self.userPresenter.fetchRecordForCurrentUserWithLiveModeEnabled(__: true)
+
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-      }
-    
+        selectedUniversity = nil
+        self.userPresenter.detachPresentingView(self)
+    }
     
     private func initializeTable() {
         //    self.tableView.backgroundColor = UIColor.darkGray
@@ -468,7 +469,7 @@ extension ProfileTableViewController {
         switch error {
         case nil:
             self.record = record
-            self.selectedUniversity = record?.university
+            self.selectedUniversity = self.selectedUniversity ?? record?.university 
             self.tableView.reloadData()
         default:
             self.showAlertWithTitle(NSLocalizedString("Error!", comment: ""), message: (error?.localizedDescription) ?? "Failed to fetch date user record")

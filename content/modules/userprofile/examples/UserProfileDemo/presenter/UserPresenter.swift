@@ -82,12 +82,12 @@ extension UserPresenter {
             do {
                 // V1.0. There should be only one document for a user.
                 // tag::livequery[]
-                userQueryToken = userQuery?.addChangeListener { [weak self] (change) in
+                userQueryToken = userQuery?.addChangeListener { [weak self] (change) in // <1>
                     guard let `self` = self else {return}
                     switch change.error {
                     case nil:
                         var userRecord = UserRecord.init() // <2>
-                        userRecord.email = self.dbMgr.currentUserCredentials?.user // <2>
+                        userRecord.email = self.dbMgr.currentUserCredentials?.user
                         
                         for (_, row) in (change.results?.enumerated())! {
                             // There should be only one user profile document for a user

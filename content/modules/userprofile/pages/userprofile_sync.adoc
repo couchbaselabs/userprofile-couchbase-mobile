@@ -12,15 +12,15 @@ toc::[]
 == Introduction
 Couchbase Sync Gateway is a key component of the Couchbase Mobile stack. It is an Internet-facing synchronization mechanism that securely syncs data across devices as well as between devices and the cloud.
 It provides
+
 * Data Synchronization across devices and the cloud
 * Authorization & Access Control
 * Data Validation
 
-A Sync Gateway is configured using a link:https://developer.couchbase.com/documentation/mobile/2.0/guides/sync-gateway/config-properties/index.html[Sync Configuration File] that specifies it's run-time behavior. 
 
 This tutorial will walk through a simple swift app that will demonstrate
 
-* how to use the Sync Gateway (in walrus mode) to sync content between multiple Couchbase Lite enabled clients. This will cover the basics of the Sync Gateway Configuration and `Sync Function API`
+* how to use the Sync Gateway (in walrus mode) to sync content between multiple Couchbase Lite enabled clients. This will cover the basics of the link:https://developer.couchbase.com/documentation/mobile/2.0/guides/sync-gateway/config-properties/index.html[Sync Gateway Configuration] and `Sync Function API`
 * how to configure your Couchbase Lite clients for replication
 * how to set up Live Queries within your Couchbase Lite clients so they are asyncronously notified of changes
 
@@ -49,8 +49,8 @@ We will be working with a simple "User Profile" app. The version of the app exte
 
 The app does the following 
 
-* Allows users to log in and create or update his/her user profile information. The user profile view is _automatically_ updated everytime the profile information changes in the underlying database
-* The user profile information is synced with a remote Sync Gateway which syncs it to other apps (subject to conditions specified in the `sync function`)
+* Allows users to log in and create or update his/her user profile information. The user profile view is _automatically updated_ everytime the profile information changes in the underlying database
+* The user profile information is synced with a remote Sync Gateway which then syncs it to other apps (subject to access control and routing confdistions specified in the `sync function`)
 
 
 image::https://raw.githubusercontent.com/couchbaselabs/userprofile-couchbase-mobile/standalone/content/modules/userprofile/assets/images/university_app_overview.gif[App with Sync]
@@ -61,11 +61,11 @@ image::https://raw.githubusercontent.com/couchbaselabs/userprofile-couchbase-mob
 
 ==== Option 1 : Git Clone
 
-- Clone the *_query_* branch of the `User Profile Demo` project from GitHub. Type the following command in your terminal
+- Clone the *_sync_* branch of the `User Profile Demo` project from GitHub. Type the following command in your terminal
 +
 [source,bash] 
 ----
-  git clone -b query https://github.com/couchbaselabs/userprofile-couchbase-mobile.git
+  git clone -b sync https://github.com/couchbaselabs/userprofile-couchbase-mobile.git
 ----
 
 ==== Option 2 : Download .zip
@@ -93,10 +93,10 @@ Now, let's verify the installation
 open UserProfileDemo.xcodeproj
 ----
 +
-* Build and run the project using the _simulator_ in Xcode. While you can run the app on a real device, we recommend the Simulator so you can see the debug logs in the output console.
-* Verify that you see the login screen
+* Build and run the project using the *two simulators* in Xcode
+* Verify that you see the login screen on both the simulators
 +
-image::user_profile_login.png[User Profile Login Screen Image]
+image::user_profile_login_2.png[User Profile Login Screen Image]
 
 == Sync Gateway 2.0 Installation
 There are several link:https://developer.couchbase.com/documentation/mobile/2.0/installation/sync-gateway/index.html[deployment] options for the Sync Gateway. In our tutorial, we will be installing the Sync Gateway installer on the same _localhost_ as the mobile app
@@ -144,7 +144,7 @@ Now, let's verify the installation
 
 
 == Data Model
-If have followed along the tutorial on link:[Query Basics], you can skip this section and procees to <<Sync Gateway Configuration File>>. We have not made any changes to the Data model for this tutorial.
+If have followed along the tutorial on link:[Query Basics], you can skip this section and proceed to the <<Sync Gateway Configuration>>. section We have not made any changes to the Data model for this tutorial.
 Couchbase Lite is a JSON Document Store. A Document is a logical collection of named fields and values.The values are any valid JSON types. In addition to the standard JSON types, Couchbase Lite supports some special types like `Date` and `Blob`.
 While it is not required or enforced, it is a recommended practice to include a _"type"_ property that can serve as a namespace for related. 
 
@@ -203,8 +203,10 @@ include::{examplesdir}/UserProfileDemo/model/UserRecord.swift[tags=universityrec
 == Sync Gateway Configuration 
 The link:https://developer.couchbase.com/documentation/mobile/2.0/guides/sync-gateway/config-properties/index.html[Sync Gateway Configuration] determines the run time behavior of the Sync Gateway and is typically specified in a JSON file. You can also use the link:https://developer.couchbase.com/documentation/mobile/2.0/references/sync-gateway/admin-rest-api/index.html#/database/put__db___config[Sync Gateway Config REST Endpoint] to specify the configuration. In our application, we will be defining it in the `*sync-gateway-config-userprofile-walrus.json*` file.
 
-* Open the `*sync-gateway-config-userprofile-walrus.json*` file using any text editor of your choice. The `sync-gateway-config-userprofile-walrus.json` is located in the app bundle at `/path/to/UserProfileDemo/content/modules/userprofile/examples`. Locate the following settings.
-
+* Open the `*sync-gateway-config-userprofile-walrus.json*` file using any text editor of your choice. The `sync-gateway-config-userprofile-walrus.json` is located in the app bundle at `/path/to/UserProfileDemo/content/modules/userprofile/examples`. 
++
+Locate the following settings.
++
 * The *users* setting. 
 +
 For simplicity, we have hardcoded the `user` to be _"demo@example.com"_ and the `password` of _"password"_. In a production app, you would typically configure the user on the Sync Gateway through the link:https://developer.couchbase.com/documentation/mobile/2.0/references/sync-gateway/admin-rest-api/index.html#/user/post__db___user_[User Admin REST API] and not hardcode it this way.
@@ -236,7 +238,7 @@ This is specified using the `server` config setting
 ----
 
 ====
- You can learn more about the walrus mode  in this link:https://developer.couchbase.com/documentation/mobile/current/installation/sync-gateway/index.html#walrus-mode[guide].
+You can learn more about the walrus mode in this link:https://developer.couchbase.com/documentation/mobile/current/installation/sync-gateway/index.html#walrus-mode[guide].
 ====
 
 == Sync Function
@@ -246,7 +248,7 @@ The Sync Function is a Javascript function that is specified as part of the <<Sy
 ** Locate the `sync` setting and follow along with the rest of the sections below
 
 === Authorization
-We use the link:https://developer.couchbase.com/documentation/mobile/2.0/guides/sync-gateway/sync-function-api-guide/index.html#requireaccesschannels[`requireUser()`] API to verify that the `email` property specified in the Document matches the Id of the user making the request. The Id of the user making the request is specified in the `Authorization` header. We will be using _Basic Authentication_ in our application. 
+We use the link:https://developer.couchbase.com/documentation/mobile/2.0/guides/sync-gateway/sync-function-api-guide/index.html#requireuserusername[`requireUser()`] API to verify that the `email` property specified in the Document matches the Id of the user making the request. The Id of the user making the request is specified in the `Authorization` header. We will be using _Basic Authentication_ in our application. 
 [source,javascript]
 ----
 function sync(doc, oldDoc) {
@@ -311,72 +313,144 @@ function sync(doc, oldDoc) {
 
 
 ====
-
-You can learn more about the Sync Function in this link:https://developer.couchbase.com/documentation/mobile/2.0/guides/sync-gateway/sync-function-api-guide/index.html[guide]
+You can learn more about the Sync Function in this link:https://developer.couchbase.com/documentation/mobile/2.0/guides/sync-gateway/sync-function-api-guide/index.htm[guide]
 ====
 
+
 === Data Routing
-link:[`channels`] are a mechanism to "tag" documents and is typically used to seggregate documents based on the contents of the document. Combined with link:https://developer.couchbase.com/documentation/mobile/2.0/guides/sync-gateway/sync-function-api-guide/index.html#access-username-channelname[access API] and link:[`requireAccess API`], it can be used to enforce <<Access Control>>. As we shall see in a later section, clients can use channels to pull only a subset of documents.
+link:https://developer.couchbase.com/documentation/mobile/2.0/guides/sync-gateway/channels/index.html#introduction-to-channels[`channels`] are a mechanism to "tag" documents and is typically used to seggregate documents based on the contents of the document. Combined with link:https://developer.couchbase.com/documentation/mobile/2.0/guides/sync-gateway/sync-function-api-guide/index.html#access-username-channelname[access API] and link:[`requireAccess API`], it can be used to enforce <<Access Control>>. As we shall see in a later section, clients can use channels to pull only a subset of documents.
+
+[source,javascript]
+----
+  /* Routing */
+  // Subsequent updates to document must be authorized
+  var email = getEmail();
+
+  // Add doc to the user's channel.
+  channel("channel." + email); // <1>
+
+  // get email Id property
+  function getEmail() {
+    return (isDelete() ? oldDoc.email : doc.email);
+  }
+
+----
+<1> The channel comes into existance the first time a document is added to it. In our case, the channel name is generated from the `email` property specified in the document
 
 === Access Control
+You can enforce access control to channels using the link:https://developer.couchbase.com/documentation/mobile/2.0/guides/sync-gateway/sync-function-api-guide/index.html#access-username-channelname[access API]. This will enforce that only users with access to a specific channel will be able to retrieve documents in the channel.
 
-== Enabling Replication
-There are several reasons why you may want to bundle your app with a prebuilt database. This would be suited for data that does not change or change that often, so you can avoid the bandwidth and latency involved in fetching/syncing this data from a remote server. This also improves the overall user experience by reducing the start-up time.
-
-In our app, the instance of Couchbase Lite that holds the pre-loaded _"university"_ data is separate from the Couchbase Lite instance that holds _"user"_ data hold the pre-loaded data.  A separate Couchbase Lite instance is not required. However, in our case, since there can be many users potentially using the app on a given device,  it makes more sense to keep it separate. This is to avoid duplication of pre-loaded data for every user.
-
-=== Location of the cblite file
-The pre-built database will be in the form of a `cblite` file. It should be copied into you app project bundle
-* In the `UserProfileDemo.xcodeproj` project explorer, locate the `universities.cblite2` file
-+
-image::cblite_location.png[Prebuilt Database Location]
-
-
-=== Loading the Prebuilt Database
-* Open the *DatabaseManager.swift* file and locate the `openPrebuiltDatabase()` function. The prebuilt database is common to all users of the app (on the device). So it will be loaded once and shared by all users on the device.
-+
-[source,swift]
+[source,javascript]
 ----
-include::{examplesdir}/UserProfileDemo/model/DatabaseManager.swift[tags=openPrebuiltDatabase]
+  /* Access Control */
+  // Give user read access to channel
+   if (!isDelete()) {
+    // Deletion of user document is essentially deletion of user
+       access(email,"channel." + email)
+   }
+
 ----
 
-* First, we create an instance of `DatabaseConfiguration` object and specify the path where the database would be located
+== Starting Replication
+
+Two-way Replication between the app and the Sync Gateway is enabled when user logs into the app.
+
+* Open the **DatabaseManager.swift** file and locate the `startPushAndPullReplicationForCurrentUser()` function.
 +
 [source,swift]
 ----
-include::{examplesdir}/UserProfileDemo/model/DatabaseManager.swift[tags=dbconfig]
+include::{examplesdir}/UserProfileDemo/model/DatabaseManager.swift[tags=startPushAndPullReplicationForCurrentUser]
 ----
-
-* Then we determine if the database "universities" already exists at the specified location. It would not be present if this is the first time we are using the app, in which case, we locate the _"universities.cblite"_ resource in the App's main bundle and we copy it over to the Database folder.  
-If the database is already present at the specified Database location, we simply open the database.
-+ 
-[source,swift]
-----
-include::{examplesdir}/UserProfileDemo/model/DatabaseManager.swift[tags=prebuiltdbopen]
-----
-
-=== Closing the Database
-When a user logs out, we close the Prebuilt Database along with other user-specific databases
-
-* Open the *DatabaseManager.swift* file and locate the `closePrebuiltDatabase()` function. 
++
+* Next, we create an instance of the `ReplicatorConfig` instance that specifies the source and target database and you can optionally, override the default configuration settings.
 +
 [source,swift]
 ----
-include::{examplesdir}/UserProfileDemo/model/DatabaseManager.swift[tags=closePrebuiltDatabase]
+include::{examplesdir}/UserProfileDemo/model/DatabaseManager.swift[tags=replicationconfig]
 ----
-
-* Closing the database is pretty straightforward
++
+<1> Initialize with `source` as the local Couchbase Lite database and the `remote` target as the Sync Gateway
+<2> Replication `type` of `pushAndPull` indicates that we require two-way sync. A value of `.pull` specifies that we only pull data from the Sync Gateway. A value of `.push` specifies that we only push data.
+<3> The `continuous` mode is specified to be _true_ which means that changes are synced in real-time. A value of _false_  which implies that data is only pulled from the Sync Gateway. 
+<4> This is where you specify the authentication credentials of the user. In the <<Authorization>> section, we discussed that the Sync Gateway can enforce authorization check using the `requireUser` API. 
+<5> The `channels` are used to specify the channels to pull from. Only documents belonging to the specified channels are synced. This is subject to <<Access Control>> rights enforced at the Sync Gateway. 
++
+* Initialize the `Replicator` with the `ReplicatorConfiguration` 
 +
 [source,swift]
 ----
-include::{examplesdir}/UserProfileDemo/model/DatabaseManager.swift[tags=dbclose]
+include::{examplesdir}/UserProfileDemo/model/DatabaseManager.swift[tags=replicationinit]
+----
++
+* We attach a callback listener to the `Replicator` to be asynchronously notified of state changes. This could be useful for instance, to inform the user of the progress of the replication. This is an optional step
++
+[source,swift]
+----
+include::{examplesdir}/UserProfileDemo/model/DatabaseManager.swift[tags=replicationlistener]
+----
++
+* Start the replicator
++
+[source,swift]
+----
+include::{examplesdir}/UserProfileDemo/model/DatabaseManager.swift[tags=replicationstart]
 ----
 
-=== Try It Out
-* The app should be running in the simulator
-* Log into the app with any email Id and password. Let's use the values _"demo@example.com"_ and _"password"_ for user Id and password fields respectively. If this is the first time that _any_ user is signing in to the app, the pre-built database will be loaded from the App Bundle. In addition, new user-specific Database will be created / opened.
-* Confirm that the console log output has a message similar to the one below. In my example, I am logging in with a user email Id of _"demo@example.com"_.
+== Stopping Replication
+When user logs out of the app, the replication is stopped before the database is closed. 
+
+* Open the **DatabaseManager.swift** file and locate the `stopAllReplicationForCurrentUser()` function.
 +
+[source,swift]
+----
+include::{examplesdir}/UserProfileDemo/model/DatabaseManager.swift[tags=stopAllReplicationForCurrentUser]
+----
++
+NOTE:All open replicators must be stopped before database is closed. There will be an exception if you attempt to close the database without closing the active replicators.
+
+== Query Events / Live Queries
+In couchbase Lite 2.0, the app can set up _live queries_ in order to be asynchronously notified of changes to the database that affect the results of the query. This would be very useful for instance, to keep a UI View up-to-date with the results of a query.
+
+In our app, the user profile view is kept up-to-date with a live query that fetches the user profile data that is used to populate the view. This means that, if the replicator pulls down changes to the user profile, it will be automatically reflected in the view.
+
+* Open the **UserPresenter.swift** file and locate the `fetchRecordForCurrentUserWithLiveModeEnabled()` function. Calling this function with a value of `true` implies that the caller wishes to be notified of any changes to query results.
++
+[source,swift]
+----
+include::{examplesdir}/UserProfileDemo/model/UserPresenter.swift[tags=fetchRecordForCurrentUserWithLiveModeEnabled]
+----
++
+* Build the Query using `QueryBuilder` API. If you are unfamiliar with this API, please check out this link:https://developer.couchbase.com/documentation/mobile/2.0/userprofile_query.html[tutorial].
++
+[source,swift]
+----
+include::{examplesdir}/UserProfileDemo/model/UserPresenter.swift[tags=livequerybuilder]
+----
+<1> We query for documents based on document Id. In our app, there should be exactly one user profile document corresponding to this Id.
++
+* Attach listener callback to the query to make it _live_
++
+[source,swift]
+----
+include::{examplesdir}/UserProfileDemo/model/UserPresenter.swift[tags=livequery]
+----
++
+<1> Attach a listener callback to the query. Attaching a listerner automatically makes it _live_ so any time there is a change in the user profile data in the underlying database, the callback would be invoked
+<2> Create an instance of <<UserRecord>>. This will be populated with the query results.
+<3> The `SelectResult.all()` method is used to query all the properties of a document. In this case, the document in the result is embedded in a dictionary where the key is the database name, which is _"userprofile"_. So we retrieve the link:http://docs.couchbase.com/mobile/2.0/couchbase-lite-swift/Classes/DictionaryObject.html[`DictionaryObject`] at key _"userprofile"_.
+<4>  We use appropriate _type getters_ to retrieve values and populate the _UserRecord_ instance
++
+== Exercise 1 
+In this exercise, we will observe changes synced across apps
+* The app should be running in two simulators side by side
+* Log into both the simulators with same userId and password. Let's use the values _"demo@example.com"_ and _"password"_ for user Id and password fields respectively. 
+* On one simulator, enter values in the user and address fields
+* Confirm that changes show up in the app on the other simulator
++
+image::https://raw.githubusercontent.com/couchbaselabs/userprofile-couchbase-mobile/standalone/content/modules/userprofile/assets/images/university_list.gif[App Sync]
++
+
+
 [source,bash]
 ----
 Will open Prebuilt DB  at path /Users/priya.rajagopal/Library/Developer/CoreSimulator/Devices/E4E62394-9940-4AF8-92FC-41E3C794B216/data/Containers/Data/Application/A9425551-7F52-461D-B4F5-CC04315154D6/Library/Application Support
