@@ -478,21 +478,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </ul>
 </li>
 <li><a href="#starting-replication">Starting Replication</a></li>
-<li><a href="#stopping-replication">Stopping Replication</a>
+<li><a href="#stopping-replication">Stopping Replication</a></li>
+<li><a href="#query-events-live-queries">Query Events / Live Queries</a></li>
+<li><a href="#exercises">Exercises</a>
 <ul class="sectlevel2">
-<li><a href="#location-of-the-cblite-file">Location of the cblite file</a></li>
-<li><a href="#loading-the-prebuilt-database">Loading the Prebuilt Database</a></li>
-<li><a href="#closing-the-database">Closing the Database</a></li>
-<li><a href="#try-it-out-3">Try It Out</a></li>
+<li><a href="#exercise-1">Exercise 1</a></li>
+<li><a href="#exercise-2">Exercise 2</a></li>
 </ul>
 </li>
-<li><a href="#live-queries">Live Queries</a>
-<ul class="sectlevel2">
-<li><a href="#fetching-university-document">Fetching University Document</a></li>
-<li><a href="#try-it-out-4">Try It Out</a></li>
-</ul>
-</li>
-<li><a href="#syncing-images">Syncing Images</a></li>
 <li><a href="#learn-more">Learn More</a>
 <ul class="sectlevel2">
 <li><a href="#further-reading">Further Reading</a></li>
@@ -524,18 +517,21 @@ It provides</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>This tutorial will walk through a simple swift app that will demonstrate</p>
+<p>This tutorial will walk through a simple swift app that will demonstrate how to</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>how to use the Sync Gateway (in walrus mode) to sync content between multiple Couchbase Lite enabled clients. This will cover the basics of the <a href="https://developer.couchbase.com/documentation/mobile/2.0/guides/sync-gateway/config-properties/index.html">Sync Gateway Configuration</a> and <code>Sync Function API</code></p>
+<p>Use the Couchbase Sync Gateway (in walrus mode) to sync content between multiple Couchbase Lite enabled clients. The tutorial will cover the basics of the <a href="https://developer.couchbase.com/documentation/mobile/2.0/guides/sync-gateway/config-properties/index.html">Sync Gateway Configuration</a> and <code>Sync Function API</code></p>
 </li>
 <li>
-<p>how to configure your Couchbase Lite clients for replication</p>
+<p>Configure your Couchbase Lite clients for replication</p>
 </li>
 <li>
-<p>how to set up Live Queries within your Couchbase Lite clients so they are asyncronously notified of changes</p>
+<p>Set up your Sync Gateway to enforce data routing, access control and authorization</p>
+</li>
+<li>
+<p>Set up Live Queries within your Couchbase Lite clients so they are asyncronously notified of changes</p>
 </li>
 </ul>
 </div>
@@ -570,8 +566,14 @@ It provides</p>
 </div>
 </li>
 <li>
-<p>iOS (Xcode 9.3+)
-Download latest version from the <a href="https://itunes.apple.com/us/app/xcode/id497799835?mt=12">Mac App Store</a></p>
+<p>iOS (Xcode 9.3+)</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Download latest version from the <a href="https://itunes.apple.com/us/app/xcode/id497799835?mt=12">Mac App Store</a></p>
+</li>
+</ul>
+</div>
 </li>
 <li>
 <p>git (Optional)
@@ -583,6 +585,16 @@ This is required if you would prefer to pull the source code from GitHub repo.</
 </li>
 <li>
 <p>git can be downloaded from <a href="https://git-scm.com/book/en/v2/Getting-Started-Installing-Git">git-scm.org</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>curl HTTP client</p>
+<div class="ulist">
+<ul>
+<li>
+<p>You could use any HTTP client of your choice. But we will use <strong>curl</strong> in our tutorial. Download latest version from <a href="https://curl.haxx.se/download.html">curl website</a></p>
 </li>
 </ul>
 </div>
@@ -1137,246 +1149,199 @@ In a production deployment, the Sync Gatway should be backed up by a Couchbase S
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-swift" data-lang="swift">NOTE:All open replicators must be stopped before database is closed. There will be an exception if you attempted to close the database without closing the replicator.</code></pre>
+<pre class="highlight"><code class="language-swift" data-lang="swift">NOTE:All open replicators must be stopped before database is closed. There will be an exception if you attempt to close the database without closing the active replicators.</code></pre>
 </div>
 </div>
 </li>
 </ul>
 </div>
-<div class="sect2">
-<h3 id="location-of-the-cblite-file">Location of the cblite file</h3>
+</div>
+</div>
+<div class="sect1">
+<h2 id="query-events-live-queries">Query Events / Live Queries</h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>The pre-built database will be in the form of a <code>cblite</code> file. It should be copied into you app project bundle
-* In the <code>UserProfileDemo.xcodeproj</code> project explorer, locate the <code>universities.cblite2</code> file</p>
+<p>In couchbase Lite 2.0, the app can set up <em>live queries</em> in order to be asynchronously notified of changes to the database that affect the results of the query. This would be very useful for instance, to keep a UI View up-to-date with the results of a query.</p>
+</div>
+<div class="paragraph">
+<p>In our app, the user profile view is kept up-to-date with a live query that fetches the user profile data that is used to populate the view. This means that, if the replicator pulls down changes to the user profile, it will be automatically reflected in the view.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Open the <strong>UserPresenter.swift</strong> file and locate the <code>fetchRecordForCurrentUserWithLiveModeEnabled()</code> function. Calling this function with a value of <code>true</code> implies that the caller wishes to be notified of any changes to query results.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-swift" data-lang="swift">Unresolved directive in userprofile_sync.adoc - include::{examplesdir}/UserProfileDemo/model/UserPresenter.swift[tags=fetchRecordForCurrentUserWithLiveModeEnabled]</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Build the Query using <code>QueryBuilder</code> API. If you are unfamiliar with this API, please check out this <a href="https://developer.couchbase.com/documentation/mobile/2.0/userprofile_query.html">tutorial</a>.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-swift" data-lang="swift">Unresolved directive in userprofile_sync.adoc - include::{examplesdir}/UserProfileDemo/model/UserPresenter.swift[tags=livequerybuilder]</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-swift" data-lang="swift">&lt;1&gt; We query for documents based on document Id. In our app, there should be exactly one user profile document corresponding to this Id.</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Attach listener callback to the query to make it <em>live</em></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-swift" data-lang="swift">Unresolved directive in userprofile_sync.adoc - include::{examplesdir}/UserProfileDemo/model/UserPresenter.swift[tags=livequery]</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-swift" data-lang="swift">&lt;1&gt; Attach a listener callback to the query. Attaching a listerner automatically makes it _live_ so any time there is a change in the user profile data in the underlying database, the callback would be invoked
+&lt;2&gt; Create an instance of &lt;&lt;UserRecord&gt;&gt;. This will be populated with the query results.
+&lt;3&gt; The `SelectResult.all()` method is used to query all the properties of a document. In this case, the document in the result is embedded in a dictionary where the key is the database name, which is _"userprofile"_. So we retrieve the link:http://docs.couchbase.com/mobile/2.0/couchbase-lite-swift/Classes/DictionaryObject.html[`DictionaryObject`] at key _"userprofile"_.
+&lt;4&gt;  We use appropriate _type getters_ to retrieve values and populate the _UserRecord_ instance</code></pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="exercises">Exercises</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="exercise-1">Exercise 1</h3>
+<div class="paragraph">
+<p>In this exercise, we will observe how changes made on one app are synced across to the other app
+* The app should be running in two simulators side by side
+* Log into both the simulators with same userId and password. Let&#8217;s use the values <em>"<a href="mailto:demo@example.com">demo@example.com</a>"</em> and <em>"password"</em> for user Id and password fields respectively.
+* On one simulator, enter values in the user and address fields
+* Confirm that changes show up in the app on the other simulator</p>
 </div>
 <div class="paragraph">
 <p>+
-image::cblite_location.png[Prebuilt Database Location]</p>
+image::https://raw.githubusercontent.com/couchbaselabs/userprofile-couchbase-mobile/standalone/content/modules/userprofile/assets/images/university_list.gif[App Sync]</p>
 </div>
-</div>
-<div class="sect2">
-<h3 id="loading-the-prebuilt-database">Loading the Prebuilt Database</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>Open the <strong>DatabaseManager.swift</strong> file and locate the <code>openPrebuiltDatabase()</code> function. The prebuilt database is common to all users of the app (on the device). So it will be loaded once and shared by all users on the device.</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-swift" data-lang="swift">Unresolved directive in userprofile_sync.adoc - include::{examplesdir}/UserProfileDemo/model/DatabaseManager.swift[tags=openPrebuiltDatabase]</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>First, we create an instance of <code>DatabaseConfiguration</code> object and specify the path where the database would be located</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-swift" data-lang="swift">Unresolved directive in userprofile_sync.adoc - include::{examplesdir}/UserProfileDemo/model/DatabaseManager.swift[tags=dbconfig]</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>Then we determine if the database "universities" already exists at the specified location. It would not be present if this is the first time we are using the app, in which case, we locate the <em>"universities.cblite"</em> resource in the App&#8217;s main bundle and we copy it over to the Database folder.
-If the database is already present at the specified Database location, we simply open the database.</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-swift" data-lang="swift">Unresolved directive in userprofile_sync.adoc - include::{examplesdir}/UserProfileDemo/model/DatabaseManager.swift[tags=prebuiltdbopen]</code></pre>
-</div>
-</div>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="closing-the-database">Closing the Database</h3>
 <div class="paragraph">
-<p>When a user logs out, we close the Prebuilt Database along with other user-specific databases</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Open the <strong>DatabaseManager.swift</strong> file and locate the <code>closePrebuiltDatabase()</code> function.</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-swift" data-lang="swift">Unresolved directive in userprofile_sync.adoc - include::{examplesdir}/UserProfileDemo/model/DatabaseManager.swift[tags=closePrebuiltDatabase]</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>Closing the database is pretty straightforward</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-swift" data-lang="swift">Unresolved directive in userprofile_sync.adoc - include::{examplesdir}/UserProfileDemo/model/DatabaseManager.swift[tags=dbclose]</code></pre>
-</div>
-</div>
-</li>
-</ul>
+<p>+</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="try-it-out-3">Try It Out</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>The app should be running in the simulator</p>
-</li>
-<li>
-<p>Log into the app with any email Id and password. Let&#8217;s use the values <em>"<a href="mailto:demo@example.com">demo@example.com</a>"</em> and <em>"password"</em> for user Id and password fields respectively. If this is the first time that <em>any</em> user is signing in to the app, the pre-built database will be loaded from the App Bundle. In addition, new user-specific Database will be created / opened.</p>
-</li>
-<li>
-<p>Confirm that the console log output has a message similar to the one below. In my example, I am logging in with a user email Id of <em>"<a href="mailto:demo@example.com">demo@example.com</a>"</em>.</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">Will open Prebuilt DB  at path /Users/priya.rajagopal/Library/Developer/CoreSimulator/Devices/E4E62394-9940-4AF8-92FC-41E3C794B216/data/Containers/Data/Application/A9425551-7F52-461D-B4F5-CC04315154D6/Library/Application Support
-
-2018-05-04 17:04:16.319360-0400 UserProfileDemo[54115:13479070] CouchbaseLite/2.0.0 (Swift; iOS 11.3; iPhone) Build/806 Commit/2f2a2097+CHANGES LiteCore/2.0.0 (806)
-
-2018-05-04 17:04:16.319721-0400 UserProfileDemo[54115:13479070] CouchbaseLite minimum log level is Verbose
-Will open/create DB  at path /Users/priya.rajagopal/Library/Developer/CoreSimulator/Devices/E4E62394-9940-4AF8-92FC-41E3C794B216/data/Containers/Data/Application/A9425551-7F52-461D-B4F5-CC04315154D6/Library/Application Support/demo@example.com</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>The above log message indicate the location of the Prebuilt database as well as the Database for the user. This would be within the <em>Application Support</em> folder.</p>
-</li>
-<li>
-<p>Open the folder in your Finder app and verify that a Database with name <em>"univerities"</em> exists along with a user specific Database with name <em>"userprofile"</em></p>
-<div class="imageblock">
-<div class="content">
-<img src="db_locations.png" alt="Database Locations">
-</div>
-</div>
-</li>
-</ul>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="live-queries">Live Queries</h2>
-<div class="sectionbody">
+<h3 id="exercise-2">Exercise 2</h3>
 <div class="paragraph">
-<p>The Query API in Couchbase Lite 2.0 is extensive. In our app, we will be using the <code>QueryBuilder</code> API to make a simple <em>pattern matching</em> query using the <code>like</code> Query Expression.</p>
+<p>In this exercise, we will observe changes made via Sync Gateway are synced over to the apps
+* Open the command terminal and issue the following command to get the user profile document via <a href="">GET Document REST API</a> . We will be using <code>curl</code> to issue the request. If you haven&#8217;t done so, please install curl as indicated in the <a href="#prerequisites">Prerequisites</a> section</p>
 </div>
-<div class="sect2">
-<h3 id="fetching-university-document">Fetching University Document</h3>
 <div class="paragraph">
-<p>Once the user logs in, the user is taken to the "Your Profile" screen. When the user taps on the "University" cell, a search screen is displayed where the user can enter the search criteria (name and optionally, the location) for the university. When the search criteria is entered, the local <em>"universities"</em> Database is queried for <a href="#the-university-document">The "University" Document</a> documents that match the specified search criteria.</p>
+<p>+</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">curl -X GET \
+  http://localhost:4985/userprofile/user::demo@example.com \
+  -H 'Accept: application/json' \
+  -H 'Cache-Control: no-cache' \
+  -H 'Content-Type: application/json'</code></pre>
+</div>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Open the <strong>UniversityPresenter.swift</strong> file and locate the <code>fetchUniversityRecords()</code> function.</p>
+<p>Your response should look something like the response below. The exact contents depends on the user profile information that you provided via your mobile app.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-swift" data-lang="swift">Unresolved directive in userprofile_sync.adoc - include::{examplesdir}/UserProfileDemo/presenter/UniversityPresenter.swift[tags=fetchUniversityRecords]</code></pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash">{
+    "_attachments": { <i class="conum" data-value="2"></i><b>(2)</b>
+        "blob_1": {
+            "content_type": "image/jpeg",
+            "digest": "sha1-S8asPSgzA+F+fp8/2DdIy4K+0U8=",
+            "length": 14989,
+            "revpos": 2,
+            "stub": true
+        }
+    },
+    "_id": "user::demo@example.com",
+    "_rev": "2-3a76cfa911e2c54d1e82b29dbffc7f4e5a9bc265", <i class="conum" data-value="1"></i><b>(1)</b>
+    "address": "",
+    "email": "demo@example.com",
+    "image": {
+        "@type": "blob",
+        "content_type": "image/jpeg",
+        "digest": "sha1-S8asPSgzA+F+fp8/2DdIy4K+0U8=",
+        "length": 14989
+    },
+    "name": "",
+    "type": "user",
+    "university": "British Institute in Paris, University of London"
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">&lt;1&gt; Record the revision Id of the document. You will need this when you update the document
+&lt;2&gt; If you had updated an image via the mobile app, you should see an **"_attachments"** property. This entry holds an array of attachments corresponding to each image blob entry added by the mobile app. This property is added by the Sync Gateway when it processes the document.  You can learn more about how image Blob types are mapped to attachments link:[here].</code></pre>
 </div>
 </div>
 </li>
 <li>
-<p>We build the Query using the <code>QueryBuilder</code> API that will look for Documents that match the specified criteria.</p>
+<p>In the command terminal, issue the following command to update the user profile document via <a href="">PUT Document REST API</a></p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-swift" data-lang="swift">Unresolved directive in userprofile_sync.adoc - include::{examplesdir}/UserProfileDemo/presenter/UniversityPresenter.swift[tags=buildquery]</code></pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash">curl -X PUT \
+  'http://localhost:4985/userprofile/user::demo@example.com?rev=2-3a76cfa911e2c54d1e82b29dbffc7f4e5a9bc265' \
+  -H 'Accept: application/json' \
+  -H 'Cache-Control: no-cache' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "address": "101 Main Street", <i class="conum" data-value="1"></i><b>(1)</b>
+    "email": "demo@example.com",
+    "image": {
+        "@type": "blob",
+        "content_type": "image/jpeg",
+        "digest": "sha1-S8asPSgzA+F+fp8/2DdIy4K+0U8=",
+        "length": 14989
+    },
+    "name": "",
+    "type": "user",
+    "university": "British Institute in Paris, University of London"
+}'</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-swift" data-lang="swift">&lt;1&gt; Build a `QueryExpression` that uses the `like` operator to look for the specified _"name"_ string in the _"name"_ property. Notice couple of things here - (a) The use of *wildcard "%" operator* to denote that we are looking for the presence of the string anywhere in the _"name"_ property and (b) The use of `Function.lowercase()` to convert the search string into lowercase equivalent. Since `like` operator does _case-senstive matching_, we convert the search string and the property value to lowercase equivalents and compare the two.
-&lt;2&gt; If the location criteria was specified in the search, then Build a `QueryExpression` that uses the `like` operator to look for the specified _"location"_ string in the _"location"_ property.
-&lt;3&gt; The `SelectResult.all()` specifiees that we are interested in all properties in Documents that match the specified criteria
-&lt;4&gt; The `DataSource.database(db)` specified the Data Source
-&lt;5&gt; We include the `where` clause that is the logical ANDing of the QueryExpression in &lt;1&gt; and <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash">&lt;1&gt; I updated the address field. You can choose to update any other profile information</code></pre>
 </div>
 </div>
 </li>
 <li>
-<p>We run the Query by calling the <code>execute()</code> method on the Query that was constructed in the previous step</p>
-<div class="listingblock">
+<p>Confirm that you get a HTTP <em>"201 Created"</em> status code</p>
+</li>
+<li>
+<p>As soon as you update the document via the Sync Gateway REST API, confirm that the changes show up in the mobile app on the simulator.</p>
+<div class="imageblock">
 <div class="content">
-<pre class="highlight"><code class="language-swift" data-lang="swift">Unresolved directive in userprofile_sync.adoc - include::{examplesdir}/UserProfileDemo/presenter/UniversityPresenter.swift[tags=runquery]</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-swift" data-lang="swift">&lt;1&gt; Create an instance of &lt;&lt;UniversityRecord&gt;&gt; type
-&lt;1&gt; Use specific type getters to fetch property values. These &lt;&lt;UniversityRecord&gt;&gt; instance is populated with these property values.
-&lt;2&gt; Getters also available for `array` types. This returns a Couchbase Lite `ArrayObject` type. So you would have to use `toArray()` to convert the Couchbase Lite native array equivalent.</code></pre>
+<img src="https://raw.githubusercontent.com/couchbaselabs/userprofile-couchbase-mobile/standalone/content/modules/userprofile/assets/images/university_list.gif" alt="App Sync">
 </div>
 </div>
 </li>
 </ul>
 </div>
-</div>
-<div class="sect2">
-<h3 id="try-it-out-4">Try It Out</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>You should have followed the steps discussed in the "Try It Out" section under <a href="#loading-the-prebuilt-database">Loading the Prebuilt Database</a></p>
-</li>
-<li>
-<p>Tap on "University" table cell</p>
-</li>
-<li>
-<p>You should see a screen show that allows you enter the search criteria for the university</p>
-</li>
-<li>
-<p>Enter "Harv" for name . You can optionally enter "united states" for location</p>
-</li>
-<li>
-<p>Confirm that you see a list of universities that match the criteria</p>
-<div class="imageblock">
-<div class="content">
-<img src="https://raw.githubusercontent.com/couchbaselabs/userprofile-couchbase-mobile/standalone/content/modules/userprofile/assets/images/university_list.gif" alt="University List">
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+From <a href="#exercise-2">Exercise 2</a> above, you observed that changes made on the Sync Gateway are propagated to the Couchbase Lite clients. However, if you tried to update the attachment / image using the <a href="">Attachments REST API</a>, you would not see the image getting updated on the client side. This is a <a href="">known issue</a> in 2.0 and should be fixed in the next release.
+</td>
+</tr>
+</table>
 </div>
 </div>
-</li>
-<li>
-<p>Select a university</p>
-</li>
-<li>
-<p>Press "Done" button</p>
-</li>
-<li>
-<p>Confirm that the university you selected shows up in the University table cell</p>
-<div class="imageblock">
-<div class="content">
-<img src="https://raw.githubusercontent.com/couchbaselabs/userprofile-couchbase-mobile/standalone/content/modules/userprofile/assets/images/university_selection.gif" alt="University Selection">
-</div>
-</div>
-</li>
-<li>
-<p>You can optionally fill in other entries in the User Profile screen</p>
-</li>
-<li>
-<p>Tap "Done" button</p>
-</li>
-<li>
-<p>Confirm that you see an alert message "Succesfully Updated Profile". The Document will be updated this time.</p>
-</li>
-<li>
-<p>Tap "Log Off" and log out of the app</p>
-</li>
-<li>
-<p>Log back into the app with the same user email Id and password that you used earlier. In my example, I used <em>"<a href="mailto:demo@example.com">demo@example.com</a>"</em> and <em>"password"</em>. So I will log in with those credentials again.</p>
-</li>
-<li>
-<p>Confirm that you see the profile screen  with the <em>university</em> value that you set earlier.</p>
-<div class="imageblock">
-<div class="content">
-<img src="https://raw.githubusercontent.com/couchbaselabs/userprofile-couchbase-mobile/standalone/content/modules/userprofile/assets/images/profile_update.gif" alt="Log Off and Log Back On">
-</div>
-</div>
-</li>
-</ul>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="syncing-images">Syncing Images</h2>
-<div class="sectionbody">
-
 </div>
 </div>
 <div class="sect1">
@@ -1386,26 +1351,26 @@ Will open/create DB  at path /Users/priya.rajagopal/Library/Developer/CoreSimula
 <p>Congratulations on completing this tutorial!</p>
 </div>
 <div class="paragraph">
-<p>This tutorial walked you through an example of how to use a pre-built Couchbase Lite database. We looked at a simple Query example. Check out the following links for further details on the Query API including a Xcode playground for testing the APIs.</p>
+<p>This tutorial walked you through an example of how to use a Sync Gateway to synchronize data between Couchbase Lite enabled clients. We discussed how to configure your Sync Gateway to enforce relevat access control, authorization and data routing between Couchbase Lite enabled clients.</p>
+</div>
+<div class="paragraph">
+<p>Check out the following links for further details</p>
 </div>
 <div class="sect2">
 <h3 id="further-reading">Further Reading</h3>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="https://blog.couchbase.com/xcode-playground-couchbase-mobile/">Xcode Playground For Couchbase Lite 2.0</a></p>
+<p><a href="https://developer.couchbase.com/documentation/mobile/2.0/guides/sync-gateway/config-properties/index.html">Sync Gateway Configuration</a></p>
 </li>
 <li>
-<p><a href="https://blog.couchbase.com/sql-for-json-query-interface-couchbase-mobile/">Fundamentals of the Couchbase Lite 2.0 Query API</a></p>
+<p><a href="https://blog.couchbase.com/querying-array-collections-couchbase-mobile/">Sync Function API</a></p>
 </li>
 <li>
-<p><a href="https://blog.couchbase.com/querying-array-collections-couchbase-mobile/">Handling Arrays in Queries</a></p>
+<p><a href="https://blog.couchbase.com/xcode-playground-couchbase-mobile/">Overview of Replication Protocol 2.0</a></p>
 </li>
 <li>
-<p><a href="https://blog.couchbase.com/full-text-search-couchbase-mobile-2-0/">Couchbase Lite 2.0 Full Text Search API</a></p>
-</li>
-<li>
-<p><a href="https://blog.couchbase.com/join-queries-couchbase-mobile/">Couchbase Lite 2.0 JOIN Query</a></p>
+<p><a href="">Installing Sync Gateway using Docker</a></p>
 </li>
 </ul>
 </div>
@@ -1415,7 +1380,7 @@ Will open/create DB  at path /Users/priya.rajagopal/Library/Developer/CoreSimula
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2018-05-11 14:37:44 EDT
+Last updated 2018-05-16 19:23:48 EDT
 </div>
 </div>
 </body>
