@@ -10,7 +10,7 @@ endif::[]
 toc::[]
 
 == Introduction
-Couchbase Sync Gateway is a key component of the Couchbase Mobile stack. It is an Internet-facing synchronization mechanism that securely syncs data across devices as well as between devices and the cloud.
+Couchbase Sync Gateway is a key component of the Couchbase Mobile stack. It is an Internet-facing synchronization mechanism that securely syncs data across devices as well as between devices and the cloud. Couchbase Mobile 2.0 introduces a brand new websockets based link:https://blog.couchbase.com/data-replication-couchbase-mobile/[replication protocol].
 It provides
 
 * Data Synchronization across devices and the cloud
@@ -18,13 +18,14 @@ It provides
 * Data Validation
 
 
-This tutorial will walk through a simple swift app that will demonstrate how to 
+This tutorial will demonstrate how to - 
 
 * Use the Couchbase Sync Gateway (in walrus mode) to sync content between multiple Couchbase Lite enabled clients. The tutorial will cover the basics of the link:https://developer.couchbase.com/documentation/mobile/2.0/guides/sync-gateway/config-properties/index.html[Sync Gateway Configuration] and `Sync Function API`
 * Configure your Couchbase Lite clients for replication
-* Set up your Sync Gateway to enforce data routing, access control and authorization
-* Set up Live Queries within your Couchbase Lite clients so they are asyncronously notified of changes
-
+* Configure your Sync Gateway to enforce data routing, access control and authorization
+* Use "Live Queries" or Query events within your Couchbase Lite clients to be asyncronously notified of changes
++
+We will be usiing a Swift App as an example of a Couchbase Lite enabled client.
 ====
 You can learn more about the Sync Gateway https://developer.couchbase.com/documentation/mobile/2.0/guides/sync-gateway/index.html[here]
 ====
@@ -58,7 +59,7 @@ The app does the following
 * The user profile information is synced with a remote Sync Gateway which then syncs it to other devices (subject to access control and routing configurations specified in the `sync function`)
 
 
-image::https://raw.githubusercontent.com/couchbaselabs/userprofile-couchbase-mobile/standalone/content/modules/userprofile/assets/images/university_app_overview.gif[App with Sync]
+image::https://raw.githubusercontent.com/couchbaselabs/userprofile-couchbase-mobile/sync/content/modules/userprofile/assets/images/userprofile_app_overview.gif[App with Sync]
 
 == App Installation
 
@@ -453,12 +454,10 @@ include::{examplesdir}/UserProfileDemo/model/UserPresenter.swift[tags=livequery]
 In this exercise, we will observe how changes made on one app are synced across to the other app
 
 * The app should be running in two simulators side by side
-* Log into both the simulators with same userId and password. Let's use the values _"demo@example.com"_ and _"password"_ for user Id and password fields respectively. 
-* On one simulator, enter values in the user and address fields (you can enter other fields as well)
+* Log into both the simulators with same userId and password. Use the values _"demo@example.com"_ and _"password"_ for user Id and password fields respectively 
+* On one simulator, enter values in the user and address fields. 
 * Confirm that changes show up in the app on the other simulator. 
 * Similarly, make changes to the app in the other simulator and confirm that the changes are synced over to the first simulator.
-+
-image::https://raw.githubusercontent.com/couchbaselabs/userprofile-couchbase-mobile/standalone/content/modules/userprofile/assets/images/university_list.gif[App Sync]
 
 === Exercise 2
 In this exercise, we will observe changes made via Sync Gateway are synced over to the apps
@@ -510,7 +509,7 @@ curl -X GET \
 [source,bash]
 ----
 curl -X PUT \
-  'http://localhost:4985/userprofile/user::demo@example.com?rev=2-3a76cfa911e2c54d1e82b29dbffc7f4e5a9bc265' \
+  'http://localhost:4985/userprofile/user::demo@example.com?rev=3-12d203d6024c8b844c5ed736c726ac63379e05dc' \
   -H 'Accept: application/json' \
   -H 'Cache-Control: no-cache' \
   -H 'Content-Type: application/json' \
@@ -532,7 +531,7 @@ curl -X PUT \
 * Confirm that you get a HTTP _"201 Created"_ status code
 * As soon as you update the document via the Sync Gateway REST API, confirm that the changes show up in the mobile app on the simulator.
 +
-image::https://raw.githubusercontent.com/couchbaselabs/userprofile-couchbase-mobile/standalone/content/modules/userprofile/assets/images/university_list.gif[App Sync]
+image::https://raw.githubusercontent.com/couchbaselabs/userprofile-couchbase-mobile/sync/content/modules/userprofile/assets/images/syncing_from_sgw.gif[App Sync]
 
 NOTE: From <<Exercise 2>> above, you observed that changes made on the Sync Gateway are propagated to the Couchbase Lite clients. However, if you tried to update the attachment / image using the link:[Attachments REST API], you would not see the image getting updated on the client side. This is a link:[known issue] in 2.0 and should be fixed in the next release.
 
@@ -548,7 +547,7 @@ Check out the following links for further details
 === Further Reading
 * link:https://developer.couchbase.com/documentation/mobile/2.0/guides/sync-gateway/config-properties/index.html[Sync Gateway Configuration]
 
-* link:https://blog.couchbase.com/querying-array-collections-couchbase-mobile/[Sync Function API]
+* link:TBD[Sync Function API]
 
 * link:https://blog.couchbase.com/data-replication-couchbase-mobile/[Overview of Replication Protocol 2.0]
 
