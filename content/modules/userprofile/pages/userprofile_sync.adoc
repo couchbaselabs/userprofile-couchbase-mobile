@@ -531,7 +531,7 @@ curl -X PUT \
 * Confirm that you get a HTTP _"201 Created"_ status code
 * As soon as you update the document via the Sync Gateway REST API, confirm that the changes show up in the mobile app on the simulator.
 +
-image::https://raw.githubusercontent.com/couchbaselabs/userprofile-couchbase-mobile/sync/content/modules/userprofile/assets/images/syncing_from_sgw.gif[App Sync]
+image::https://raw.githubusercontent.com/couchbaselabs/userprofile-couchbase-mobile/sync/content/modules/userprofile/assets/images/sync_from_sgw.gif[App Sync]
 
 NOTE: From <<Exercise 2>> above, you observed that changes made on the Sync Gateway are propagated to the Couchbase Lite clients. However, if you tried to update the attachment / image using the link:[Attachments REST API], you would not see the image getting updated on the client side. This is a link:[known issue] in 2.0 and should be fixed in the next release.
 
