@@ -51,7 +51,9 @@ This is required if you would prefer to pull the source code from GitHub repo.
 ** You could use any HTTP client of your choice. But we will use *curl* in our tutorial. Download latest version from link:https://curl.haxx.se/download.html[curl website]
 
 == System Overview
-We will be working with a simple "User Profile" app. The version of the app extends the version introduced in the link:https://developer.couchbase.com/documentation/mobile/2.0/userprofile_basic.html[Query tutorial].
+We will be working with a simple "User Profile" app which we introduced in the [Fundamentals Tutorial](https://developer.couchbase.com/documentation/mobile/2.0/userprofile_basic.html) and extended in the [Query Tutorial](https://developer.couchbase.com/documentation/mobile/2.0/userprofile_query.html). 
+
+In this tutorial, we will be extending that app to support data sync.
 
 The app does the following 
 
@@ -535,13 +537,16 @@ image::https://raw.githubusercontent.com/couchbaselabs/userprofile-couchbase-mob
 
 NOTE: From <<Exercise 2>> above, you observed that changes made on the Sync Gateway are propagated to the Couchbase Lite clients. However, if you tried to update the attachment / image using the link:[Attachments REST API], you would not see the image getting updated on the client side. This is a link:[known issue] in 2.0 and should be fixed in the next release.
 
+== Handling Conflicts during Data Syncronization
+Data conflicts are inevtiable in an environment where you can potentially have multiple writes updating the same data concurrently. Couchbase MObile 2.0 supports _Automated Conflict Resolution_. 
+
+You can learn more about automated conflict resolution in this link:https://blog.couchbase.com/document-conflicts-couchbase-mobile/[blog post].
+
 == Learn More
 Congratulations on completing this tutorial!
 
 This tutorial walked you through an example of how to use a Sync Gateway to synchronize data between Couchbase Lite enabled clients. We discussed how to configure your Sync Gateway to enforce relevat access control, authorization and data routing between Couchbase Lite enabled clients. 
  
-
-
 Check out the following links for further details 
 
 === Further Reading
