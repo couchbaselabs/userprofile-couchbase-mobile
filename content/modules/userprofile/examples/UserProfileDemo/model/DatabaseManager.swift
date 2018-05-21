@@ -338,17 +338,18 @@ extension DatabaseManager {
                  print("Documents \(s.progress.total - s.progress.completed) still pending sync")
             }
         })
+        //end::replicationlistener[]
         
         //tag::replicationstart[]
         _pushPullRepl?.start()
-        //end::replicationend[]
+        //end::replicationstart[]
         
     }
     
     
     //tag::stopAllReplicationForCurrentUser[]
     func stopAllReplicationForCurrentUser() {
-        //end:"stopAllReplicationForCurrentUser[]
+        //end::stopAllReplicationForCurrentUser[]
         //tag::replicationstop[]
         _pushPullRepl?.stop()
         if let pushPullReplListener = _pushPullReplListener{
