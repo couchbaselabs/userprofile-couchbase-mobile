@@ -209,7 +209,7 @@ The _"university"_ Document is encoded to a native struct named _UniversityRecor
 
 [source,swift]
 ----
-include::{examplesdir}/UserProfileDemo/model/UserRecord.swift[tags=universityrecord]
+include::{examplesdir}/UserProfileDemo/model/UniversityRecord.swift[tags=universityrecord]
 ----
 
 == Sync Gateway Configuration 
@@ -217,7 +217,7 @@ The link:https://developer.couchbase.com/documentation/mobile/2.0/guides/sync-ga
 
 * Open the `*sync-gateway-config-userprofile-walrus.json*` file using any text editor of your choice. The `sync-gateway-config-userprofile-walrus.json` is located in the app bundle at `/path/to/UserProfileDemo/content/modules/userprofile/examples`. 
 +
-Locate the following settings.
+Locate the following settings in the configuration file -
 +
 * The *users* setting. 
 +
@@ -258,7 +258,7 @@ You can learn more about the walrus mode in this link:https://developer.couchbas
 The Sync Function is a Javascript function that is specified as part of the <<Sync Gateway Configuration>>. The Sync Function handles data validation, authorization, access control and data routing. 
 
 * Open the `*sync-gateway-config-userprofile-walrus.json*` file using any text editor of your choice. The `sync-gateway-config-userprofile-walrus.json` is located in the app bundle at `/path/to/UserProfileDemo/content/modules/userprofile/examples`. 
-** Locate the `sync` setting and follow along with the rest of the sections below
+* Locate the `sync` setting and follow along with the rest of the sections below
 
 === Authorization
 We use the link:https://developer.couchbase.com/documentation/mobile/2.0/guides/sync-gateway/sync-function-api-guide/index.html#requireuserusername[`requireUser()`] API to verify that the `email` property specified in the Document matches the Id of the user making the request. The Id of the user making the request is specified in the `Authorization` header. We will be using _Basic Authentication_ in our application. 
@@ -430,14 +430,14 @@ In our app, the user profile view is kept up-to-date with a live query that fetc
 +
 [source,swift]
 ----
-include::{examplesdir}/UserProfileDemo/model/UserPresenter.swift[tags=fetchRecordForCurrentUserWithLiveModeEnabled]
+include::{examplesdir}/UserProfileDemo/modpresenter/UserPresenter.swift[tags=fetchRecordForCurrentUserWithLiveModeEnabled]
 ----
 +
 * Build the Query using `QueryBuilder` API. If you are unfamiliar with this API, please check out this link:https://developer.couchbase.com/documentation/mobile/2.0/userprofile_query.html[tutorial].
 +
 [source,swift]
 ----
-include::{examplesdir}/UserProfileDemo/model/UserPresenter.swift[tags=livequerybuilder]
+include::{examplesdir}/UserProfileDemo/presenter/UserPresenter.swift[tags=livequerybuilder]
 ----
 <1> We query for documents based on document Id. In our app, there should be exactly one user profile document corresponding to this Id.
 +
@@ -445,7 +445,7 @@ include::{examplesdir}/UserProfileDemo/model/UserPresenter.swift[tags=livequeryb
 +
 [source,swift]
 ----
-include::{examplesdir}/UserProfileDemo/model/UserPresenter.swift[tags=livequery]
+include::{examplesdir}/UserProfileDemo/presenter/UserPresenter.swift[tags=livequery]
 ----
 +
 <1> Attach a listener callback to the query. Attaching a listerner automatically makes it _live_ so any time there is a change in the user profile data in the underlying database, the callback would be invoked
@@ -531,7 +531,7 @@ curl -X PUT \
     "university": "British Institute in Paris, University of London"
 }'
 ----
-<1> I updated the address field. You can choose to update any other profile information
+<1> I updated the university field via the REST API. You can choose to update any other profile information
 * Confirm that you get a HTTP _"201 Created"_ status code
 * As soon as you update the document via the Sync Gateway REST API, confirm that the changes show up in the mobile app on the simulator.
 +
