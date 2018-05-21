@@ -10,6 +10,7 @@ endif::[]
 toc::[]
 
 == Introduction
+
 Couchbase Sync Gateway is a key component of the Couchbase Mobile stack. It is an Internet-facing synchronization mechanism that securely syncs data across devices as well as between devices and the cloud. Couchbase Mobile 2.0 introduces a brand new websockets based link:https://blog.couchbase.com/data-replication-couchbase-mobile/[replication protocol].
 
 The core functions of the Sync Gateway include
