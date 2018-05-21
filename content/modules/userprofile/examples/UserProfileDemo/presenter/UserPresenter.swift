@@ -81,7 +81,7 @@ extension UserPresenter {
             //end::livequerybuilder[]
             do {
                 // V1.0. There should be only one document for a user.
-                // tag::livequery[]
+                //tag::livequery[]
                 userQueryToken = userQuery?.addChangeListener { [weak self] (change) in // <1>
                     guard let `self` = self else {return}
                     switch change.error {
@@ -145,13 +145,13 @@ extension UserPresenter {
        
     }
     
-    // tag::setRecordForCurrentUser[]
+    //tag::setRecordForCurrentUser[]
     func setRecordForCurrentUser( _ record:UserRecord?, handler:@escaping(_ error:Error?)->Void) {
-    // end::setRecordForCurrentUser[]
+    //end::setRecordForCurrentUser[]
         guard let db = dbMgr.db else {
             fatalError("db is not initialized at this point!")
         }
-        // tag::doccreate[]
+        //tag::doccreate[]
         // This will create a new instance of MutableDocument or will
         // fetch existing one
         // Get mutable version

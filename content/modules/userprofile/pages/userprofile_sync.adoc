@@ -69,6 +69,8 @@ image::https://raw.githubusercontent.com/couchbaselabs/userprofile-couchbase-mob
 
 === Fetching App Source Code
 
+You have two options
+
 ==== Option 1 : Git Clone
 
 - Clone the *_sync_* branch of the `User Profile Demo` project from GitHub. Type the following command in your terminal
