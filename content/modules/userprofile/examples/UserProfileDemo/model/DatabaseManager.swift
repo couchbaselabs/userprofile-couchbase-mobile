@@ -351,13 +351,13 @@ extension DatabaseManager {
     func stopAllReplicationForCurrentUser() {
         //end::stopAllReplicationForCurrentUser[]
         //tag::replicationstop[]
-        _pushPullRepl?.stop()
         if let pushPullReplListener = _pushPullReplListener{
             print(#function)
             _pushPullRepl?.removeChangeListener(withToken:  pushPullReplListener)
             _pushPullRepl = nil
             _pushPullReplListener = nil
         }
+        _pushPullRepl?.stop()
         //end::replicationstop[]
     }
     

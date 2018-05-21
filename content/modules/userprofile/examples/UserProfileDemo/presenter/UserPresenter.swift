@@ -100,6 +100,7 @@ extension UserPresenter {
                                 userRecord.imageData = userVal.blob(forKey:UserRecordDocumentKeys.image.rawValue)?.content // <4>
                             }
                         }
+                        //end::livequery[]
                         self.associatedView?.dataFinishedLoading()
                         self.associatedView?.updateUIWithUserRecord(userRecord, error: nil)
                         
@@ -109,7 +110,7 @@ extension UserPresenter {
                     }
                 }
 
-                //end::livequery[]
+               
             }catch {
                 self.associatedView?.updateUIWithUserRecord(nil, error: UserProfileError.UserNotFound)
 

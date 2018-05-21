@@ -421,7 +421,15 @@ When user logs out of the app, the replication is stopped before the database is
 include::{examplesdir}/UserProfileDemo/model/DatabaseManager.swift[tags=stopAllReplicationForCurrentUser]
 ----
 +
-NOTE:All open replicators must be stopped before database is closed. There will be an exception if you attempt to close the database without closing the active replicators.
+* Stop the replicator and remove any associated change listeners
++
+[source,swift]
+----
+include::{examplesdir}/UserProfileDemo/model/DatabaseManager.swift[tags=replicationstop]
+----
++
+
+NOTE: All open replicators must be stopped before database is closed. There will be an exception if you attempt to close the database without closing the active replicators.
 
 == Query Events / Live Queries
 In couchbase Lite 2.0, the app can set up _live queries_ in order to be asynchronously notified of changes to the database that affect the results of the query. This would be very useful for instance, to keep a UI View up-to-date with the results of a query.
@@ -432,7 +440,7 @@ In our app, the user profile view is kept up-to-date with a live query that fetc
 +
 [source,swift]
 ----
-include::{examplesdir}/UserProfileDemo/modpresenter/UserPresenter.swift[tags=fetchRecordForCurrentUserWithLiveModeEnabled]
+include::{examplesdir}/UserProfileDemo/presenter/UserPresenter.swift[tags=fetchRecordForCurrentUserWithLiveModeEnabled]
 ----
 +
 * Build the Query using `QueryBuilder` API. If you are unfamiliar with this API, please check out this link:https://developer.couchbase.com/documentation/mobile/2.0/userprofile_query.html[tutorial].
