@@ -351,7 +351,7 @@ link:https://developer.couchbase.com/documentation/mobile/2.0/guides/sync-gatewa
 <1> The channel comes into existance the first time a document is added to it. In our case, the channel name is generated from the `email` property specified in the document
 
 === Access Control
-You can enforce access control to channels using the link:https://developer.couchbase.com/documentation/mobile/2.0/guides/sync-gateway/sync-function-api-guide/index.html#access-username-channelname[access API]. This will enforce that only users with access to a specific channel will be able to retrieve documents in the channel.
+You can enforce access control to channels using the link:https://developer.couchbase.com/documentation/mobile/2.0/guides/sync-gateway/sync-function-api-guide/index.html#access-username-channelname[access API]. This will ensure that only users with access to a specific channel will be able to retrieve documents in the channel.
 
 [source,javascript]
 ----

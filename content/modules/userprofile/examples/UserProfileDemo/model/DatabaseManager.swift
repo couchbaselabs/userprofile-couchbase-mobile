@@ -271,9 +271,9 @@ extension DatabaseManager {
 
 // MARK: Replication
 extension DatabaseManager {
-    //tag: startPushAndPullReplicationForCurrentUser[]
+    //tag::startPushAndPullReplicationForCurrentUser[]
     func startPushAndPullReplicationForCurrentUser() {
-        //end: startPushAndPullReplicationForCurrentUser[]
+        //end::startPushAndPullReplicationForCurrentUser[]
         guard let remoteUrl = URL.init(string: kRemoteSyncUrl) else {
             lastError = UserProfileError.RemoteDatabaseNotReachable
             return
@@ -294,7 +294,7 @@ extension DatabaseManager {
             return
         }
         
-        //tag: replicationconfig[]
+        //tag::replicationconfig[]
         let dbUrl = remoteUrl.appendingPathComponent(kDBName)
         let config = ReplicatorConfiguration.init(database: db, target: URLEndpoint.init(url:dbUrl)) //<1>
         
@@ -308,13 +308,13 @@ extension DatabaseManager {
         let userChannel = "channel.\(user)"
         config.channels = [userChannel] // <5>
         
-        //end: replicationconfig[]
+        //end::replicationconfig[]
         
-        //tag: replicationinit[]
+        //tag::replicationinit[]
         _pushPullRepl = Replicator.init(config: config)
-        //end: replicationinit[]
+        //end::replicationinit[]
         
-        //tag: replicationlistener[]
+        //tag::replicationlistener[]
         _pushPullReplListener = _pushPullRepl?.addChangeListener({ (change) in
             let s = change.status
             switch s.activity {
@@ -339,17 +339,17 @@ extension DatabaseManager {
             }
         })
         
-        //tag: replicationstart[]
+        //tag::replicationstart[]
         _pushPullRepl?.start()
-        //tag: replicationend[]
+        //end::replicationend[]
         
     }
     
     
-    //tag: stopAllReplicationForCurrentUser[]
+    //tag::stopAllReplicationForCurrentUser[]
     func stopAllReplicationForCurrentUser() {
-        //end:stopAllReplicationForCurrentUser[]
-        //tag:replicationstop[]
+        //end:"stopAllReplicationForCurrentUser[]
+        //tag::replicationstop[]
         _pushPullRepl?.stop()
         if let pushPullReplListener = _pushPullReplListener{
             print(#function)
@@ -357,7 +357,7 @@ extension DatabaseManager {
             _pushPullRepl = nil
             _pushPullReplListener = nil
         }
-        //end:replicationstop[]
+        //end::replicationstop[]
     }
     
     

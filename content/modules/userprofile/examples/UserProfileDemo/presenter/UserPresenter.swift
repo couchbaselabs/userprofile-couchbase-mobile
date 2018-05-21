@@ -64,12 +64,12 @@ class UserPresenter:UserPresenterProtocol {
 extension UserPresenter {
     // tag::fetchRecordForCurrentUserWithLiveModeEnabled[]
     func fetchRecordForCurrentUserWithLiveModeEnabled(__ enabled:Bool = false) {
-        // end::fetchRecordForCurrentUserWithLiveModeEnabled[]
+        //end::fetchRecordForCurrentUserWithLiveModeEnabled[]
         
         switch enabled {
         case true :
             // Doing a live query for specific document
-            // tag::livequerybuilder[]
+            //tag::livequerybuilder[]
             guard let db = dbMgr.db else {
                 fatalError("db is not initialized at this point!")
             }
@@ -78,7 +78,7 @@ extension UserPresenter {
                 .from(DataSource.database(db))
                 .where(Meta.id.equalTo(Expression.string(self.userProfileDocId))) // <1>
             
-            // end::livequerybuilder[]
+            //end::livequerybuilder[]
             do {
                 // V1.0. There should be only one document for a user.
                 // tag::livequery[]
@@ -109,7 +109,7 @@ extension UserPresenter {
                     }
                 }
 
-                //end:livequery
+                //end::livequery[]
             }catch {
                 self.associatedView?.updateUIWithUserRecord(nil, error: UserProfileError.UserNotFound)
 
@@ -118,7 +118,7 @@ extension UserPresenter {
         case false:
             // Case when we are doing a one-time fetch for document
      
-            // tag::singledocfetch[]
+            //tag::singledocfetch[]
             guard let db = dbMgr.db else {
                 fatalError("db is not initialized at this point!")
             }
@@ -137,7 +137,7 @@ extension UserPresenter {
                 profile.imageData = doc.blob(forKey:UserRecordDocumentKeys.image.rawValue)?.content //<4>
                 
             }
-            // end::singledocfetch[]
+            //end::singledocfetch[]
             self.associatedView?.dataFinishedLoading()
             self.associatedView?.updateUIWithUserRecord(profile, error: nil)
         }
@@ -156,9 +156,9 @@ extension UserPresenter {
         // fetch existing one
         // Get mutable version
         var mutableDoc = MutableDocument.init(id: self.userProfileDocId)
-        // end::doccreate[]
+        //end::doccreate[]
 
-        // tag::docset[]
+        //tag::docset[]
         mutableDoc.setString(record?.type, forKey: UserRecordDocumentKeys.type.rawValue)
         
         if let email = record?.email {
@@ -180,10 +180,10 @@ extension UserPresenter {
             let blob = Blob.init(contentType: "image/jpeg", data: imageData)
             mutableDoc.setBlob(blob, forKey: UserRecordDocumentKeys.image.rawValue)
         } // <1>
-        // end::docset[]
+        //end::docset[]
         
         
-        // tag::docsave[]
+        //tag::docsave[]
         do {
             // This will create a document if it does not exist and overrite it if it exists
             // Using default concurrency control policy of "writes always win"
@@ -193,7 +193,7 @@ extension UserPresenter {
         catch {
             handler(error)
         }
-        // end::docsave[]
+        //end::docsave[]
     }
     
 }
