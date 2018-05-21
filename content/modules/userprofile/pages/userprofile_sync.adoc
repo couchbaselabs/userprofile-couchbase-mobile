@@ -11,7 +11,8 @@ toc::[]
 
 == Introduction
 Couchbase Sync Gateway is a key component of the Couchbase Mobile stack. It is an Internet-facing synchronization mechanism that securely syncs data across devices as well as between devices and the cloud. Couchbase Mobile 2.0 introduces a brand new websockets based link:https://blog.couchbase.com/data-replication-couchbase-mobile/[replication protocol].
-It provides
+
+The core functions of the Sync Gateway include
 
 * Data Synchronization across devices and the cloud
 * Authorization & Access Control
@@ -20,11 +21,11 @@ It provides
 
 This tutorial will demonstrate how to - 
 
-* Use the Couchbase Sync Gateway (in walrus mode) to sync content between multiple Couchbase Lite enabled clients. The tutorial will cover the basics of the link:https://developer.couchbase.com/documentation/mobile/2.0/guides/sync-gateway/config-properties/index.html[Sync Gateway Configuration] and `Sync Function API`
-* Configure your Couchbase Lite clients for replication
-* Configure your Sync Gateway to enforce data routing, access control and authorization
+* Setup the Couchbase Sync Gateway (in walrus mode) to sync content between multiple Couchbase Lite enabled clients. We will will cover the basics of the link:https://developer.couchbase.com/documentation/mobile/2.0/guides/sync-gateway/config-properties/index.html[Sync Gateway Configuration].
+* Configure your Sync Gateway to enforce data routing, access control and authorization. We will cover the basics of link:https://developer.couchbase.com/documentation/mobile/2.0/guides/sync-gateway/sync-function-api-guide/index.html[Sync Function API]
+* Configure your Couchbase Lite clients for replication with the Sync Gateway
 * Use "Live Queries" or Query events within your Couchbase Lite clients to be asyncronously notified of changes
-+
+
 We will be usiing a Swift App as an example of a Couchbase Lite enabled client.
 ====
 You can learn more about the Sync Gateway https://developer.couchbase.com/documentation/mobile/2.0/guides/sync-gateway/index.html[here]
@@ -36,7 +37,7 @@ This tutorial assumes familiarity with building swift apps with Xcode and with C
 * If you are unfamiliar with the basics of Couchbase Lite, it is recommended that you walk through the following tutorials
 +
 ** link:https://developer.couchbase.com/documentation/mobile/2.0/userprofile_basic.html[Fundamentals] of using Couchbase Lite 2.0 as a standalone database
-** link:https://developer.couchbase.com/documentation/mobile/2.0/userprofile_basic.html[Query Basics] with a prebuilt version of Couchbase Lite database
+** link:https://developer.couchbase.com/documentation/mobile/2.0/userprofile_query.html[Query Basics] with a prebuilt version of Couchbase Lite database
 
 * iOS (Xcode 9.3+) 
 ** Download latest version from the link:https://itunes.apple.com/us/app/xcode/id497799835?mt=12[Mac App Store]
@@ -51,7 +52,7 @@ This is required if you would prefer to pull the source code from GitHub repo.
 ** You could use any HTTP client of your choice. But we will use *curl* in our tutorial. Download latest version from link:https://curl.haxx.se/download.html[curl website]
 
 == System Overview
-We will be working with a simple "User Profile" app which we introduced in the [Fundamentals Tutorial](https://developer.couchbase.com/documentation/mobile/2.0/userprofile_basic.html) and extended in the [Query Tutorial](https://developer.couchbase.com/documentation/mobile/2.0/userprofile_query.html). 
+We will be working with a simple "User Profile" app which we introduced in the link:https://developer.couchbase.com/documentation/mobile/2.0/userprofile_basic.html[Fundamentals Tutorial] and extended in the link:https://developer.couchbase.com/documentation/mobile/2.0/userprofile_query.html[Query Tutorial]. 
 
 In this tutorial, we will be extending that app to support data sync.
 
@@ -112,7 +113,7 @@ There are several link:https://developer.couchbase.com/documentation/mobile/2.0/
 === Download the Installer
 * Download the Sync Gateway 2.0.0 installer from link:https://www.couchbase.com/downloads#couchbase-mobile[Downloads] page. Be sure to select the *"Mobile"* tab.
 
-* Launch the Sync Gateway from the command line with the **sync-gateway-config-userprofile-walrus.json** config file. This file is bundled with the User Profile mobile App source that you downloaded as per instructions in <<Fetching App Source Code>> section. The `sync-gateway-config-userprofile-walrus.json` will be located in the `/path/to/UserProfileDemo/content/modules/userprofile/examples/` folder 
+* Launch the Sync Gateway from the command line with the *sync-gateway-config-userprofile-walrus.json* config file. This file is bundled with the User Profile mobile App source that you downloaded as per instructions in <<Fetching App Source Code>> section. The `sync-gateway-config-userprofile-walrus.json` will be located in the `/path/to/UserProfileDemo/content/modules/userprofile/examples/` folder 
 +
 Type following commands in the command terminal - 
 +
@@ -217,7 +218,7 @@ The link:https://developer.couchbase.com/documentation/mobile/2.0/guides/sync-ga
 +
 Locate the following settings.
 +
-* The **users** setting. 
+* The *users* setting. 
 +
 The list of  users recognized by the Sync Gateway is specified using the `users` config setting. The Sync Gateway will only authorize syncronization requests from valid/recognized users.
 +
@@ -233,7 +234,7 @@ For simplicity, we have hardcoded the `user` to be _"demo@example.com"_ and the 
 +
 NOTE: If you want to want to use a different user, then add the credentials of that user to this configuration setting and restart the Sync Gateway. 
 
-* The **server** setting
+* The *server* setting
 +
 This is where we specify the URL of the server. We have specified this to be `*walrus*`. This is an _in-memory-only_ mode that is only recommended for development environments. We will be configuring Sync Gateway to operate in this mode. 
 In a production deployment, the Sync Gatway should be backed up by a Couchbase Server.
@@ -366,7 +367,7 @@ You can enforce access control to channels using the link:https://developer.couc
 
 Two-way Replication between the app and the Sync Gateway is enabled when user logs into the app.
 
-* Open the **DatabaseManager.swift** file and locate the `startPushAndPullReplicationForCurrentUser()` function.
+* Open the *DatabaseManager.swift* file and locate the `startPushAndPullReplicationForCurrentUser()` function.
 +
 [source,swift]
 ----
@@ -410,7 +411,7 @@ include::{examplesdir}/UserProfileDemo/model/DatabaseManager.swift[tags=replicat
 == Stopping Replication
 When user logs out of the app, the replication is stopped before the database is closed. 
 
-* Open the **DatabaseManager.swift** file and locate the `stopAllReplicationForCurrentUser()` function.
+* Open the *DatabaseManager.swift* file and locate the `stopAllReplicationForCurrentUser()` function.
 +
 [source,swift]
 ----
@@ -424,7 +425,7 @@ In couchbase Lite 2.0, the app can set up _live queries_ in order to be asynchro
 
 In our app, the user profile view is kept up-to-date with a live query that fetches the user profile data that is used to populate the view. This means that, if the replicator pulls down changes to the user profile, it will be automatically reflected in the view.
 
-* Open the **UserPresenter.swift** file and locate the `fetchRecordForCurrentUserWithLiveModeEnabled()` function. Calling this function with a value of `true` implies that the caller wishes to be notified of any changes to query results.
+* Open the *UserPresenter.swift* file and locate the `fetchRecordForCurrentUserWithLiveModeEnabled()` function. Calling this function with a value of `true` implies that the caller wishes to be notified of any changes to query results.
 +
 [source,swift]
 ----
@@ -505,7 +506,7 @@ curl -X GET \
 }
 ----
 <1> Record the revision Id of the document. You will need this when you update the document
-<2> If you had updated an image via the mobile app, you should see an **"_attachments"** property. This entry holds an array of attachments corresponding to each image blob entry added by the mobile app. This property is added by the Sync Gateway when it processes the document.  You can learn more about how image Blob types are mapped to attachments link:[here].
+<2> If you had updated an image via the mobile app, you should see an *"_attachments"* property. This entry holds an array of attachments corresponding to each image blob entry added by the mobile app. This property is added by the Sync Gateway when it processes the document.  You can learn more about how image Blob types are mapped to attachments link:[here].
 * In the command terminal, issue the following command to update the user profile document via link:[PUT Document REST API]
 +
 [source,bash]
