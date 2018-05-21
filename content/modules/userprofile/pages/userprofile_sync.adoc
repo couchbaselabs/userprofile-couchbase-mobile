@@ -306,7 +306,7 @@ function sync(doc, oldDoc) {
 
 
   // Verify that specified property exists
-  function validateNotEmpty(key, value) {
+  function validateNotEmpty(key, value) { 
     if (!value) {
       throw({forbidden: key + " is not provided."});
     }
@@ -320,9 +320,9 @@ function sync(doc, oldDoc) {
   }
 ----
 
-<1> Verify that the `email` property is not null
-<2> If this a new document, then verify that the `Id` of the Document is of the required format (i.e. _"user::<email>"_)
-<3> If this is a document update, then verify that the `email` property value has not changed 
+<1> Verify that the `email` property is not null. If it's null, we throw a JS exception (see `validateNotEmpty()` function)
+<2> If this a new document, then verify that the `Id` of the Document is of the required format (i.e. _"user::<email>"_). We throw an exception if that's not the case.
+<3> If this is a document update, then verify that the `email` property value has not changed. Again, we throw an exception if that's not the case.
 
 
 ====
