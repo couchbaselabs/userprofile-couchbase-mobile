@@ -20,12 +20,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     fileprivate var cbMgr = DatabaseManager.shared
     fileprivate var isObservingForLoginEvents:Bool = false
 
-
+    // tag::setMinBackgroundFetchInterval[]
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         self.loadLoginViewController()
+    UIApplication.shared.setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalMinimum)
         return true
     }
+    // end::setMinBackgroundFetchInterval[]
 
     func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
@@ -141,6 +143,24 @@ extension AppDelegate {
     
 }
 
+// MARK:Background
+extension AppDelegate {
+    // tag::backgroundFetchHandler[]
+    // Support for background fetch
+    func application( _ application: UIApplication,
+                      performFetchWithCompletionHandler
+        completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        print(#function)
+        
+        // Do a one shot replication
+        self.cbMgr.startOneShotPullReplicationForCurrentUser { (status) in
+            completionHandler(.newData)
+            
+        }
+        
+    }
+    // end::backgroundFetchHandler[]
+}
 
 
 

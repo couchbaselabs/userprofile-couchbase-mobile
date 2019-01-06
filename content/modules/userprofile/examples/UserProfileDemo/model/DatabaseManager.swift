@@ -372,3 +372,87 @@ extension DatabaseManager {
     
 }
 
+// MARK: One shot replication
+extension DatabaseManager {
+    //tag::startOneShotPullReplicationForCurrentUser[]
+    func startOneShotPullReplicationForCurrentUser(completionHandler:@escaping(_ doneStatus:Bool)->Void) {
+         //end::startOneShotPullReplicationForCurrentUser[]
+        print(#function)
+        guard let remoteUrl = URL.init(string: kRemoteSyncUrl) else {
+            lastError = UserProfileError.RemoteDatabaseNotReachable
+            return
+        }
+        
+        guard let user = self.currentUserCredentials?.user,let password = self.currentUserCredentials?.password  else {
+            lastError = UserProfileError.UserCredentialsNotProvided
+            return
+        }
+        
+        guard let db = db else {
+            lastError = UserProfileError.DatabaseNotInitialized
+            return
+        }
+        
+        if _pushPullRepl != nil {
+            print("Will resume pull replication in background")
+            // Replication is already started
+            _pushPullRepl?.start()
+            return
+        }
+        
+        //tag::oneshotreplicationconfig[]
+        let dbUrl = remoteUrl.appendingPathComponent(kDBName)
+        let config = ReplicatorConfiguration.init(database: db, target: URLEndpoint.init(url:dbUrl)) //<1>
+        
+        config.replicatorType = .pull // <2>
+        config.continuous =  true // <3>
+        config.authenticator =  BasicAuthenticator(username: user, password: password) // <4>
+        
+        
+        // This should match what is specified in the sync gateway config
+        // Only pull documents from this user's channel
+        //        let userChannel = "channel.\(user)"
+        //        config.channels = [userChannel] // <5>
+        //
+        //end::oneshotreplicationconfig[]
+        
+        //tag::oneshotreplicationinit[]
+        _pushPullRepl = Replicator.init(config: config)
+        //end::oneshotreplicationinit[]
+        
+        //tag::oneshotreplicationlistener[]
+        _pushPullReplListener = _pushPullRepl?.addChangeListener({ (change) in
+            let s = change.status
+            switch s.activity {
+            case .busy:
+                print("Busy transferring data")
+            case .connecting:
+                print("Connecting to Sync Gateway")
+            case .idle:
+                print("Replicator in Idle state")
+                completionHandler(true)
+            case .offline:
+                print("Replicator in offline state")
+                completionHandler(true)
+            case .stopped:
+                print("Completed syncing documents")
+                completionHandler(true)
+            }
+            
+            // Workarond for BUG :https://github.com/couchbase/couchbase-lite-ios/issues/1816.
+            if s.progress.completed == s.progress.total {
+                print("All documents synced")
+            }
+            else {
+                print("Documents \(s.progress.total - s.progress.completed) still pending sync")
+            }
+        })
+        //end::oneshotreplicationlistener[]
+        
+        //tag::oneshotreplicationstart[]
+        _pushPullRepl?.start()
+        //end::oneshotreplicationstart[]
+        
+    }
+    
+}
