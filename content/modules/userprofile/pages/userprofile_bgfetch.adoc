@@ -241,7 +241,7 @@ image::bg_console_logs.png[Background Fetch Logs]
 * Stop the Sync Gateway
 * Launch the app in the foreground. The user profile doc that was synced in the background will be displayed.
 +
-image::relanch_app.png[App Launched into foreground]
+image::relaunch_app.png[App Launched into foreground]
 
 == Learn More
 Congratulations on completing this tutorial!

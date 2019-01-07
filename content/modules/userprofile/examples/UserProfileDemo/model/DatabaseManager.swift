@@ -413,7 +413,7 @@ extension DatabaseManager {
         let config = ReplicatorConfiguration.init(database: db, target: URLEndpoint.init(url:dbUrl))
         config.continuous =  false // <1>
         config.replicatorType = .pull // <2>
-        config.authenticator =  BasicAuthenticator(username: user, password: password) // <4>
+        config.authenticator =  BasicAuthenticator(username: user, password: password) 
         //end::oneshotreplicationconfig[]
         
         
