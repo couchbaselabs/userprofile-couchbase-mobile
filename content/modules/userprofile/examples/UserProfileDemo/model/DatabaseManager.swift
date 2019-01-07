@@ -44,6 +44,9 @@ class DatabaseManager {
     fileprivate var _pushPullRepl:Replicator?
     fileprivate var _pushPullReplListener:ListenerToken?
     fileprivate var kRemoteSyncUrl = "ws://localhost:4984" // <1>
+    fileprivate var _oneshotPushPullRepl:Replicator?
+    fileprivate var _oneshotPushPullReplListener:ListenerToken?
+    
     // end:replicationdefs
     
     fileprivate var _applicationDocumentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).last
@@ -330,7 +333,6 @@ extension DatabaseManager {
                 print("Completed syncing documents")
             }
           
-            // Workarond for BUG :https://github.com/couchbase/couchbase-lite-ios/issues/1816.
             if s.progress.completed == s.progress.total {
                 print("All documents synced")
             }
@@ -358,10 +360,16 @@ extension DatabaseManager {
             _pushPullReplListener = nil
         }
         _pushPullRepl?.stop()
+        
+        if let oneshotPushPullReplListener = _oneshotPushPullReplListener{
+            print(#function)
+            _oneshotPushPullRepl?.removeChangeListener(withToken:  oneshotPushPullReplListener)
+            _oneshotPushPullRepl = nil
+            _oneshotPushPullRepl = nil
+        }
+        _oneshotPushPullRepl?.stop()
         //end::replicationstop[]
     }
-    
-    
 }
 // MARK: Utils
 extension DatabaseManager {
@@ -393,35 +401,34 @@ extension DatabaseManager {
             return
         }
         
-        if _pushPullRepl != nil {
+        if _oneshotPushPullRepl != nil {
             print("Will resume pull replication in background")
-            // Replication is already started
-            _pushPullRepl?.start()
+            // Replication is already created
+            _oneshotPushPullRepl?.start()
             return
         }
         
         //tag::oneshotreplicationconfig[]
         let dbUrl = remoteUrl.appendingPathComponent(kDBName)
-        let config = ReplicatorConfiguration.init(database: db, target: URLEndpoint.init(url:dbUrl)) //<1>
-        
+        let config = ReplicatorConfiguration.init(database: db, target: URLEndpoint.init(url:dbUrl))
+        config.continuous =  false // <1>
         config.replicatorType = .pull // <2>
-        config.continuous =  true // <3>
         config.authenticator =  BasicAuthenticator(username: user, password: password) // <4>
+        //end::oneshotreplicationconfig[]
         
         
         // This should match what is specified in the sync gateway config
         // Only pull documents from this user's channel
         //        let userChannel = "channel.\(user)"
-        //        config.channels = [userChannel] // <5>
+        //        config.channels = [userChannel]
         //
-        //end::oneshotreplicationconfig[]
         
         //tag::oneshotreplicationinit[]
-        _pushPullRepl = Replicator.init(config: config)
+        _oneshotPushPullRepl = Replicator.init(config: config)
         //end::oneshotreplicationinit[]
         
         //tag::oneshotreplicationlistener[]
-        _pushPullReplListener = _pushPullRepl?.addChangeListener({ (change) in
+        _oneshotPushPullReplListener = _oneshotPushPullRepl?.addChangeListener({ (change) in
             let s = change.status
             switch s.activity {
             case .busy:
@@ -439,7 +446,6 @@ extension DatabaseManager {
                 completionHandler(true)
             }
             
-            // Workarond for BUG :https://github.com/couchbase/couchbase-lite-ios/issues/1816.
             if s.progress.completed == s.progress.total {
                 print("All documents synced")
             }
@@ -450,7 +456,7 @@ extension DatabaseManager {
         //end::oneshotreplicationlistener[]
         
         //tag::oneshotreplicationstart[]
-        _pushPullRepl?.start()
+        _oneshotPushPullRepl?.start()
         //end::oneshotreplicationstart[]
         
     }

@@ -48,9 +48,9 @@ In this tutorial, we will be extending that app to support data sync when in the
 
 The app does the following 
 
-* Allows users to log in and create or update his/her user profile information. The user profile view is _automatically updated_ everytime the profile information changes in the underlying database
+* Allows users to log in and create or update his/her user profile information. The user profile view is automatically updated everytime the profile information changes in the underlying database
 * The user profile information is synced with a remote Sync Gateway which then syncs it to other devices (subject to access control and routing configurations specified in the `sync function`)
-* When the app is woken up in  the background, it does a one-shot replication with the remote Sync Gateway
+* When the app is woken up in the _background_, it does a one-shot replication with the remote Sync Gateway
 
 == App Installation
 
@@ -60,7 +60,7 @@ You have two options
 
 ==== Option 1 : Git Clone
 
-- Clone the *_background_* branch of the `User Profile Demo` project from GitHub. Type the following command in your terminal
+- Clone the _backgroundfetch_ branch of the `User Profile Demo` project from GitHub. Type the following command in your terminal
 +
 [source,bash] 
 ----
@@ -129,7 +129,7 @@ image::bg_modes.png[Background Modes]
 +
 [source,swift]
 ----
-include::{examplesdir}/UserProfileDemo/AppDelegate.swift[tags=setMinBackgroundFetchInterval]
+include::{examplesdir}/UserProfileDemo/AppDelegate.swift[tags=setMinBackgroundFetchInterval,indent=0]
 ----
 * Here we specify the periodicity at which the app should be woken up. We use a value of _UIApplicationBackgroundFetchIntervalMinimum_ which is the smallest fetch interval supported by the system  
 
@@ -138,34 +138,40 @@ include::{examplesdir}/UserProfileDemo/AppDelegate.swift[tags=setMinBackgroundFe
 +
 [source,swift]
 ----
-include::{examplesdir}/UserProfileDemo/AppDelegate.swift[tags=backgroundFetchHandler]
+include::{examplesdir}/UserProfileDemo/AppDelegate.swift[tags=backgroundFetchHandler,indent=0]
 ----
 <1> Invoke function on to do a one-shot replication with the Sync Gateway. Everytime the app is launched, all pending changes with the remote Sync Gateway will be synched up
 
 == Implementing the One-shot replication
-Setting up the app for one-shot replication is very similar to continuous replication that was discussed in the link:https://docs.couchbase.com/tutorials/userprofile-couchbase-mobile/sync/userprofile/userprofile_sync.html#starting-replication [Sync tutorial]. The exception being that the "continuous" configuration mode is specified to be _false_.
+Setting up the app for one-shot replication is very similar to continuous replication that was discussed in the link:https://docs.couchbase.com/tutorials/userprofile-couchbase-mobile/sync/userprofile/userprofile_sync.html#starting-replication[Sync tutorial].
+
 * Open the *DatabaseManager.swift* file and locate the `startOneShotPullReplicationForCurrentUser()` function. 
 +
 [source,swift]
 ----
-include::{examplesdir}/UserProfileDemo/model/DatabaseManager.swift[tags=startOneShotPullReplicationForCurrentUser]
+include::{examplesdir}/UserProfileDemo/model/DatabaseManager.swift[tags=startOneShotPullReplicationForCurrentUser,indent=0]]
 ----
-* Note that the "conitnuous" mode is set to "false" in the Replicator configuration indicating that this is a one-shot replication. In one-shot mode, the replicator goes into idle state once all pending changes are synced
+* Let's examine the replicator configuration
 +
 [source,swift]
 ----
-include::{examplesdir}/UserProfileDemo/model/DatabaseManager.swift[tags=oneshotreplicationconfig]
+include::{examplesdir}/UserProfileDemo/model/DatabaseManager.swift[tags=oneshotreplicationconfig,indent=0]
 ----
+<1> The"continuous" mode is set to "false" in the Replicator configuration indicating that this is a one-shot replication. In one-shot mode, the replicator goes into idle state once all pending changes are synced
+<2> The "replicationType" is set to pull-only in the Replicator configuration indicating that the app will only pull changes from remote client when in the background. 
+
+The rest of the configuration is as in the continuous replication case.
+
 
 == Exercises
-Before proceeding with the exercises in this section, complete the exercises in the link:https://docs.couchbase.com/tutorials/userprofile-couchbase-mobile/sync/userprofile/userprofile_sync.html#exercises[Sync tutorial] to verify that you can sync changes between the app and Sync Gateway in the foreground
+Before proceeding with the exercises in this section, complete the exercises in the link:https://docs.couchbase.com/tutorials/userprofile-couchbase-mobile/sync/userprofile/userprofile_sync.html#exercises[Sync tutorial] to verify that you can sync changes between the app and Sync Gateway with the app in the foreground.
 
 In the following exercise, we will observe how changes made on Sync Gateway are fetched by the iOS app in the background
 
-* The app should be running in the simulator with the xcode debugger attached
+* The app must be running in the simulator with the _xcode debugger attached_. This is important as we will use the xcode debugger for simulating background fetches.
 * Push the app in the simulator to the background. Typically you can do it with the Shift-Cmd-H key combination 
 * Clear the debug console logs in xcode. This will make it easier to identify what goes on when the app is launched in the background
-* Open the command terminal and issue the following `curl` command to get the user profile document via link:[GET Document REST API] 
+* Open the command terminal and issue the following `curl` command to get the user profile document on the Sync Gateway via link:[GET Document REST API] 
 +
 [source,bash]
 ----
@@ -175,7 +181,7 @@ curl -X GET \
   -H 'Cache-Control: no-cache' \
   -H 'Content-Type: application/json'
 ----
-* Your response should look something like the response below. The exact contents depends on the user profile information that you provided via your mobile app.
+* Your response should look something like the response below. The exact contents depends on the user profile that you provided via your mobile app.
 +
 [source,bash]
 ----
@@ -203,7 +209,7 @@ curl -X GET \
   "type": "user"
 }
 ----
-* In the command terminal, issue the following command to update the user profile document via link:[PUT Document REST API]
+* In the command terminal, issue the following command to update the user profile document on the Sync Gateway via link:[PUT Document REST API]
 +
 [source,bash]
 ----
