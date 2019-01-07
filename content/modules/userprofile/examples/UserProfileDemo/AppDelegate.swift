@@ -154,7 +154,7 @@ extension AppDelegate {
         
         // Do a one shot replication
         self.cbMgr.startOneShotPullReplicationForCurrentUser { (status) in
-            completionHandler(.newData)
+            completionHandler(.newData) // <1>
             
         }
         

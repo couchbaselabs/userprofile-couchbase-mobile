@@ -451,41 +451,16 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#try-it-out">Try it Out</a></li>
 </ul>
 </li>
-<li><a href="#sync-gateway-2-0-installation">Sync Gateway 2.0 Installation</a>
+<li><a href="#sync-gateway-2-x-installation">Sync Gateway 2.x Installation</a>
 <ul class="sectlevel2">
-<li><a href="#download-the-installer">Download the Installer</a></li>
 <li><a href="#try-it-out-2">Try it Out</a></li>
 </ul>
 </li>
-<li><a href="#data-model">Data Model</a>
-<ul class="sectlevel2">
-<li><a href="#the-user-profile-document">The "User Profile" Document</a></li>
-<li><a href="#userrecord">UserRecord</a></li>
-</ul>
-</li>
-<li><a href="#the-university-document">The "University" Document</a>
-<ul class="sectlevel2">
-<li><a href="#universityrecord">UniversityRecord</a></li>
-</ul>
-</li>
-<li><a href="#sync-gateway-configuration">Sync Gateway Configuration</a></li>
-<li><a href="#sync-function">Sync Function</a>
-<ul class="sectlevel2">
-<li><a href="#authorization">Authorization</a></li>
-<li><a href="#data-validation">Data Validation</a></li>
-<li><a href="#data-routing">Data Routing</a></li>
-<li><a href="#access-control">Access Control</a></li>
-</ul>
-</li>
-<li><a href="#starting-replication">Starting Replication</a></li>
-<li><a href="#stopping-replication">Stopping Replication</a></li>
-<li><a href="#query-events-live-queries">Query Events / Live Queries</a></li>
-<li><a href="#exercises">Exercises</a>
-<ul class="sectlevel2">
-<li><a href="#exercise-1">Exercise 1</a></li>
-<li><a href="#exercise-2">Exercise 2</a></li>
-</ul>
-</li>
+<li><a href="#data-model">Data Model</a></li>
+<li><a href="#configuring-app-for-background-app-refresh">Configuring App for Background App Refresh</a></li>
+<li><a href="#implementing-the-background-fetch-callback">Implementing the Background Fetch callback</a></li>
+<li><a href="#implementing-the-one-shot-replication">Implementing the One-shot replication</a></li>
+<li><a href="#exercises">Exercises</a></li>
 <li><a href="#learn-more">Learn More</a>
 <ul class="sectlevel2">
 <li><a href="#further-reading">Further Reading</a></li>
@@ -500,40 +475,23 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="introduction">Introduction</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Couchbase Sync Gateway is a key component of the Couchbase Mobile stack. It is an Internet-facing synchronization mechanism that securely syncs data across devices as well as between devices and the cloud.
-It provides</p>
+<p>The ability for a mobile app to run in the background is an important element of the life cycle of a mobile application. The ability to sync data while in the background would be useful in several scenarios. Background support is platform specific and is hence not built into Couchbase Lite. However, one can easily leverage the various platform specific backgrounding capabilities to perform data sync over Couchbase Mobile.</p>
+</div>
+<div class="paragraph">
+<p>This tutorial will demonstrate how to -</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Data Synchronization across devices and the cloud</p>
+<p>Configure your iOS app for Background Fetch support</p>
 </li>
 <li>
-<p>Authorization &amp; Access Control</p>
-</li>
-<li>
-<p>Data Validation</p>
+<p>Setup your app to do a one-shot sync with Couchbase Sync Gateway while in the background</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>This tutorial will walk through a simple swift app that will demonstrate how to</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Use the Couchbase Sync Gateway (in walrus mode) to sync content between multiple Couchbase Lite enabled clients. The tutorial will cover the basics of the <a href="https://developer.couchbase.com/documentation/mobile/2.0/guides/sync-gateway/config-properties/index.html">Sync Gateway Configuration</a> and <code>Sync Function API</code></p>
-</li>
-<li>
-<p>Configure your Couchbase Lite clients for replication</p>
-</li>
-<li>
-<p>Set up your Sync Gateway to enforce data routing, access control and authorization</p>
-</li>
-<li>
-<p>Set up Live Queries within your Couchbase Lite clients so they are asyncronously notified of changes</p>
-</li>
-</ul>
+<p>We will be usiing a Swift App as an example of a Couchbase Lite enabled client.</p>
 </div>
 <div class="exampleblock">
 <div class="content">
@@ -553,24 +511,24 @@ It provides</p>
 <div class="ulist">
 <ul>
 <li>
-<p>If you are unfamiliar with the basics of Couchbase Lite, it is recommended that you walk through the following tutorials</p>
+<p>You must have completed the "user profile" tutorial on <strong>sync</strong>. If you haven&#8217;t already done so, please complete the following tutorial first</p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="https://developer.couchbase.com/documentation/mobile/2.0/userprofile_basic.html">Fundamentals</a> of using Couchbase Lite 2.0 as a standalone database</p>
-</li>
-<li>
-<p><a href="https://developer.couchbase.com/documentation/mobile/2.0/userprofile_basic.html">Query Basics</a> with a prebuilt version of Couchbase Lite database</p>
+<p><a href="https://docs.couchbase.com/tutorials/userprofile-couchbase-mobile/sync/userprofile/userprofile_sync.html">Fundamentals of  Sync</a> using Couchbase Lite and Sync Gateway</p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p>iOS (Xcode 9.3+)</p>
+<p>iOS (Xcode 10+)</p>
 <div class="ulist">
 <ul>
 <li>
 <p>Download latest version from the <a href="https://itunes.apple.com/us/app/xcode/id497799835?mt=12">Mac App Store</a></p>
+</li>
+<li>
+<p>NOTE: If you are on an older version of Xcode that you must retain for your other development needs, you can make a copy of your existing version of Xcode and install Xcode 10. So you can have multiple versions of Xcode on your Mac.</p>
 </li>
 </ul>
 </div>
@@ -607,7 +565,10 @@ This is required if you would prefer to pull the source code from GitHub repo.</
 <h2 id="system-overview">System Overview</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>We will be working with a simple "User Profile" app. The version of the app extends the version introduced in the <a href="https://developer.couchbase.com/documentation/mobile/2.0/userprofile_basic.html">Query tutorial</a>.</p>
+<p>We will be working with a simple "User Profile" app which we introduced in the <a href="https://developer.couchbase.com/documentation/mobile/2.0/userprofile_basic.html">Fundamentals Tutorial</a> and extended to support data sync capabilities in the <a href="https://docs.couchbase.com/tutorials/userprofile-couchbase-mobile/sync/userprofile/userprofile_sync.html">Sync Tutorial</a>.</p>
+</div>
+<div class="paragraph">
+<p>In this tutorial, we will be extending that app to support data sync when in the background.</p>
 </div>
 <div class="paragraph">
 <p>The app does the following</p>
@@ -618,14 +579,12 @@ This is required if you would prefer to pull the source code from GitHub repo.</
 <p>Allows users to log in and create or update his/her user profile information. The user profile view is <em>automatically updated</em> everytime the profile information changes in the underlying database</p>
 </li>
 <li>
-<p>The user profile information is synced with a remote Sync Gateway which then syncs it to other apps (subject to access control and routing confdistions specified in the <code>sync function</code>)</p>
+<p>The user profile information is synced with a remote Sync Gateway which then syncs it to other devices (subject to access control and routing configurations specified in the <code>sync function</code>)</p>
+</li>
+<li>
+<p>When the app is woken up in  the background, it does a one-shot replication with the remote Sync Gateway</p>
 </li>
 </ul>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="https://raw.githubusercontent.com/couchbaselabs/userprofile-couchbase-mobile/standalone/content/modules/userprofile/assets/images/university_app_overview.gif" alt="App with Sync">
-</div>
 </div>
 </div>
 </div>
@@ -634,15 +593,18 @@ This is required if you would prefer to pull the source code from GitHub repo.</
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="fetching-app-source-code">Fetching App Source Code</h3>
+<div class="paragraph">
+<p>You have two options</p>
+</div>
 <div class="sect3">
 <h4 id="option-1-git-clone">Option 1 : Git Clone</h4>
 <div class="ulist">
 <ul>
 <li>
-<p>Clone the <strong><em>sync</em></strong> branch of the <code>User Profile Demo</code> project from GitHub. Type the following command in your terminal</p>
+<p>Clone the <strong><em>background</em></strong> branch of the <code>User Profile Demo</code> project from GitHub. Type the following command in your terminal</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">  git clone -b sync https://github.com/couchbaselabs/userprofile-couchbase-mobile.git</code></pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash">  git clone -b backgroundfetch https://github.com/couchbaselabs/userprofile-couchbase-mobile.git</code></pre>
 </div>
 </div>
 </li>
@@ -665,19 +627,19 @@ This is required if you would prefer to pull the source code from GitHub repo.</
 <div class="ulist">
 <ul>
 <li>
-<p>Next, we will download the Couchbase Lite 2.0 framework. The Couchbase Lite iOS framework is <a href="https://developer.couchbase.com/documentation/mobile/2.0/couchbase-lite/swift.html">distributed</a> via Cocoapods, Carthage or you can download the pre-built framework. In our example, we will be downloading the pre-built version of the framework. For this, do the following</p>
+<p>Next, we will download the Couchbase Lite 2.x framework. The Couchbase Lite iOS framework is <a href="https://developer.couchbase.com/documentation/mobile/2.1/couchbase-lite/swift.html">distributed</a> via Cocoapods, Carthage or you can download the pre-built framework. In our example, we will be downloading the pre-built version of the framework. For this, type the following in the command terminal</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-bash" data-lang="bash">  cd /path/to/UserProfileDemo/content/modules/userprofile/examples
 
-  sh install_9.sh</code></pre>
+  sh install_10.sh</code></pre>
 </div>
 </div>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>Now, let&#8217;s verify the installation</p>
+<p>let&#8217;s verify the installation</p>
 </div>
 </div>
 <div class="sect2">
@@ -693,13 +655,13 @@ This is required if you would prefer to pull the source code from GitHub repo.</
 </div>
 </li>
 <li>
-<p>Build and run the project using the <strong>two simulators</strong> in Xcode</p>
+<p>Build and run the project in the simulator using Xcode</p>
 </li>
 <li>
-<p>Verify that you see the login screen on both the simulators</p>
+<p>Verify that you see the login screen</p>
 <div class="imageblock">
 <div class="content">
-<img src="user_profile_login_2.png" alt="User Profile Login Screen Image">
+<img src="login_screen.png" alt="User Profile Login Screen Image">
 </div>
 </div>
 </li>
@@ -709,51 +671,20 @@ This is required if you would prefer to pull the source code from GitHub repo.</
 </div>
 </div>
 <div class="sect1">
-<h2 id="sync-gateway-2-0-installation">Sync Gateway 2.0 Installation</h2>
+<h2 id="sync-gateway-2-x-installation">Sync Gateway 2.x Installation</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>There are several <a href="https://developer.couchbase.com/documentation/mobile/2.0/installation/sync-gateway/index.html">deployment</a> options for the Sync Gateway. In our tutorial, we will be installing the Sync Gateway installer on the same <em>localhost</em> as the mobile app</p>
+<p>Follow the steps outlined in the <a href="https://docs.couchbase.com/tutorials/userprofile-couchbase-mobile/sync/userprofile/userprofile_sync.html#sync-gateway-2-0-installation">Sync Tutorial</a> to install the Sync Gateway on localhost running in walrus mode.</p>
 </div>
-<div class="sect2">
-<h3 id="download-the-installer">Download the Installer</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>Download the Sync Gateway 2.0.0 installer from <a href="https://www.couchbase.com/downloads#couchbase-mobile">Downloads</a> page. Be sure to select the <strong>"Mobile"</strong> tab.</p>
-</li>
-<li>
-<p>Launch the Sync Gateway with the <strong>sync-gateway-config-userprofile-walrus.json</strong> config file that is bundled with the User Profile mobile App that you installed as per instructions in <a href="#fetching-app-source-code">Fetching App Source Code</a> section. The <code>sync-gateway-config-userprofile-walrus.json</code> will be located in the <code>/path/to/UserProfileDemo/content/modules/userprofile/examples/</code> folder</p>
-<div class="listingblock">
+<div class="exampleblock">
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">cd  /path/to/sync-gateway-installation/couchbase-sync-gateway/bin
-
-./sync_gateway /path/to/UserProfileDemo/content/modules/userprofile/examples/sync-gateway-config-userprofile-walrus.json</code></pre>
+<div class="paragraph">
+<p>Note that the walrus must is a development-only mode used for testing/demonstration purposes. It must never be used in production.</p>
 </div>
 </div>
-</li>
-<li>
-<p>You should see a bunch of logs output to the console, similar to one below. For brevity, some of the log messages have been trimmed from output below</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">~/couchbase-sync-gateway/bin | =&gt; ./sync_gateway ~/projects/ios/UserProfileDemo/content/modules/userprofile/examples/sync-gateway-config-userprofile-walrus.json
-2018-05-07T15:25:02.924-04:00 Enabling logging: [*]
-2018-05-07T15:25:02.924-04:00 ==== Couchbase Sync Gateway/2.0.0(832;2d8a6c0) ====
-2018-05-07T15:25:03.028-04:00     Created user "demo@example.com"
-2018-05-07T15:25:03.028-04:00 Starting admin server on 127.0.0.1:4985
-2018-05-07T15:25:03.028-04:00 Changes+: Notifying that "userprofile" changed (keys="{_sync:user:demo@example.com}") count=2
-2018-05-07T15:25:03.028-04:00 Cache: Received #1 ("_user/demo@example.com")
-2018-05-07T15:25:03.028-04:00 Cache: Initialized cache for channel "*" with options: &amp;{ChannelCacheMinLength:50 ChannelCacheMaxLength:500 ChannelCacheAge:1m0s}
-2018-05-07T15:25:03.028-04:00 Cache:     #1 ==&gt; channel "*"
-2018-05-07T15:25:03.028-04:00 Changes+: Notifying that "userprofile" changed (keys="{*}") count=3
-2018-05-07T15:25:03.031-04:00 Starting server on :4984 ...</code></pre>
-</div>
-</div>
-</li>
-</ul>
 </div>
 <div class="paragraph">
 <p>Now, let&#8217;s verify the installation</p>
-</div>
 </div>
 <div class="sect2">
 <h3 id="try-it-out-2">Try it Out</h3>
@@ -779,352 +710,56 @@ This is required if you would prefer to pull the source code from GitHub repo.</
 <h2 id="data-model">Data Model</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>If have followed along the tutorial on <a href="">Query Basics</a>, you can skip this section and proceed to the <a href="#sync-gateway-configuration">Sync Gateway Configuration</a>. section We have not made any changes to the Data model for this tutorial.
-Couchbase Lite is a JSON Document Store. A Document is a logical collection of named fields and values.The values are any valid JSON types. In addition to the standard JSON types, Couchbase Lite supports some special types like <code>Date</code> and <code>Blob</code>.
-While it is not required or enforced, it is a recommended practice to include a <em>"type"</em> property that can serve as a namespace for related.</p>
-</div>
-<div class="sect2">
-<h3 id="the-user-profile-document">The "User Profile" Document</h3>
-<div class="paragraph">
-<p>The app deals with a single Document with a <em>"type"</em> property of <em>"user"</em>.  The document ID is of the form <em>"user::&lt;email&gt;"</em>.
-An example of a document would be</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-json" data-lang="json">{
-    "type":"user",
-    "name":"Jane Doe",
-    "email":"jame.doe@earth.org",
-    "address":"101 Main Street",
-    "image":CBLBlob (image/jpg),
-    "university":"Rensselaer Polytechnic"
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="userrecord">UserRecord</h3>
-<div class="paragraph">
-<p>The <em>"user"</em> Document is encoded to a native struct named <em>UserRecord</em>.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-swift" data-lang="swift">Unresolved directive in userprofile_sync.adoc - include::{examplesdir}/UserProfileDemo/model/UserRecord.swift[tags=userrecord]</code></pre>
-</div>
-</div>
+<p>There are two documents - the "user profile" type document and "university" type document. We will use the same data model as discussed in <a href="https://docs.couchbase.com/tutorials/userprofile-couchbase-mobile/sync/userprofile/userprofile_sync.html#data-model">data model section</a> of the Sync tutorial.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="the-university-document">The "University" Document</h2>
+<h2 id="configuring-app-for-background-app-refresh">Configuring App for Background App Refresh</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The app comes bundled with a collection of Documents of type <em>"university"</em>. Each Document represents a university.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-json" data-lang="json">{
-    "type":"university","web_pages": [
-      "http://www.rpi.edu/"
-    ],
-    "name": "Rensselaer Polytechnic Institute",
-    "alpha_two_code": "US",
-    "state-province": null,
-    "domains": [
-      "rpi.edu"
-    ],
-    "country": "United States"
-}</code></pre>
-</div>
-</div>
-<div class="sect2">
-<h3 id="universityrecord">UniversityRecord</h3>
-<div class="paragraph">
-<p>The <em>"university"</em> Document is encoded to a native struct named <em>UniversityRecord</em>.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-swift" data-lang="swift">Unresolved directive in userprofile_sync.adoc - include::{examplesdir}/UserProfileDemo/model/UserRecord.swift[tags=universityrecord]</code></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="sync-gateway-configuration">Sync Gateway Configuration</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The <a href="https://developer.couchbase.com/documentation/mobile/2.0/guides/sync-gateway/config-properties/index.html">Sync Gateway Configuration</a> determines the run time behavior of the Sync Gateway and is typically specified in a JSON file. You can also use the <a href="https://developer.couchbase.com/documentation/mobile/2.0/references/sync-gateway/admin-rest-api/index.html#/database/put<em>db</em>_config">Sync Gateway Config REST Endpoint</a> to specify the configuration. In our application, we will be defining it in the <code><strong>sync-gateway-config-userprofile-walrus.json</strong></code> file.</p>
+<p>iOS supports several backgrounding models. One such option is Background App Refresh. According to <a href="https://developer.apple.com/documentation/uikit/core_app/managing_your_app_s_life_cycle/preparing_your_app_to_run_in_the_background/updating_your_app_with_background_app_refresh">Apple docs</a>, <em>Background App Refresh</em> lets your app run periodically in the background so that it can update its content. The iOS system uses its discretion to determine when to wake up and run your app, typically by learning your app usage over time. In other words, there is no guarantee that your app will have an opportunity to run in the background. Even when provided with the opportunity, the app gets a finite amount of time to run.</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Open the <code><strong>sync-gateway-config-userprofile-walrus.json</strong></code> file using any text editor of your choice. The <code>sync-gateway-config-userprofile-walrus.json</code> is located in the app bundle at <code>/path/to/UserProfileDemo/content/modules/userprofile/examples</code>.</p>
-<div class="paragraph">
-<p>Locate the following settings.</p>
-</div>
-</li>
-<li>
-<p>The <strong>users</strong> setting.</p>
-<div class="paragraph">
-<p>For simplicity, we have hardcoded the <code>user</code> to be <em>"<a href="mailto:demo@example.com">demo@example.com</a>"</em> and the <code>password</code> of <em>"password"</em>. In a production app, you would typically configure the user on the Sync Gateway through the <a href="https://developer.couchbase.com/documentation/mobile/2.0/references/sync-gateway/admin-rest-api/index.html#/user/post<em>db</em><em>user</em>">User Admin REST API</a> and not hardcode it this way.</p>
-</div>
-<div class="paragraph">
-<p>This is specified using the <code>users</code> config setting</p>
-</div>
-<div class="listingblock">
+<p>Open the "capabilities" tab in the <strong>UserProfileDemo.xcodeproj</strong> file. Note that "Background Fetch" is enabled under the "Background models" tab</p>
+<div class="imageblock">
 <div class="content">
-<pre class="highlight"><code class="language-json" data-lang="json">"userprofile": {
-      "users": { "demo@example.com": { "password": "password"} },
-      ....
-}</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-json" data-lang="json">NOTE: If you want to want to use a different user, then specify the credentials of that user to the config file and restart the Sync Gateway.</code></pre>
+<img src="bg_modes.png" alt="Background Modes">
 </div>
 </div>
 </li>
 <li>
-<p>The <strong>server</strong> setting
-We have specified this to be <code><strong>walrus</strong></code>. This is an <em>in-memory-only</em> mode that is only recommended for development environments. We will be configuring Sync Gateway to operate in this mode.
-In a production deployment, the Sync Gatway should be backed up by a Couchbase Server.</p>
-<div class="paragraph">
-<p>This is specified using the <code>server</code> config setting</p>
-</div>
+<p>Open the <strong>AppDelegate.swift</strong> file and locate the <code>application:didFinishLaunchingWithOptions()</code> function.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-json" data-lang="json">"userprofile": {
-      "server": "walrus:",
-      ....
-}</code></pre>
+<pre class="highlight"><code class="language-swift" data-lang="swift">Unresolved directive in userprofile_bgfetch.adoc - include::{examplesdir}/UserProfileDemo/AppDelegate.swift[tags=setMinBackgroundFetchInterval]</code></pre>
 </div>
 </div>
+</li>
+<li>
+<p>Here we specify the periodicity at which the app should be woken up. We use a value of <em>UIApplicationBackgroundFetchIntervalMinimum</em> which is the smallest fetch interval supported by the system</p>
 </li>
 </ul>
 </div>
-<div class="exampleblock">
-<div class="content">
-<div class="paragraph">
-<p>You can learn more about the walrus mode in this <a href="https://developer.couchbase.com/documentation/mobile/current/installation/sync-gateway/index.html#walrus-mode">guide</a>.</p>
-</div>
-</div>
-</div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="sync-function">Sync Function</h2>
+<h2 id="implementing-the-background-fetch-callback">Implementing the Background Fetch callback</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>The Sync Function is a Javascript function that is specified as part of the <a href="#sync-gateway-configuration">Sync Gateway Configuration</a>. The Sync Function handles data validation, authorization, access control and data routing.</p>
-</div>
 <div class="ulist">
 <ul>
 <li>
-<p>Open the <code><strong>sync-gateway-config-userprofile-walrus.json</strong></code> file using any text editor of your choice. The <code>sync-gateway-config-userprofile-walrus.json</code> is located in the app bundle at <code>/path/to/UserProfileDemo/content/modules/userprofile/examples</code>.</p>
-<div class="ulist">
-<ul>
-<li>
-<p>Locate the <code>sync</code> setting and follow along with the rest of the sections below</p>
-</li>
-</ul>
-</div>
-</li>
-</ul>
-</div>
-<div class="sect2">
-<h3 id="authorization">Authorization</h3>
-<div class="paragraph">
-<p>We use the <a href="https://developer.couchbase.com/documentation/mobile/2.0/guides/sync-gateway/sync-function-api-guide/index.html#requireuserusername"><code>requireUser()</code></a> API to verify that the <code>email</code> property specified in the Document matches the Id of the user making the request. The Id of the user making the request is specified in the <code>Authorization</code> header. We will be using <em>Basic Authentication</em> in our application.</p>
-</div>
+<p>Open the <strong>AppDelegate.swift</strong> file and locate the <code>application:performFetchWithCompletionHandler()</code> function. This callback function is invoked by the system everything the app is launched in the background.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">function sync(doc, oldDoc) {
-   ....
-   /* Authorization */
-
-  // Verify the user making the request is the same as the one in doc's email
-  requireUser(doc.email);
-  .....
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="data-validation">Data Validation</h3>
-<div class="paragraph">
-<p>In this case, we are doing some basic validation of the contents of the Document</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">function sync(doc, oldDoc) {
-   ...
-   /* Data Validation */
-
-   if (!isDelete()) {
-      // Validate the presence of email fields
-      validateNotEmpty("email", doc.email); <i class="conum" data-value="1"></i><b>(1)</b>
-
-      // Check if document is being created / added for first time
-      // We allow any user to create the document
-      if (isCreate()) {
-
-        // Validate that the document Id _id is prefixed by owner.
-        var expectedDocId = "user" + "::" + doc.email;
-
-        if (expectedDocId != doc._id) { <i class="conum" data-value="2"></i><b>(2)</b>
-            throw({forbidden: "user doc Id must be of form user:email"});
-        }
-
-      } else {
-         // Validate that the email hasn't changed.
-        validateReadOnly("email", doc.email, oldDoc.email); <i class="conum" data-value="3"></i><b>(3)</b>
-      }
-
-    }
-
-
-  // Verify that specified property exists
-  function validateNotEmpty(key, value) {
-    if (!value) {
-      throw({forbidden: key + " is not provided."});
-    }
-  }
-
-  // Verify that specified property value has not changed during update
-  function validateReadOnly(name, value, oldValue) {
-    if (value != oldValue) {
-      throw({forbidden: name + " is read-only."});
-    }
-  }</code></pre>
-</div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Verify that the <code>email</code> property is not null</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>If this a new document, then verify that the <code>Id</code> of the Document is of the required format (i.e. <em>"user::&lt;email&gt;"</em>)</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>If this is a document update, then verify that the <code>email</code> property value has not changed</td>
-</tr>
-</table>
-</div>
-<div class="exampleblock">
-<div class="content">
-<div class="paragraph">
-<p>You can learn more about the Sync Function in this <a href="https://developer.couchbase.com/documentation/mobile/2.0/guides/sync-gateway/sync-function-api-guide/index.htm">guide</a></p>
-</div>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="data-routing">Data Routing</h3>
-<div class="paragraph">
-<p><a href="https://developer.couchbase.com/documentation/mobile/2.0/guides/sync-gateway/channels/index.html#introduction-to-channels"><code>channels</code></a> are a mechanism to "tag" documents and is typically used to seggregate documents based on the contents of the document. Combined with <a href="https://developer.couchbase.com/documentation/mobile/2.0/guides/sync-gateway/sync-function-api-guide/index.html#access-username-channelname">access API</a> and <a href=""><code>requireAccess API</code></a>, it can be used to enforce <a href="#access-control">Access Control</a>. As we shall see in a later section, clients can use channels to pull only a subset of documents.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">  /* Routing */
-  // Subsequent updates to document must be authorized
-  var email = getEmail();
-
-  // Add doc to the user's channel.
-  channel("channel." + email); <i class="conum" data-value="1"></i><b>(1)</b>
-
-  // get email Id property
-  function getEmail() {
-    return (isDelete() ? oldDoc.email : doc.email);
-  }</code></pre>
-</div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>The channel comes into existance the first time a document is added to it. In our case, the channel name is generated from the <code>email</code> property specified in the document</td>
-</tr>
-</table>
-</div>
-</div>
-<div class="sect2">
-<h3 id="access-control">Access Control</h3>
-<div class="paragraph">
-<p>You can enforce access control to channels using the <a href="https://developer.couchbase.com/documentation/mobile/2.0/guides/sync-gateway/sync-function-api-guide/index.html#access-username-channelname">access API</a>. This will enforce that only users with access to a specific channel will be able to retrieve documents in the channel.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">  /* Access Control */
-  // Give user read access to channel
-   if (!isDelete()) {
-    // Deletion of user document is essentially deletion of user
-       access(email,"channel." + email)
-   }</code></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="starting-replication">Starting Replication</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Two-way Replication between the app and the Sync Gateway is enabled when user logs into the app.</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Open the <strong>DatabaseManager.swift</strong> file and locate the <code>startPushAndPullReplicationForCurrentUser()</code> function.</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-swift" data-lang="swift">Unresolved directive in userprofile_sync.adoc - include::{examplesdir}/UserProfileDemo/model/DatabaseManager.swift[tags=startPushAndPullReplicationForCurrentUser]</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>Next, we create an instance of the <code>ReplicatorConfig</code> instance that specifies the source and target database and you can optionally, override the default configuration settings.</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-swift" data-lang="swift">Unresolved directive in userprofile_sync.adoc - include::{examplesdir}/UserProfileDemo/model/DatabaseManager.swift[tags=replicationconfig]</code></pre>
+<pre class="highlight"><code class="language-swift" data-lang="swift">Unresolved directive in userprofile_bgfetch.adoc - include::{examplesdir}/UserProfileDemo/AppDelegate.swift[tags=backgroundFetchHandler]</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-swift" data-lang="swift">&lt;1&gt; Initialize with `source` as the local Couchbase Lite database and the `remote` target as the Sync Gateway
-&lt;2&gt; Replication `type` of `pushAndPull` indicates that we require two-way sync. A value of `.pull` specifies that we only pull data from the Sync Gateway. A value of `.push` specifies that we only push data.
-&lt;3&gt; The `continuous` mode is specified to be _true_ which means that changes are synced in real-time. A value of _false_  which implies that data is only pulled from the Sync Gateway.
-&lt;4&gt; This is where you specify the authentication credentials of the user. In the &lt;&lt;Authorization&gt;&gt; section, we discussed that the Sync Gateway can enforce authorization check using the `requireUser` API.
-&lt;5&gt; The `channels` are used to specify the channels to pull from. Only documents belonging to the specified channels are synced. This is subject to &lt;&lt;Access Control&gt;&gt; rights enforced at the Sync Gateway.</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>Initialize the <code>Replicator</code> with the <code>ReplicatorConfiguration</code></p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-swift" data-lang="swift">Unresolved directive in userprofile_sync.adoc - include::{examplesdir}/UserProfileDemo/model/DatabaseManager.swift[tags=replicationinit]</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>We attach a callback listener to the <code>Replicator</code> to be asynchronously notified of state changes. This could be useful for instance, to inform the user of the progress of the replication. This is an optional step</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-swift" data-lang="swift">Unresolved directive in userprofile_sync.adoc - include::{examplesdir}/UserProfileDemo/model/DatabaseManager.swift[tags=replicationlistener]</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>Start the replicator</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-swift" data-lang="swift">Unresolved directive in userprofile_sync.adoc - include::{examplesdir}/UserProfileDemo/model/DatabaseManager.swift[tags=replicationstart]</code></pre>
+<pre class="highlight"><code class="language-swift" data-lang="swift">&lt;1&gt; Invoke function on to do a one-shot replication with the Sync Gateway. Everytime the app is launched, all pending changes with the remote Sync Gateway will be synched up</code></pre>
 </div>
 </div>
 </li>
@@ -1133,75 +768,27 @@ In a production deployment, the Sync Gatway should be backed up by a Couchbase S
 </div>
 </div>
 <div class="sect1">
-<h2 id="stopping-replication">Stopping Replication</h2>
+<h2 id="implementing-the-one-shot-replication">Implementing the One-shot replication</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>When user logs out of the app, the replication is stopped before the database is closed.</p>
+<p>Setting up the app for one-shot replication is very similar to continuous replication that was discussed in the link:https://docs.couchbase.com/tutorials/userprofile-couchbase-mobile/sync/userprofile/userprofile_sync.html#starting-replication [Sync tutorial]. The exception being that the "continuous" configuration mode is specified to be <em>false</em>.
+* Open the <strong>DatabaseManager.swift</strong> file and locate the <code>startOneShotPullReplicationForCurrentUser()</code> function.</p>
+</div>
+<div class="paragraph">
+<p>+</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-swift" data-lang="swift">Unresolved directive in userprofile_bgfetch.adoc - include::{examplesdir}/UserProfileDemo/model/DatabaseManager.swift[tags=startOneShotPullReplicationForCurrentUser]</code></pre>
+</div>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Open the <strong>DatabaseManager.swift</strong> file and locate the <code>stopAllReplicationForCurrentUser()</code> function.</p>
+<p>Note that the "conitnuous" mode is set to "false" in the Replicator configuration indicating that this is a one-shot replication. In one-shot mode, the replicator goes into idle state once all pending changes are synced</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-swift" data-lang="swift">Unresolved directive in userprofile_sync.adoc - include::{examplesdir}/UserProfileDemo/model/DatabaseManager.swift[tags=stopAllReplicationForCurrentUser]</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-swift" data-lang="swift">NOTE:All open replicators must be stopped before database is closed. There will be an exception if you attempt to close the database without closing the active replicators.</code></pre>
-</div>
-</div>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="query-events-live-queries">Query Events / Live Queries</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>In couchbase Lite 2.0, the app can set up <em>live queries</em> in order to be asynchronously notified of changes to the database that affect the results of the query. This would be very useful for instance, to keep a UI View up-to-date with the results of a query.</p>
-</div>
-<div class="paragraph">
-<p>In our app, the user profile view is kept up-to-date with a live query that fetches the user profile data that is used to populate the view. This means that, if the replicator pulls down changes to the user profile, it will be automatically reflected in the view.</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Open the <strong>UserPresenter.swift</strong> file and locate the <code>fetchRecordForCurrentUserWithLiveModeEnabled()</code> function. Calling this function with a value of <code>true</code> implies that the caller wishes to be notified of any changes to query results.</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-swift" data-lang="swift">Unresolved directive in userprofile_sync.adoc - include::{examplesdir}/UserProfileDemo/model/UserPresenter.swift[tags=fetchRecordForCurrentUserWithLiveModeEnabled]</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>Build the Query using <code>QueryBuilder</code> API. If you are unfamiliar with this API, please check out this <a href="https://developer.couchbase.com/documentation/mobile/2.0/userprofile_query.html">tutorial</a>.</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-swift" data-lang="swift">Unresolved directive in userprofile_sync.adoc - include::{examplesdir}/UserProfileDemo/model/UserPresenter.swift[tags=livequerybuilder]</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-swift" data-lang="swift">&lt;1&gt; We query for documents based on document Id. In our app, there should be exactly one user profile document corresponding to this Id.</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>Attach listener callback to the query to make it <em>live</em></p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-swift" data-lang="swift">Unresolved directive in userprofile_sync.adoc - include::{examplesdir}/UserProfileDemo/model/UserPresenter.swift[tags=livequery]</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-swift" data-lang="swift">&lt;1&gt; Attach a listener callback to the query. Attaching a listerner automatically makes it _live_ so any time there is a change in the user profile data in the underlying database, the callback would be invoked
-&lt;2&gt; Create an instance of &lt;&lt;UserRecord&gt;&gt;. This will be populated with the query results.
-&lt;3&gt; The `SelectResult.all()` method is used to query all the properties of a document. In this case, the document in the result is embedded in a dictionary where the key is the database name, which is _"userprofile"_. So we retrieve the link:http://docs.couchbase.com/mobile/2.0/couchbase-lite-swift/Classes/DictionaryObject.html[`DictionaryObject`] at key _"userprofile"_.
-&lt;4&gt;  We use appropriate _type getters_ to retrieve values and populate the _UserRecord_ instance</code></pre>
+<pre class="highlight"><code class="language-swift" data-lang="swift">Unresolved directive in userprofile_bgfetch.adoc - include::{examplesdir}/UserProfileDemo/model/DatabaseManager.swift[tags=oneshotreplicationconfig]</code></pre>
 </div>
 </div>
 </li>
@@ -1212,32 +799,25 @@ In a production deployment, the Sync Gatway should be backed up by a Couchbase S
 <div class="sect1">
 <h2 id="exercises">Exercises</h2>
 <div class="sectionbody">
-<div class="sect2">
-<h3 id="exercise-1">Exercise 1</h3>
 <div class="paragraph">
-<p>In this exercise, we will observe how changes made on one app are synced across to the other app
-* The app should be running in two simulators side by side
-* Log into both the simulators with same userId and password. Let&#8217;s use the values <em>"<a href="mailto:demo@example.com">demo@example.com</a>"</em> and <em>"password"</em> for user Id and password fields respectively.
-* On one simulator, enter values in the user and address fields
-* Confirm that changes show up in the app on the other simulator</p>
+<p>Before proceeding with the exercises in this section, complete the exercises in the <a href="https://docs.couchbase.com/tutorials/userprofile-couchbase-mobile/sync/userprofile/userprofile_sync.html#exercises">Sync tutorial</a> to verify that you can sync changes between the app and Sync Gateway in the foreground</p>
 </div>
 <div class="paragraph">
-<p>+
-image::https://raw.githubusercontent.com/couchbaselabs/userprofile-couchbase-mobile/standalone/content/modules/userprofile/assets/images/university_list.gif[App Sync]</p>
+<p>In the following exercise, we will observe how changes made on Sync Gateway are fetched by the iOS app in the background</p>
 </div>
-<div class="paragraph">
-<p>+</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="exercise-2">Exercise 2</h3>
-<div class="paragraph">
-<p>In this exercise, we will observe changes made via Sync Gateway are synced over to the apps
-* Open the command terminal and issue the following command to get the user profile document via <a href="">GET Document REST API</a> . We will be using <code>curl</code> to issue the request. If you haven&#8217;t done so, please install curl as indicated in the <a href="#prerequisites">Prerequisites</a> section</p>
-</div>
-<div class="paragraph">
-<p>+</p>
-</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The app should be running in the simulator with the xcode debugger attached</p>
+</li>
+<li>
+<p>Push the app in the simulator to the background. Typically you can do it with the Shift-Cmd-H key combination</p>
+</li>
+<li>
+<p>Clear the debug console logs in xcode. This will make it easier to identify what goes on when the app is launched in the background</p>
+</li>
+<li>
+<p>Open the command terminal and issue the following <code>curl</code> command to get the user profile document via <a href="">GET Document REST API</a></p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-bash" data-lang="bash">curl -X GET \
@@ -1247,42 +827,34 @@ image::https://raw.githubusercontent.com/couchbaselabs/userprofile-couchbase-mob
   -H 'Content-Type: application/json'</code></pre>
 </div>
 </div>
-<div class="ulist">
-<ul>
+</li>
 <li>
 <p>Your response should look something like the response below. The exact contents depends on the user profile information that you provided via your mobile app.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-bash" data-lang="bash">{
-    "_attachments": { <i class="conum" data-value="2"></i><b>(2)</b>
-        "blob_1": {
-            "content_type": "image/jpeg",
-            "digest": "sha1-S8asPSgzA+F+fp8/2DdIy4K+0U8=",
-            "length": 14989,
-            "revpos": 2,
-            "stub": true
-        }
-    },
-    "_id": "user::demo@example.com",
-    "_rev": "2-3a76cfa911e2c54d1e82b29dbffc7f4e5a9bc265", <i class="conum" data-value="1"></i><b>(1)</b>
-    "address": "",
-    "email": "demo@example.com",
-    "image": {
-        "@type": "blob",
-        "content_type": "image/jpeg",
-        "digest": "sha1-S8asPSgzA+F+fp8/2DdIy4K+0U8=",
-        "length": 14989
-    },
-    "name": "",
-    "type": "user",
-    "university": "British Institute in Paris, University of London"
+  "_attachments": {
+    "blob_/image": {
+      "content_type": "image/jpeg",
+      "digest": "sha1-9OHO0QIk+kREiOaoMlrEg/jU4zU=",
+      "length": 15110,
+      "revpos": 1,
+      "stub": true
+    }
+  },
+  "_id": "user::demo@example.com",
+  "_rev": "1-0b9e3efa5ec1b1596564c4db34ba28d4e618f9c5",
+  "address": "",
+  "email": "demo@example.com",
+  "image": {
+    "@type": "blob",
+    "content_type": "image/jpeg",
+    "digest": "sha1-9OHO0QIk+kREiOaoMlrEg/jU4zU=",
+    "length": 15110
+  },
+  "name": "",
+  "type": "user"
 }</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">&lt;1&gt; Record the revision Id of the document. You will need this when you update the document
-&lt;2&gt; If you had updated an image via the mobile app, you should see an **"_attachments"** property. This entry holds an array of attachments corresponding to each image blob entry added by the mobile app. This property is added by the Sync Gateway when it processes the document.  You can learn more about how image Blob types are mapped to attachments link:[here].</code></pre>
 </div>
 </div>
 </li>
@@ -1291,56 +863,49 @@ image::https://raw.githubusercontent.com/couchbaselabs/userprofile-couchbase-mob
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-bash" data-lang="bash">curl -X PUT \
-  'http://localhost:4985/userprofile/user::demo@example.com?rev=2-3a76cfa911e2c54d1e82b29dbffc7f4e5a9bc265' \
+  'http://localhost:4985/userprofile/user::demo@example.com?rev=1-0b9e3efa5ec1b1596564c4db34ba28d4e618f9c5' \
   -H 'Accept: application/json' \
   -H 'Cache-Control: no-cache' \
   -H 'Content-Type: application/json' \
   -d '{
-    "address": "101 Main Street", <i class="conum" data-value="1"></i><b>(1)</b>
-    "email": "demo@example.com",
-    "image": {
-        "@type": "blob",
-        "content_type": "image/jpeg",
-        "digest": "sha1-S8asPSgzA+F+fp8/2DdIy4K+0U8=",
-        "length": 14989
-    },
-    "name": "",
-    "type": "user",
-    "university": "British Institute in Paris, University of London"
+  "address": "101 Main Street",
+  "email": "demo@example.com",
+  "image": {
+    "@type": "blob",
+    "content_type": "image/jpeg",
+    "digest": "sha1-S8asPSgzA+F+fp8/2DdIy4K+0U8=",
+    "length": 14989
+  },
+  "name": "priya Rajagopal",
+  "type": "user",
+  "university": "British Institute in Paris, University of London"
 }'</code></pre>
 </div>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">&lt;1&gt; I updated the address field. You can choose to update any other profile information</code></pre>
-</div>
-</div>
 </li>
 <li>
-<p>Confirm that you get a HTTP <em>"201 Created"</em> status code</p>
-</li>
-<li>
-<p>As soon as you update the document via the Sync Gateway REST API, confirm that the changes show up in the mobile app on the simulator.</p>
+<p>Launch the iOS app in the background. You will simulate this through the Xcode Debug menu to "Simulate Background Fetch"</p>
 <div class="imageblock">
 <div class="content">
-<img src="https://raw.githubusercontent.com/couchbaselabs/userprofile-couchbase-mobile/standalone/content/modules/userprofile/assets/images/university_list.gif" alt="App Sync">
+<img src="simulate_bg_fetch.png" alt="Simulate Background Fetch">
 </div>
 </div>
 </li>
+<li>
+<p>Observe the console logs. You would see a set of messages indicating that the app has pulled the latest changes from the Sync Gateway</p>
+<div class="imageblock">
+<div class="content">
+<img src="bg_console_logs.png" alt="Background Fetch Logs">
+</div>
+</div>
+</li>
+<li>
+<p>Stop the Sync Gateway</p>
+</li>
+<li>
+<p>Launch the app in the foreground. The user profile doc that was synced in the background will be displayed.</p>
+</li>
 </ul>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-From <a href="#exercise-2">Exercise 2</a> above, you observed that changes made on the Sync Gateway are propagated to the Couchbase Lite clients. However, if you tried to update the attachment / image using the <a href="">Attachments REST API</a>, you would not see the image getting updated on the client side. This is a <a href="">known issue</a> in 2.0 and should be fixed in the next release.
-</td>
-</tr>
-</table>
-</div>
 </div>
 </div>
 </div>
@@ -1351,7 +916,7 @@ From <a href="#exercise-2">Exercise 2</a> above, you observed that changes made 
 <p>Congratulations on completing this tutorial!</p>
 </div>
 <div class="paragraph">
-<p>This tutorial walked you through an example of how to use a Sync Gateway to synchronize data between Couchbase Lite enabled clients. We discussed how to configure your Sync Gateway to enforce relevat access control, authorization and data routing between Couchbase Lite enabled clients.</p>
+<p>This tutorial walked you through an example of how to synchronize data between Sync Gateway and Couchbase Lite enabled mobile app running in the background.</p>
 </div>
 <div class="paragraph">
 <p>Check out the following links for further details</p>
@@ -1361,16 +926,10 @@ From <a href="#exercise-2">Exercise 2</a> above, you observed that changes made 
 <div class="ulist">
 <ul>
 <li>
-<p><a href="https://developer.couchbase.com/documentation/mobile/2.0/guides/sync-gateway/config-properties/index.html">Sync Gateway Configuration</a></p>
+<p><a href="https://developer.apple.com/library/archive/documentation/iPhone/Conceptual/iPhoneOSProgrammingGuide/BackgroundExecution/BackgroundExecution.html">Apple Backgrounding Support</a></p>
 </li>
 <li>
-<p><a href="https://blog.couchbase.com/querying-array-collections-couchbase-mobile/">Sync Function API</a></p>
-</li>
-<li>
-<p><a href="https://blog.couchbase.com/xcode-playground-couchbase-mobile/">Overview of Replication Protocol 2.0</a></p>
-</li>
-<li>
-<p><a href="">Installing Sync Gateway using Docker</a></p>
+<p><a href="https://blog.couchbase.com/data-replication-couchbase-mobile/">Overview of Replication Protocol 2.0</a></p>
 </li>
 </ul>
 </div>
@@ -1380,7 +939,7 @@ From <a href="#exercise-2">Exercise 2</a> above, you observed that changes made 
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2018-05-16 19:23:48 EDT
+Last updated 2019-01-06 23:37:59 EST
 </div>
 </div>
 </body>
