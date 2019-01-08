@@ -10,13 +10,13 @@ endif::[]
 toc::[]
 
 == Introduction
-Couchbase Lite 2.0 brings powerful querying and Full-Text-Search(FTS) capabilties to the edge. The new query interface is based on link:https://www.couchbase.com/products/n1ql[N1QL], Couchbase’s declarative query language that extends link:https://www.sqlite.org/index.html[SQL] for JSON. If you are familiar with SQL, you will feel right at home with the semantics of the new API.  The query API is designed using the link:https://en.wikipedia.org/wiki/Fluent_interface[Fluent API Design Pattern], and it uses method cascading to read to like a Domain Specific Language (DSL). This makes the interface very intuitive and easy to understand.
+Couchbase Lite 2.x brings powerful querying and Full-Text-Search(FTS) capabilties to the edge. The new query interface is based on link:https://www.couchbase.com/products/n1ql[N1QL], Couchbase’s declarative query language that extends link:https://www.sqlite.org/index.html[SQL] for JSON. If you are familiar with SQL, you will feel right at home with the semantics of the new API.  The query API is designed using the link:https://en.wikipedia.org/wiki/Fluent_interface[Fluent API Design Pattern], and it uses method cascading to read to like a Domain Specific Language (DSL). This makes the interface very intuitive and easy to understand.
 
 Couchbase Lite can be used as a standalone embedded database within your mobile app.
 
 This tutorial will walk through a simple swift app that will 
 
-* Demonstrate how you can bundle, load and use a  **_prebuilt_** instance of Couchbase Lite 2.0 
+* Demonstrate how you can bundle, load and use a  **_prebuilt_** instance of Couchbase Lite 2.x 
 * Introduce you to the basics of the `QueryBuilder` interface
 
 ====
@@ -26,9 +26,9 @@ You can learn more about Couchbase Mobile https://developer.couchbase.com/mobile
 == Prerequisites
 This tutorial assumes familiarity with building swift apps with Xcode and with the basics of Couchbase Lite
 
-* If you are unfamiliar with the basics of Couchbase Lite, it is recommended that you walk through the link:https://developer.couchbase.com/documentation/mobile/2.0/userprofile_basic.html[Fundamentals Tutorial] on using Couchbase Lite 2.0 as a standalone database
+* If you are unfamiliar with the basics of Couchbase Lite, it is recommended that you walk through the link:https://developer.couchbase.com/documentation/mobile/2.0/userprofile_basic.html[Fundamentals Tutorial] on using Couchbase Lite 2.x as a standalone database
 
-* iOS (Xcode 9.3+) 
+* iOS (Xcode 10+) 
   Download latest version from the link:https://itunes.apple.com/us/app/xcode/id497799835?mt=12[Mac App Store]
                         
 * git (Optional)
@@ -67,13 +67,13 @@ image::https://raw.githubusercontent.com/couchbaselabs/userprofile-couchbase-mob
 
 === Installing Couchbase Lite Framework
 
-- Next, we will download the Couchbase Lite 2.0 framework. The Couchbase Lite iOS framework is link:https://developer.couchbase.com/documentation/mobile/2.0/couchbase-lite/swift.html[distributed] via Cocoapods, Carthage or you can download the pre-built framework. In our example, we will be downloading the pre-built version of the framework. For this, do the following
+- Next, we will download the Couchbase Lite 2.x framework. The Couchbase Lite iOS framework is link:https://developer.couchbase.com/documentation/mobile/2.0/couchbase-lite/swift.html[distributed] via Cocoapods, Carthage or you can download the pre-built framework. In our example, we will be downloading the pre-built version of the framework. For this, do the following
 +
 [source,bash] 
 ----
   cd /path/to/UserProfileDemo/content/modules/userprofile/examples
 
-  sh install_9.sh
+  sh install_10.sh
 ----
 
 Now, let's verify the installation
