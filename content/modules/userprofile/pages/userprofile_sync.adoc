@@ -11,7 +11,7 @@ toc::[]
 
 == Introduction
 
-Couchbase Sync Gateway is a key component of the Couchbase Mobile stack. It is an Internet-facing synchronization mechanism that securely syncs data across devices as well as between devices and the cloud. Couchbase Mobile 2.0 introduces a brand new websockets based link:https://blog.couchbase.com/data-replication-couchbase-mobile/[replication protocol].
+Couchbase Sync Gateway is a key component of the Couchbase Mobile stack. It is an Internet-facing synchronization mechanism that securely syncs data across devices as well as between devices and the cloud. Couchbase Mobile 2.x introduces a brand new websockets based link:https://blog.couchbase.com/data-replication-couchbase-mobile/[replication protocol].
 
 The core functions of the Sync Gateway include
 
@@ -40,7 +40,7 @@ This tutorial assumes familiarity with building swift apps with Xcode and with C
 ** link:https://developer.couchbase.com/documentation/mobile/2.0/userprofile_basic.html[Fundamentals] of using Couchbase Lite 2.0 as a standalone database
 ** link:https://developer.couchbase.com/documentation/mobile/2.0/userprofile_query.html[Query Basics] with a prebuilt version of Couchbase Lite database
 
-* iOS (Xcode 9.3+) 
+* iOS (Xcode 10+) 
 ** Download latest version from the link:https://itunes.apple.com/us/app/xcode/id497799835?mt=12[Mac App Store]
 ** NOTE: If you are on an older version of Xcode that you must retain for your other development needs, you can make a copy of your existing version of Xcode and install Xcode 9.3. So you can have multiple versions of Xcode on your Mac.
                         
@@ -86,13 +86,13 @@ You have two options
 
 === Installing Couchbase Lite Framework
 
-- Next, we will download the Couchbase Lite 2.0 framework. The Couchbase Lite iOS framework is link:https://developer.couchbase.com/documentation/mobile/2.0/couchbase-lite/swift.html[distributed] via Cocoapods, Carthage or you can download the pre-built framework. In our example, we will be downloading the pre-built version of the framework. For this, type the following in the command terminal
+- Next, we will download the Couchbase Lite 2.x framework. The Couchbase Lite iOS framework is link:https://developer.couchbase.com/documentation/mobile/2.0/couchbase-lite/swift.html[distributed] via Cocoapods, Carthage or you can download the pre-built framework. In our example, we will be downloading the pre-built version of the framework. For this, type the following in the command terminal
 +
 [source,bash] 
 ----
   cd /path/to/UserProfileDemo/content/modules/userprofile/examples
 
-  sh install_9.sh
+  sh install_10.sh
 ----
 
 Now, let's verify the installation
@@ -110,11 +110,11 @@ open UserProfileDemo.xcodeproj
 +
 image::user_profile_login_2.png[User Profile Login Screen Image]
 
-== Sync Gateway 2.0 Installation
+== Sync Gateway 2.x Installation
 There are several link:https://developer.couchbase.com/documentation/mobile/2.0/installation/sync-gateway/index.html[deployment] options for the Sync Gateway. In our tutorial, we will be using the Sync Gateway installer to install the Sync Gateway on the same _localhost_ as the mobile app.
 
 === Download the Installer
-* Download the Sync Gateway 2.0.0 installer from link:https://www.couchbase.com/downloads#couchbase-mobile[Downloads] page. Be sure to select the *"Mobile"* tab.
+* Download the latest Sync Gateway 2.x installer from link:https://www.couchbase.com/downloads#couchbase-mobile[Downloads] page. Be sure to select the *"Mobile"* tab.
 
 * Launch the Sync Gateway from the command line with the *sync-gateway-config-userprofile-walrus.json* config file. This file is bundled with the User Profile mobile App source that you downloaded as per instructions in <<Fetching App Source Code>> section. The `sync-gateway-config-userprofile-walrus.json` will be located in the `/path/to/UserProfileDemo/content/modules/userprofile/examples/` folder 
 +
