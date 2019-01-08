@@ -22,7 +22,7 @@ Couchbase Mobile supports flexible deployment models. You can deploy
 * Couchbase Lite enabled mobile clients with a Sync Gateway to sychronize data between your mobile clients or,
 * Couchbase Lite enabled clients with a Sync Gateway to sync data between mobile clients and the Couchbase Server, which can persist data in the cloud (public or private) 
 
-This tutorial will walk you through a very basic example of how you can use *Couchbase Lite 2.0 in standalone mode* within your Swift app. In this mode, Couchbase Lite will serve as a local, embedded data store within your iOS App and can be a replacement for SQLite or Core Data.
+This tutorial will walk you through a very basic example of how you can use *Couchbase Lite 2.x in standalone mode* within your Swift app. In this mode, Couchbase Lite will serve as a local, embedded data store within your iOS App and can be a replacement for SQLite or Core Data.
 
 You will learn the fundamentals of
 
@@ -37,7 +37,7 @@ You can learn more about Couchbase Mobile https://developer.couchbase.com/mobile
 == Prerequisites
 This tutorial assumes familiarity with building swift apps with Xcode.
 
-* iOS (Xcode 9.3+) 
+* iOS (Xcode 10+) 
   Download latest version from the link:https://itunes.apple.com/us/app/xcode/id497799835?mt=12[Mac App Store]
             
                 
@@ -80,7 +80,7 @@ image::https://raw.githubusercontent.com/couchbaselabs/userprofile-couchbase-mob
 ----
   cd /path/to/UserProfileDemo/content/modules/userprofile/examples
 
-  sh install_9.sh
+  sh install_10.sh
 ----
 
 Now, let's verify the installation
@@ -311,7 +311,7 @@ image::https://raw.githubusercontent.com/couchbaselabs/userprofile-couchbase-mob
 == Learn More
 Congratulations on completing this tutorial!
 
-This tutorial walked you through a very basic example of how to get up and running with Couchbase Lite as a local-only, standalone embedded data store in your iOS app. If you want to learn more about Couchbase Mobile 2.0, check out the following links.
+This tutorial walked you through a very basic example of how to get up and running with Couchbase Lite as a local-only, standalone embedded data store in your iOS app. If you want to learn more about Couchbase Mobile 2.x, check out the following links.
 
 === Further Reading
 * link:https://blog.couchbase.com/couchbase-mobile-2-0/[Introduction to Couchbase Mobile]
