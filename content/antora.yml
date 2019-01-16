@@ -1,6 +1,4 @@
-name: userprofile-couchbase-mobile
-title: User Profile Tutorial
-version: 'standalone'
-start_page: userprofile:userprofile_basic.adoc
+name: tutorials
 nav:
-- modules/docs/nav.adoc
+title: User Profile Sample - Data Sync Fundamentals
+version: 'master'
