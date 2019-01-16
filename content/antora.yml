@@ -1,6 +1,3 @@
-name: tutorials/userprofile-couchbase-mobile
-title: User Profile Tutorial
-version: 'query'
-start_page: userprofile:userprofile_query.adoc
-nav:
-- modules/docs/nav.adoc
+name: tutorials
+title: User Profile Sample - Couchbase Lite Query Introduction
+version: 'master'
