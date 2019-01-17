@@ -1,6 +1,4 @@
-name: tutorials/userprofile-couchbase-mobile
+name: userprofile-couchbase-mobile
+nav:
 title: User Profile Tutorial
 version: 'query'
-start_page: userprofile:userprofile_query.adoc
-nav:
-- modules/docs/nav.adoc
