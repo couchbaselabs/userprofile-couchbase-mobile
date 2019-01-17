@@ -1,4 +1,4 @@
-name: tutorials
+name: userprofile-couchbase-mobile
 nav:
 title: User Profile Tutorial
-version: 'master'
+version: 'backgroundfetch'
