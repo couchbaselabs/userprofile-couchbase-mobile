@@ -3,6 +3,7 @@
 :idseparator: -
 :icons: font
 :quick-uri: https://asciidoctor.org/docs/asciidoc-syntax-quick-reference/
+:page-aliases: tutorials:userprofile-couchbase-mobile:standalone/userprofile/userprofile_basic
 ifndef::env-site,env-github[]
 :toc: left
 :toclevels: 3
