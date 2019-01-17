@@ -1,3 +1,4 @@
+= User Profile Sample: Couchbase Lite Fundamentals
 :idprefix:
 :idseparator: -
 :icons: font
