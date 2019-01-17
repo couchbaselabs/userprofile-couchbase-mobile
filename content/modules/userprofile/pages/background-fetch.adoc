@@ -1,7 +1,9 @@
+= User Profile Sample: Background App Refresh
 :idprefix:
 :idseparator: -
 :icons: font
 :quick-uri: https://asciidoctor.org/docs/asciidoc-syntax-quick-reference/
+:page-aliases: tutorials:userprofile:background-fetch
 ifndef::env-site,env-github[]
 :toc: left
 :toclevels: 3
