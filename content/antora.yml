@@ -1,6 +1,4 @@
 name: userprofile-couchbase-mobile
+nav:
 title: User Profile Tutorial
 version: 'sync'
-start_page: userprofile:userprofile_sync.adoc
-nav:
-- modules/docs/nav.adoc
