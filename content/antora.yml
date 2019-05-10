@@ -1,4 +1,5 @@
 name: userprofile-couchbase-mobile
-nav:
 title: User Profile Tutorial
 version: 'backgroundfetch'
+nav:
+  - modules/userprofile/nav.adoc
