@@ -7,3 +7,5 @@
 ** xref:standalone@userprofile-couchbase-mobile:userprofile:xamarin/userprofile_basic.adoc[Standalone]
 ** xref:query@userprofile-couchbase-mobile:userprofile:xamarin/userprofile_query.adoc[Query]
 ** xref:sync@userprofile-couchbase-mobile:userprofile:xamarin/userprofile_sync.adoc[Sync]
+* Getting Started on Android
+** xref:standalone@userprofile-couchbase-mobile:userprofile:android/userprofile_basic.adoc[Standalone]
