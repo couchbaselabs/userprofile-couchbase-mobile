@@ -1,4 +1,5 @@
 = User Profile Sample: Couchbase Lite Fundamentals
+:page-hide-view-latest: true
 :idprefix:
 :idseparator: -
 :icons: font
