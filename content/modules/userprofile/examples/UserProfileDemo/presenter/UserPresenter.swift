@@ -158,7 +158,7 @@ extension UserPresenter {
         // Get mutable version
         var mutableDoc = MutableDocument.init(id: self.userProfileDocId)
         //end::doccreate[]
-
+      
         //tag::docset[]
         mutableDoc.setString(record?.type, forKey: UserRecordDocumentKeys.type.rawValue)
         

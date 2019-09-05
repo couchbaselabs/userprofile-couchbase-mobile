@@ -43,9 +43,9 @@ This tutorial assumes familiarity with building swift apps with Xcode and with C
 ** link:https://developer.couchbase.com/documentation/mobile/2.0/userprofile_basic.html[Fundamentals] of using Couchbase Lite 2.0 as a standalone database
 ** link:https://developer.couchbase.com/documentation/mobile/2.0/userprofile_query.html[Query Basics] with a prebuilt version of Couchbase Lite database
 
-* iOS (Xcode 10+) 
+* iOS (Xcode 10.1+) 
 ** Download latest version from the link:https://itunes.apple.com/us/app/xcode/id497799835?mt=12[Mac App Store]
-** NOTE: If you are on an older version of Xcode that you must retain for your other development needs, you can make a copy of your existing version of Xcode and install Xcode 9.3. So you can have multiple versions of Xcode on your Mac.
+** NOTE: If you are on an older version of Xcode that you must retain for your other development needs, you can make a copy of your existing version of Xcode and install Xcode 10.1+. So you can have multiple versions of Xcode on your Mac.
                         
 * git (Optional)
 This is required if you would prefer to pull the source code from GitHub repo.
@@ -90,12 +90,13 @@ You have two options
 === Installing Couchbase Lite Framework
 
 - Next, we will download the Couchbase Lite 2.x framework. The Couchbase Lite iOS framework is link:https://developer.couchbase.com/documentation/mobile/2.0/couchbase-lite/swift.html[distributed] via Cocoapods, Carthage or you can download the pre-built framework. In our example, we will be downloading the pre-built version of the framework. For this, type the following in the command terminal
+If you are on xcode10.1, use install_10.1.sh  script. If you are on xcode10.2, use the install10_2.sh script
 +
 [source,bash] 
 ----
   cd /path/to/UserProfileDemo/content/modules/userprofile/examples
 
-  sh install_10.sh
+  sh install_10.1.sh
 ----
 
 Now, let's verify the installation
