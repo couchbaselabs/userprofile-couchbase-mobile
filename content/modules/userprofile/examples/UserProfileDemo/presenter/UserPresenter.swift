@@ -16,7 +16,7 @@ enum UserRecordDocumentKeys:String {
     case name
     case email
     case address
-    case image
+    case image="imageData"
     case extended
 }
 
