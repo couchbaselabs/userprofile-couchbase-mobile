@@ -32,7 +32,7 @@ This tutorial assumes familiarity with building swift apps with Xcode and with C
 * You must have completed the "user profile" tutorial on *sync*. If you haven't already done so, please complete the following tutorial first
 ** link:https://docs.couchbase.com/tutorials/userprofile-couchbase-mobile/sync/userprofile/userprofile_sync.html[Fundamentals of  Sync] using Couchbase Lite and Sync Gateway
 
-* iOS (Xcode 10+) 
+* iOS (Xcode 11+) 
 ** Download latest version from the link:https://itunes.apple.com/us/app/xcode/id497799835?mt=12[Mac App Store]
 ** NOTE: If you are on an older version of Xcode that you must retain for your other development needs, you can make a copy of your existing version of Xcode and install Xcode 10. So you can have multiple versions of Xcode on your Mac.
                         
@@ -76,13 +76,13 @@ You have two options
 
 === Installing Couchbase Lite Framework
 
-- Next, we will download the Couchbase Lite 2.x framework. The Couchbase Lite iOS framework is link:https://developer.couchbase.com/documentation/mobile/2.1/couchbase-lite/swift.html[distributed] via Cocoapods, Carthage or you can download the pre-built framework. In our example, we will be downloading the pre-built version of the framework. For this, type the following in the command terminal
+- Next, we will download the latest version of Couchbase Lite 2.x framework. The Couchbase Lite iOS framework is link:https://developer.couchbase.com/documentation/mobile/current/couchbase-lite/swift.html[distributed] via Cocoapods, Carthage or you can download the pre-built framework. In our example, we will be downloading the pre-built version of the framework. For this, type the following in the command terminal
 +
 [source,bash] 
 ----
   cd /path/to/UserProfileDemo/content/modules/userprofile/examples
 
-  sh install_10.sh
+  sh install_11.sh
 ----
 
 
@@ -104,7 +104,7 @@ image::login_screen.png[User Profile Login Screen Image]
 == Sync Gateway 2.x Installation
 Follow the steps outlined in the link:https://docs.couchbase.com/tutorials/userprofile-couchbase-mobile/sync/userprofile/userprofile_sync.html#sync-gateway-2-0-installation[Sync Tutorial] to install the Sync Gateway on localhost running in walrus mode. 
 ====
-Note that the walrus must is a development-only mode used for testing/demonstration purposes. It must never be used in production.
+Note that the walrus must is a development-only mode used for testing/demonstration purposes. It must be *never* used in production.
 ====
 
 Now, let's verify the installation
