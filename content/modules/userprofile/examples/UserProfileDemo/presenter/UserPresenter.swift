@@ -63,12 +63,12 @@ extension UserPresenter {
         self.associatedView?.dataStartedLoading()
     
         // fetch document corresponding to the user Id
-        if let doc = db.document(withID: self.userProfileDocId)  { // <3> 
+        if let doc = db.document(withID: self.userProfileDocId)  { // <3>
         
             profile.email  =  doc.string(forKey: UserRecordDocumentKeys.email.rawValue)
             profile.address = doc.string(forKey:UserRecordDocumentKeys.address.rawValue)
             profile.name =  doc.string(forKey: UserRecordDocumentKeys.name.rawValue)
-            profile.imageData = doc.blob(forKey:UserRecordDocumentKeys.image.rawValue)?.content //<4>
+            profile.imageData = doc.blob(forKey:UserRecordDocumentKeys.image.rawValue)?.content // <4>
             
         }
         // end::docfetch[]
