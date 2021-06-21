@@ -89,14 +89,14 @@ You have two options
 
 === Installing Couchbase Lite Framework
 
-- Next, we will download the Couchbase Lite 2.x framework. The Couchbase Lite iOS framework is link:https://developer.couchbase.com/documentation/mobile/2.0/couchbase-lite/swift.html[distributed] via Cocoapods, Carthage or you can download the pre-built framework. In our example, we will be downloading the pre-built version of the framework. For this, type the following in the command terminal
-If you are on xcode10.1, use install_10.1.sh  script. If you are on xcode10.2, use the install10_2.sh script
+- Next, we will download the Couchbase Lite 2.8.x framework. The Couchbase Lite iOS framework is link:https://developer.couchbase.com/documentation/mobile/2.0/couchbase-lite/swift.html[distributed] via Cocoapods, Carthage or you can download the pre-built framework. In our example, we will be downloading the pre-built version of the framework. For this, type the following in the command terminal
+
 +
 [source,bash] 
 ----
   cd /path/to/UserProfileDemo/content/modules/userprofile/examples
 
-  sh install_10.1.sh
+  sh install_12.sh
 ----
 
 Now, let's verify the installation
