@@ -77,13 +77,13 @@ image::https://raw.githubusercontent.com/couchbaselabs/userprofile-couchbase-mob
 
 === Installing Couchbase Lite Framework
 
-- Next, we will download the Couchbase Lite 2.0 framework. The Couchbase Lite iOS framework is link:https://developer.couchbase.com/documentation/mobile/2.0/couchbase-lite/swift.html[distributed] via Cocoapods, Carthage or you can download the pre-built framework. In our example, we will be downloading the pre-built version of the framework. For this, do the following
+- Next, we will download the Couchbase Lite 2.8.x framework. The Couchbase Lite iOS framework is link:https://developer.couchbase.com/documentation/mobile/current/couchbase-lite/swift.html[distributed] via Cocoapods, Carthage or you can download the pre-built framework. In our example, we will be downloading the pre-built version of the framework. For this, do the following
 +
 [source,bash] 
 ----
   cd /path/to/UserProfileDemo/content/modules/userprofile/examples
 
-  sh install_10.sh
+  sh install_12.sh
 ----
 
 Now, let's verify the installation
