@@ -24,9 +24,8 @@
 		5F86E880203B65FF007ED29E /* StoryboardExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F86E87F203B65FF007ED29E /* StoryboardExtension.swift */; };
 		5F86E884203B66B5007ED29E /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F86E883203B66B5007ED29E /* DatabaseManager.swift */; };
 		5F86E886203B788C007ED29E /* ProfileTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F86E885203B788C007ED29E /* ProfileTableViewController.swift */; };
-		5F9C43E7209A20BA004607AE /* CouchbaseLiteSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F9C43E6209A20BA004607AE /* CouchbaseLiteSwift.framework */; };
-		5F9C43E8209A2112004607AE /* CouchbaseLiteSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F9C43E6209A20BA004607AE /* CouchbaseLiteSwift.framework */; };
-		5F9C43E9209A2112004607AE /* CouchbaseLiteSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5F9C43E6209A20BA004607AE /* CouchbaseLiteSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		5FD23C9C2694975B005D5476 /* CouchbaseLiteSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FD23C9A26949593005D5476 /* CouchbaseLiteSwift.framework */; };
+		5FD23C9D2694975B005D5476 /* CouchbaseLiteSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5FD23C9A26949593005D5476 /* CouchbaseLiteSwift.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -36,7 +35,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				5F9C43E9209A2112004607AE /* CouchbaseLiteSwift.framework in Embed Frameworks */,
+				5FD23C9D2694975B005D5476 /* CouchbaseLiteSwift.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -63,7 +62,7 @@
 		5F86E87F203B65FF007ED29E /* StoryboardExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryboardExtension.swift; sourceTree = "<group>"; };
 		5F86E883203B66B5007ED29E /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
 		5F86E885203B788C007ED29E /* ProfileTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileTableViewController.swift; sourceTree = "<group>"; };
-		5F9C43E6209A20BA004607AE /* CouchbaseLiteSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CouchbaseLiteSwift.framework; path = iOS/CouchbaseLiteSwift.framework; sourceTree = "<group>"; };
+		5FD23C9A26949593005D5476 /* CouchbaseLiteSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = CouchbaseLiteSwift.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,8 +70,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5F9C43E8209A2112004607AE /* CouchbaseLiteSwift.framework in Frameworks */,
-				5F9C43E7209A20BA004607AE /* CouchbaseLiteSwift.framework in Frameworks */,
+				5FD23C9C2694975B005D5476 /* CouchbaseLiteSwift.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -102,7 +100,7 @@
 		5F86E83E2037E292007ED29E = {
 			isa = PBXGroup;
 			children = (
-				5F9C43E6209A20BA004607AE /* CouchbaseLiteSwift.framework */,
+				5FD23C9A26949593005D5476 /* CouchbaseLiteSwift.framework */,
 				5F86E8492037E292007ED29E /* UserProfileDemo */,
 				5F86E8482037E292007ED29E /* Products */,
 			);

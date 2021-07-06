@@ -170,7 +170,9 @@ extension DatabaseManager {
 extension DatabaseManager {
     
     fileprivate func enableCrazyLevelLogging() {
-        Database.setLogLevel(.verbose, domain: .query)
+        Database.log.console.domains = LogDomains(rawValue: LogDomain.all.hashValue)
+        Database.log.console.level = .verbose
+      
     }
     
 }
