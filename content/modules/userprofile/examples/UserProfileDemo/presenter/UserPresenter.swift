@@ -17,6 +17,7 @@ enum UserRecordDocumentKeys:String {
     case email
     case address
     case image="imageData"
+    case blobMetadata
     case extended
 }
 
@@ -60,15 +61,40 @@ extension UserPresenter {
         
         var profile = UserRecord.init() // <1>
         profile.email = self.dbMgr.currentUserCredentials?.user // <2>
+     
         self.associatedView?.dataStartedLoading()
     
         // fetch document corresponding to the user Id
         if let doc = db.document(withID: self.userProfileDocId)  { // <3>
         
+            #if CBL3
+            // Get JSON String corresponding to the document
+            let jsonString = doc.toJSON()
+            let jsonData = Data(jsonString.utf8)
+            let jsonDecoder = JSONDecoder()
+           
+            // Map the json string to struct
+            profile = try! jsonDecoder.decode(UserRecord.self, from: jsonData)
+            // Fetch blob metadata and corresponding blob using metadata
+            if let blobMetaString = profile.blobMetadataAsSting {
+                let blobMeta = Data(blobMetaString.utf8)
+                if let blobJson = try? JSONSerialization.jsonObject(with: blobMeta, options: []) as? [String: Any] {
+                    
+                    if let blob = try? db.getBlob(properties: blobJson!) {
+                            // Get blob from database based on metadata
+                            profile.imageData = blob?.content
+                        }
+                   }
+            
+            }
+            #else
+             
             profile.email  =  doc.string(forKey: UserRecordDocumentKeys.email.rawValue)
             profile.address = doc.string(forKey:UserRecordDocumentKeys.address.rawValue)
             profile.name =  doc.string(forKey: UserRecordDocumentKeys.name.rawValue)
-            profile.imageData = doc.blob(forKey:UserRecordDocumentKeys.image.rawValue)?.content // <4>
+            profile.imageData = doc.blob(forKey:UserRecordDocumentKeys.image.rawValue)?.content
+         
+            #endif
             
         }
         // end::docfetch[]
@@ -87,28 +113,38 @@ extension UserPresenter {
         // This will create a new instance of MutableDocument or will
         // fetch existing one
         // Get mutable version
+        #if CBL3
         var mutableDoc = MutableDocument.init(id: self.userProfileDocId)
+        #else
+        var mutableDoc = MutableDocument.init(id: self.userProfileDocId)
+        #endif
         // end::doccreate[]
 
         // tag::docset[]
-        mutableDoc.setString(record?.type, forKey: UserRecordDocumentKeys.type.rawValue)
-        
-        if let email = record?.email {
-            mutableDoc.setString(email, forKey: UserRecordDocumentKeys.email.rawValue)
-        }
-        if let address = record?.address {
-            mutableDoc.setString(address, forKey: UserRecordDocumentKeys.address.rawValue)
-        }
-        
-        if let name = record?.name {
-            mutableDoc.setString(name, forKey: UserRecordDocumentKeys.name.rawValue)
-        }
-       
-        if let imageData = record?.imageData {
+        #if CBL3
+        // Create blob in database and add metadata to record
+        var mutableRecord = record
+        if let imageData = mutableRecord?.imageData {
+            // Save blob
             let blob = Blob.init(contentType: "image/jpeg", data: imageData)
-            mutableDoc.setBlob(blob, forKey: UserRecordDocumentKeys.image.rawValue)
-        } // <1>
+            try? db.saveBlob(blob: blob)
+           // print("BLOB SAVED IS \(blob.toJSON()), ::::: \(blob.properties)")
+            // Add blob metadata
+            mutableRecord?.blobMetadataAsSting = blob.toJSON()
+
+          }
+        
+        let jsonEncoder = JSONEncoder()
+        if let jsonData = try? jsonEncoder.encode(mutableRecord) {
+            let jsonString = String(data: jsonData, encoding: .utf8)!
+
+            try? mutableDoc.setJSON(jsonString)
+        }
+  
+   
+        #endif
         // end::docset[]
+        
         
         
         // tag::docsave[]
