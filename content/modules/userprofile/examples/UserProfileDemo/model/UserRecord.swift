@@ -12,8 +12,8 @@ import UIKit
 // tag::userrecord[]
 let kUserRecordDocumentType = "user"
 
-#if CBL3
 typealias ExtendedData = [[String:Any]]
+#if CBL3
 struct UserRecord : CustomStringConvertible, Codable{
     let type = kUserRecordDocumentType
     var name:String?
@@ -33,12 +33,14 @@ struct UserRecord : CustomStringConvertible, Codable{
 }
 #else
 
-struct UserRecord : CustomStringConvertible, Codable{
+struct UserRecord : CustomStringConvertible{
     let type = kUserRecordDocumentType
     var name:String?
     var email:String?
     var address:String?
     var imageData:Data?
+    
+    var extended:ExtendedData? // future
     private enum CodingKeys: String, CodingKey {
           case type, name,email,address,blobMetadata
       }

@@ -141,6 +141,25 @@ extension UserPresenter {
             try? mutableDoc.setJSON(jsonString)
         }
   
+        #else
+ 
+        mutableDoc.setString(record?.type, forKey: UserRecordDocumentKeys.type.rawValue)
+        
+        if let email = record?.email {
+            mutableDoc.setString(email, forKey: UserRecordDocumentKeys.email.rawValue)
+        }
+        if let address = record?.address {
+            mutableDoc.setString(address, forKey: UserRecordDocumentKeys.address.rawValue)
+        }
+        
+        if let name = record?.name {
+            mutableDoc.setString(name, forKey: UserRecordDocumentKeys.name.rawValue)
+        }
+       
+        if let imageData = record?.imageData {
+            let blob = Blob.init(contentType: "image/jpeg", data: imageData)
+            mutableDoc.setBlob(blob, forKey: UserRecordDocumentKeys.image.rawValue)
+        } // <1>
    
         #endif
         // end::docset[]
