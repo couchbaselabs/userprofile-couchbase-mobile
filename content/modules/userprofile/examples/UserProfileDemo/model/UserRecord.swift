@@ -11,20 +11,46 @@ import UIKit
 
 // tag::userrecord[]
 let kUserRecordDocumentType = "user"
+
 typealias ExtendedData = [[String:Any]]
+#if CBL3
+struct UserRecord : CustomStringConvertible, Codable{
+    let type = kUserRecordDocumentType
+    var name:String?
+    var email:String?
+    var address:String?
+    var university:String?
+    var blobMetadataAsSting:String?
+    var imageData:Data?
+    var extended:ExtendedData? // future
+    private enum CodingKeys: String, CodingKey {
+          case type, name,email,address,blobMetadataAsSting
+      }
+    var description: String {
+        return "name = \(String(describing: name)), email = \(String(describing: email)), address = \(String(describing: address)), university = \(university),blobMetadataAsSting = \(blobMetadataAsSting) imageData = \(imageData)"
+    }
+    
+
+}
+#else
+
 struct UserRecord : CustomStringConvertible{
     let type = kUserRecordDocumentType
     var name:String?
     var email:String?
     var address:String?
-    var imageData:Data?
     var university:String?
+    var imageData:Data?
+    
     var extended:ExtendedData? // future
-  
+    private enum CodingKeys: String, CodingKey {
+          case type, name,email,address,blobMetadata
+      }
     var description: String {
-        return "name = \(String(describing: name)), email = \(String(describing: email)), address = \(String(describing: address)), imageData = \(imageData)"
+        return "name = \(String(describing: name)), email = \(String(describing: email)), address = \(String(describing: address)), university = \(university), imageData = \(imageData)"
     }
     
 
 }
+#endif
 // end::userrecord[]

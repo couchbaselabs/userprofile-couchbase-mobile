@@ -73,15 +73,28 @@ extension UserPresenter {
             guard let db = dbMgr.db else {
                 fatalError("db is not initialized at this point!")
             }
+            #if CBL3
+            let queryStr = "SELECT * FROM userprofile WHERE META().id = '\(self.userProfileDocId)'"
+            userQuery = db.createQuery(query: queryStr)
+            print("userQuery is \(userQuery?.description) ****** query explain: \(String(describing: try? userQuery?.explain()))")
+            
+//            userQuery = QueryBuilder
+//                .select(SelectResult.all())
+//                .from(DataSource.database(db))
+//                .where(Meta.id.equalTo(Expression.string(self.userProfileDocId))) // <1>
+//              print("userQuery is \(userQuery?.description) ****** query explain: \(String(describing: try? userQuery?.explain()))")
+                        
+            #else
             userQuery = QueryBuilder
                 .select(SelectResult.all())
                 .from(DataSource.database(db))
                 .where(Meta.id.equalTo(Expression.string(self.userProfileDocId))) // <1>
-            
+            #endif
             //end::livequerybuilder[]
             do {
                 // V1.0. There should be only one document for a user.
                 //tag::livequery[]
+        
                 userQueryToken = userQuery?.addChangeListener { [weak self] (change) in // <1>
                     guard let `self` = self else {return}
                     switch change.error {
@@ -89,15 +102,39 @@ extension UserPresenter {
                         var userRecord = UserRecord.init() // <2>
                         userRecord.email = self.dbMgr.currentUserCredentials?.user
                         
+                        let jsonDecoder = JSONDecoder()
+                      
                         for (_, row) in (change.results?.enumerated())! {
                             // There should be only one user profile document for a user
-                            print(row.toDictionary())
+                           // print(row.toDictionary())
                             if let userVal = row.dictionary(forKey: "userprofile") { // <3>
+                                
+                                #if CBL3
+                                 // Get JSON String corresponding to the document
+                                 let jsonString = userVal.toJSON()
+                                 let jsonData = Data(jsonString.utf8)
+                                
+                                 // Map the json string to struct
+                                userRecord = try! jsonDecoder.decode(UserRecord.self, from: jsonData)
+                                 // Fetch blob metadata and corresponding blob using metadata
+                                 if let blobMetaString = userRecord.blobMetadataAsSting {
+                                     let blobMeta = Data(blobMetaString.utf8)
+                                     if let blobJson = try? JSONSerialization.jsonObject(with: blobMeta, options: []) as? [String: Any] {
+                                         
+                                         if let blob = try? db.getBlob(properties: blobJson!) {
+                                                 // Get blob from database based on metadata
+                                            userRecord.imageData = blob?.content
+                                             }
+                                        }
+                                 
+                                 }
+                                 #else
                                 userRecord.email  =  userVal.string(forKey: UserRecordDocumentKeys.email.rawValue)
                                 userRecord.address = userVal.string(forKey:UserRecordDocumentKeys.address.rawValue)
                                 userRecord.name =  userVal.string(forKey: UserRecordDocumentKeys.name.rawValue)
                                 userRecord.university = userVal.string(forKey: UserRecordDocumentKeys.university.rawValue)
                                 userRecord.imageData = userVal.blob(forKey:UserRecordDocumentKeys.image.rawValue)?.content // <4>
+                                #endif
                             }
                         }
                         //end::livequery[]
@@ -124,42 +161,86 @@ extension UserPresenter {
                 fatalError("db is not initialized at this point!")
             }
             
-            var profile = UserRecord.init() // <1>
-            profile.email = self.dbMgr.currentUserCredentials?.user // <2>
-            self.associatedView?.dataStartedLoading()
-        
-            // fetch document corresponding to the user Id
-            if let doc = db.document(withID: self.userProfileDocId)  { // <3>
+    
+          var profile = UserRecord.init() // <1>
+          profile.email = self.dbMgr.currentUserCredentials?.user // <2>
+          self.associatedView?.dataStartedLoading()
+      
+         
+          // fetch document corresponding to the user Id
+          if let doc = db.document(withID: self.userProfileDocId)  { // <3>
+            #if CBL3
+             // Get JSON String corresponding to the document
+             let jsonString = doc.toJSON()
+             let jsonData = Data(jsonString.utf8)
+             let jsonDecoder = JSONDecoder()
             
-                profile.email  =  doc.string(forKey: UserRecordDocumentKeys.email.rawValue)
-                profile.address = doc.string(forKey:UserRecordDocumentKeys.address.rawValue)
-                profile.name =  doc.string(forKey: UserRecordDocumentKeys.name.rawValue)
-                profile.university = doc.string(forKey: UserRecordDocumentKeys.university.rawValue)
-                profile.imageData = doc.blob(forKey:UserRecordDocumentKeys.image.rawValue)?.content //<4>
-                
-            }
-            //end::singledocfetch[]
-            self.associatedView?.dataFinishedLoading()
-            self.associatedView?.updateUIWithUserRecord(profile, error: nil)
+             // Map the json string to struct
+             profile = try! jsonDecoder.decode(UserRecord.self, from: jsonData)
+             // Fetch blob metadata and corresponding blob using metadata
+             if let blobMetaString = profile.blobMetadataAsSting {
+                 let blobMeta = Data(blobMetaString.utf8)
+                 if let blobJson = try? JSONSerialization.jsonObject(with: blobMeta, options: []) as? [String: Any] {
+                     
+                     if let blob = try? db.getBlob(properties: blobJson!) {
+                             // Get blob from database based on metadata
+                             profile.imageData = blob?.content
+                         }
+                    }
+             
+             }
+             #else
+              profile.email  =  doc.string(forKey: UserRecordDocumentKeys.email.rawValue)
+              profile.address = doc.string(forKey:UserRecordDocumentKeys.address.rawValue)
+              profile.name =  doc.string(forKey: UserRecordDocumentKeys.name.rawValue)
+              profile.university = doc.string(forKey: UserRecordDocumentKeys.university.rawValue)
+              profile.imageData = doc.blob(forKey:UserRecordDocumentKeys.image.rawValue)?.content //<4>
+             #endif
+          }
+         
+          // end::singledocfetch[]
+
+          self.associatedView?.dataFinishedLoading()
+          self.associatedView?.updateUIWithUserRecord(profile, error: nil)
         }
 
        
     }
     
-    //tag::setRecordForCurrentUser[]
+// tag::setRecordForCurrentUser[]
     func setRecordForCurrentUser( _ record:UserRecord?, handler:@escaping(_ error:Error?)->Void) {
-    //end::setRecordForCurrentUser[]
+    // end::setRecordForCurrentUser[]
         guard let db = dbMgr.db else {
             fatalError("db is not initialized at this point!")
         }
-        //tag::doccreate[]
+        // tag::doccreate[]
         // This will create a new instance of MutableDocument or will
         // fetch existing one
         // Get mutable version
         var mutableDoc = MutableDocument.init(id: self.userProfileDocId)
-        //end::doccreate[]
-      
-        //tag::docset[]
+        // end::doccreate[]
+
+        // tag::docset[]
+        #if CBL3
+        var mutableRecord = record
+        if let imageData = mutableRecord?.imageData {
+           // Save blob
+           let blob = Blob.init(contentType: "image/jpeg", data: imageData)
+           try? db.saveBlob(blob: blob)
+          // print("BLOB SAVED IS \(blob.toJSON()), ::::: \(blob.properties)")
+           // Add blob metadata
+           mutableRecord?.blobMetadataAsSting = blob.toJSON()
+
+        }
+       
+        let jsonEncoder = JSONEncoder()
+        if let jsonData = try? jsonEncoder.encode(mutableRecord) {
+           let jsonString = String(data: jsonData, encoding: .utf8)!
+
+           try? mutableDoc.setJSON(jsonString)
+        }
+        
+        #else
         mutableDoc.setString(record?.type, forKey: UserRecordDocumentKeys.type.rawValue)
         
         if let email = record?.email {
@@ -181,10 +262,11 @@ extension UserPresenter {
             let blob = Blob.init(contentType: "image/jpeg", data: imageData)
             mutableDoc.setBlob(blob, forKey: UserRecordDocumentKeys.image.rawValue)
         } // <1>
-        //end::docset[]
+        #endif
+        // end::docset[]
         
         
-        //tag::docsave[]
+        // tag::docsave[]
         do {
             // This will create a document if it does not exist and overrite it if it exists
             // Using default concurrency control policy of "writes always win"
@@ -194,10 +276,12 @@ extension UserPresenter {
         catch {
             handler(error)
         }
-        //end::docsave[]
+        // end::docsave[]
     }
     
 }
+
+
 
 
 // MARK: PresenterProtocol

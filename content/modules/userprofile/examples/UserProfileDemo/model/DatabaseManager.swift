@@ -296,7 +296,7 @@ extension DatabaseManager {
         
         //tag::replicationconfig[]
         let dbUrl = remoteUrl.appendingPathComponent(kDBName)
-        let config = ReplicatorConfiguration.init(database: db, target: URLEndpoint.init(url:dbUrl)) //<1>
+        var config = ReplicatorConfiguration.init(database: db, target: URLEndpoint.init(url:dbUrl)) //<1>
         
         config.replicatorType = .pushAndPull // <2>
         config.continuous =  true // <3>
@@ -330,7 +330,6 @@ extension DatabaseManager {
                 print("Completed syncing documents")
             }
           
-            // Workarond for BUG :https://github.com/couchbase/couchbase-lite-ios/issues/1816.
             if s.progress.completed == s.progress.total {
                 print("All documents synced")
             }
@@ -365,10 +364,12 @@ extension DatabaseManager {
 }
 // MARK: Utils
 extension DatabaseManager {
-    
     fileprivate func enableCrazyLevelLogging() {
-        Database.setLogLevel(.debug, domain: .all)
-    }
-    
+         
+         Database.log.console.level = .verbose
+         Database.log.console.domains = .all
+         
+     }
+
 }
 

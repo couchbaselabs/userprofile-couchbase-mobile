@@ -49,6 +49,43 @@ extension UniversityPresenter {
             }
             
             // tag::buildquery[]
+            #if CBL3
+            // Search for documents where "name" and "counry"(if present) match
+            // the input values
+            var whereExpr = "LOWER(\(UniversityDocumentKeys.name.rawValue)) LIKE '%\(name.lowercased())%'"
+            
+            if let countryExpr = countryStr {
+                let countryQueryExpr = "LOWER(\(UniversityDocumentKeys.country.rawValue)) LIKE '%\(countryExpr.lowercased())%'"
+                 whereExpr = whereExpr + " AND " + countryQueryExpr
+
+            }
+            
+            let universityQueryString = "SELECT * FROM universities WHERE \(whereExpr)"
+            let universityQuery = db.createQuery(query: universityQueryString)
+            
+            print(try? universityQuery.explain())
+         
+            // end::buildquery[]
+            
+            // tag::runquery[]
+            var universities = Universities()
+            for result in try universityQuery.execute() {
+                print ("RESULT IS \(result.toJSON())")
+                // Get JSON String corresponding to the result
+                
+                let jsonDecoder = JSONDecoder()
+                if let university = result.dictionary(forKey: "universities") {
+                    let jsonString = university.toJSON()
+                    print(jsonString)
+                    let jsonData = Data(jsonString.utf8)
+                    if let universityData = try? jsonDecoder.decode(UniversityRecord.self, from: jsonData) {
+                        universities.append(universityData)
+                    }
+                }
+                
+                
+            }
+            #else
             var whereQueryExpr = Function.lower(Expression.property(UniversityDocumentKeys.name.rawValue))
                 .like(Expression.string("%\(name.lowercased())%")) // <1>
             
@@ -59,15 +96,12 @@ extension UniversityPresenter {
                 whereQueryExpr = whereQueryExpr.and(countryQueryExpr) // <3>
             }
             
-            let expr1 = Expression.property("title").equalTo(Expression.string("Hello")).or(Expression.property("title").equalTo(Expression.string("world")))
-            let expr2 = Expression.property("author").equalTo(Expression.string("john")).or(Expression.property("author").equalTo(Expression.string("ken")))
-            
-            let expr = expr1.and(expr2)
             let universityQuery = QueryBuilder.select(SelectResult.all()) // <4>
                 .from(DataSource.database(db)) // <5>
                 .where(whereQueryExpr) // <6>
             
             print(try? universityQuery.explain())
+         
             // end::buildquery[]
             
             // tag::runquery[]
@@ -85,6 +119,7 @@ extension UniversityPresenter {
 
                 }
             }
+            #endif
             // end::runquery[]
             
             self.associatedView?.dataFinishedLoading()
