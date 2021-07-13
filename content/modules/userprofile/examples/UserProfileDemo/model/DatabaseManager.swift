@@ -51,7 +51,7 @@ class DatabaseManager {
     }()
     
     func initialize() {
-        //  enableCrazyLevelLogging()
+          enableCrazyLevelLogging()
     }
     // Don't allow instantiation . Enforce singleton
     private init() {
@@ -267,7 +267,10 @@ extension DatabaseManager {
 extension DatabaseManager {
     
     fileprivate func enableCrazyLevelLogging() {
-        Database.setLogLevel(.verbose, domain: .query)
+        
+        Database.log.console.level = .verbose
+        Database.log.console.domains = .all
+        
     }
     
 }
