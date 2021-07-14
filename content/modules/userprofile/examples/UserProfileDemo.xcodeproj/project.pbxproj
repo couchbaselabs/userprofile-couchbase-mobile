@@ -14,8 +14,8 @@
 		5F61CCBA204F578100399C1D /* UserRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F61CCB9204F578100399C1D /* UserRecord.swift */; };
 		5F7CCFAF204849BE0019D450 /* UserPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F7CCFAE204849BE0019D450 /* UserPresenter.swift */; };
 		5F7CCFB1204849DB0019D450 /* PresenterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F7CCFB0204849DB0019D450 /* PresenterProtocol.swift */; };
-		5F856E16269CF3E90053ADCC /* CouchbaseLiteSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F856E14269CF3DF0053ADCC /* CouchbaseLiteSwift.framework */; };
-		5F856E17269CF3E90053ADCC /* CouchbaseLiteSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5F856E14269CF3DF0053ADCC /* CouchbaseLiteSwift.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		5F856E22269E9EFF0053ADCC /* CouchbaseLiteSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F856E20269E9EF70053ADCC /* CouchbaseLiteSwift.framework */; };
+		5F856E23269E9EFF0053ADCC /* CouchbaseLiteSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5F856E20269E9EF70053ADCC /* CouchbaseLiteSwift.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		5F86E84B2037E292007ED29E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F86E84A2037E292007ED29E /* AppDelegate.swift */; };
 		5F86E84D2037E292007ED29E /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F86E84C2037E292007ED29E /* LoginViewController.swift */; };
 		5F86E8502037E292007ED29E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5F86E84E2037E292007ED29E /* Main.storyboard */; };
@@ -40,7 +40,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				5F856E17269CF3E90053ADCC /* CouchbaseLiteSwift.framework in Embed Frameworks */,
+				5F856E23269E9EFF0053ADCC /* CouchbaseLiteSwift.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -55,7 +55,7 @@
 		5F61CCB9204F578100399C1D /* UserRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRecord.swift; sourceTree = "<group>"; };
 		5F7CCFAE204849BE0019D450 /* UserPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPresenter.swift; sourceTree = "<group>"; };
 		5F7CCFB0204849DB0019D450 /* PresenterProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresenterProtocol.swift; sourceTree = "<group>"; };
-		5F856E14269CF3DF0053ADCC /* CouchbaseLiteSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = CouchbaseLiteSwift.framework; sourceTree = "<group>"; };
+		5F856E20269E9EF70053ADCC /* CouchbaseLiteSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CouchbaseLiteSwift.framework; path = iOS/CouchbaseLiteSwift.framework; sourceTree = "<group>"; };
 		5F86E8472037E292007ED29E /* UserProfileDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UserProfileDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5F86E84A2037E292007ED29E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5F86E84C2037E292007ED29E /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
@@ -80,7 +80,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5F856E16269CF3E90053ADCC /* CouchbaseLiteSwift.framework in Frameworks */,
+				5F856E22269E9EFF0053ADCC /* CouchbaseLiteSwift.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,7 +112,7 @@
 		5F86E83E2037E292007ED29E = {
 			isa = PBXGroup;
 			children = (
-				5F856E14269CF3DF0053ADCC /* CouchbaseLiteSwift.framework */,
+				5F856E20269E9EF70053ADCC /* CouchbaseLiteSwift.framework */,
 				5F86E8492037E292007ED29E /* UserProfileDemo */,
 				5F86E8482037E292007ED29E /* Products */,
 			);
