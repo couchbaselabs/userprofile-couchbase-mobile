@@ -6,6 +6,8 @@
 ## Build generated
 build/
 DerivedData/
+iOS/
+macOS/
 
 ## Various settings
 *.pbxuser
