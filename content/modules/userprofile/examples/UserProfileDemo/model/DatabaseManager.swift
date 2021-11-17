@@ -296,17 +296,17 @@ extension DatabaseManager {
         
         //tag::replicationconfig[]
         let dbUrl = remoteUrl.appendingPathComponent(kDBName)
-        let config = ReplicatorConfiguration.init(database: db, target: URLEndpoint.init(url:dbUrl)) //<1>
+        var config = ReplicatorConfiguration.init(database: db, target: URLEndpoint.init(url:dbUrl)) //<.>
         
-        config.replicatorType = .pushAndPull // <2>
-        config.continuous =  true // <3>
-        config.authenticator =  BasicAuthenticator(username: user, password: password) // <4>
+        config.replicatorType = .pushAndPull // <.>
+        config.continuous =  true // <.>
+        config.authenticator =  BasicAuthenticator(username: user, password: password) // <.>
         
         
         // This should match what is specified in the sync gateway config
         // Only pull documents from this user's channel
         let userChannel = "channel.\(user)"
-        config.channels = [userChannel] // <5>
+        config.channels = [userChannel] // <.>
         
         //end::replicationconfig[]
         
@@ -367,7 +367,9 @@ extension DatabaseManager {
 extension DatabaseManager {
     
     fileprivate func enableCrazyLevelLogging() {
-        Database.setLogLevel(.debug, domain: .all)
+//        Database.setLogLevel(.debug, domain: .all)
+        Database.log.console.domains = .all
+        Database.log.console.level = .debug
     }
     
 }

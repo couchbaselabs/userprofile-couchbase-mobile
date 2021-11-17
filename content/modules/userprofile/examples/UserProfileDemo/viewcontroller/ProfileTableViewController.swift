@@ -116,7 +116,7 @@ class ProfileTableViewController:UITableViewController, UserPresentingViewProtoc
         self.tableView.delegate = self
         self.tableView.dataSource = self
         
-        self.tableView.rowHeight = UITableViewAutomaticDimension
+        self.tableView.rowHeight = UITableView.automaticDimension
         self.tableView.sectionHeaderHeight = 10.0
         self.tableView.sectionFooterHeight = 10.0
         self.tableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
@@ -153,7 +153,7 @@ extension ProfileTableViewController {
         userProfile.university = self.universityLabel?.text
         
         
-        if let imageVal = self.userImageView?.image, let imageData = UIImageJPEGRepresentation(imageVal, 0.75)  {
+        if let imageVal = self.userImageView?.image, let imageData = imageVal.jpegData(compressionQuality: 0.75)  {
             userProfile.imageData = imageData
         }
         
@@ -277,7 +277,7 @@ extension ProfileTableViewController{
                     }
                     return cell
                 case BasicRows.university.index :
-                    guard let cell = UITableViewCell(style: UITableViewCellStyle.value1, reuseIdentifier: "UniversitySelectionCell") as? UITableViewCell else {
+                    guard let cell = UITableViewCell(style: UITableViewCell.CellStyle.value1, reuseIdentifier: "UniversitySelectionCell") as? UITableViewCell else {
                         return UITableViewCell()
                     }
                     self.universityLabel = cell.detailTextLabel
@@ -291,7 +291,7 @@ extension ProfileTableViewController{
 //                    }
                     
                     cell.selectionStyle = .gray
-                    cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
+                    cell.accessoryType = UITableViewCell.AccessoryType.disclosureIndicator
                     
                     return cell
                 default:
@@ -300,9 +300,9 @@ extension ProfileTableViewController{
             
         // future
         case Section.extended.index :
-            return UITableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: "DefaultCell")
+            return UITableViewCell(style: UITableViewCell.CellStyle.default, reuseIdentifier: "DefaultCell")
         default:
-            return UITableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: "DefaultCell")
+            return UITableViewCell(style: UITableViewCell.CellStyle.default, reuseIdentifier: "DefaultCell")
             
         }
         
@@ -326,7 +326,7 @@ extension ProfileTableViewController{
             
         }
      
-        return UITableViewAutomaticDimension
+        return UITableView.automaticDimension
     }
     
     
@@ -410,7 +410,7 @@ extension ProfileTableViewController:CustomImageEntryTableViewCellProtocol {
             let imagePickerController = UIImagePickerController()
             imagePickerController.delegate = self
             imagePickerController.allowsEditing = false
-            imagePickerController.sourceType = UIImagePickerControllerSourceType.photoLibrary;
+            imagePickerController.sourceType = UIImagePickerController.SourceType.photoLibrary;
             
             imagePickerController.modalPresentationStyle = .overCurrentContext
             
@@ -418,14 +418,14 @@ extension ProfileTableViewController:CustomImageEntryTableViewCellProtocol {
             
         }
         
-        if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.camera) {
+        if UIImagePickerController.isSourceTypeAvailable(UIImagePickerController.SourceType.camera) {
             let cameraAction = UIAlertAction(title: NSLocalizedString("Take Photo", comment: ""), style: .default) { [unowned self] action in
                 
                 let imagePickerController = UIImagePickerController()
                 imagePickerController.delegate = self
                 imagePickerController.allowsEditing = false
-                imagePickerController.sourceType = UIImagePickerControllerSourceType.camera;
-                imagePickerController.cameraDevice = UIImagePickerControllerCameraDevice.front;
+                imagePickerController.sourceType = UIImagePickerController.SourceType.camera;
+                imagePickerController.cameraDevice = UIImagePickerController.CameraDevice.front;
                 
                 imagePickerController.modalPresentationStyle = .overCurrentContext
                 
@@ -448,8 +448,11 @@ extension ProfileTableViewController:CustomImageEntryTableViewCellProtocol {
 
 
 extension ProfileTableViewController : UIImagePickerControllerDelegate , UINavigationControllerDelegate{
-    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
+    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+// Local variable inserted by Swift 4.2 migrator.
+let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
+
+        if let image = info[convertFromUIImagePickerControllerInfoKey(UIImagePickerController.InfoKey.originalImage)] as? UIImage {
             self.userImageView.image = image
             self.imageUpdated = true
             self.doneButton.isEnabled = true
@@ -492,10 +495,10 @@ extension ProfileTableViewController:UITextViewDelegate {
                 
             }
         }
-        let length = (textView.text?.characters.count)! - range.length + text.characters.count
-        let addressEntryLength = (textView == self.addressTextEntry ) ? length : self.addressTextEntry?.text?.characters.count ?? 0
-        let nameTextEntryLength = (textView == self.nameTextEntry) ? length : self.nameTextEntry?.text?.characters.count ?? 0
-        let emailEntryLength = (textView == self.emailTextEntry ) ? length : self.emailTextEntry?.text?.characters.count ?? 0
+        let length = (textView.text?.count)! - range.length + text.count
+        let addressEntryLength = (textView == self.addressTextEntry ) ? length : self.addressTextEntry?.text?.count ?? 0
+        let nameTextEntryLength = (textView == self.nameTextEntry) ? length : self.nameTextEntry?.text?.count ?? 0
+        let emailEntryLength = (textView == self.emailTextEntry ) ? length : self.emailTextEntry?.text?.count ?? 0
         self.doneButton.isEnabled = imageUpdated || emailEntryLength > 0 || nameTextEntryLength > 0 || addressEntryLength > 0
        
         return true
@@ -503,3 +506,13 @@ extension ProfileTableViewController:UITextViewDelegate {
     
 }
 
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromUIImagePickerControllerInfoKeyDictionary(_ input: [UIImagePickerController.InfoKey: Any]) -> [String: Any] {
+	return Dictionary(uniqueKeysWithValues: input.map {key, value in (key.rawValue, value)})
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromUIImagePickerControllerInfoKey(_ input: UIImagePickerController.InfoKey) -> String {
+	return input.rawValue
+}

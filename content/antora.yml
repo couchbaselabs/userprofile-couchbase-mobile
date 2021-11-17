@@ -1,5 +1,17 @@
 name: userprofile-couchbase-mobile
 title: User Profile Tutorial
 version: 'sync'
+display-version: 'Data Sync Fundamentals'
 nav:
   - modules/userprofile/nav.adoc
+asciidoc:
+  attributes:
+    prerelease: beta
+    is-beta: true
+    release: '3.0'
+    major: 3
+    minor: 0
+    maintenance: 0
+    base: 0
+    releasetag: beta02
+
