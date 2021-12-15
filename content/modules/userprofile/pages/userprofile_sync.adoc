@@ -1,4 +1,4 @@
-= User Profile Sample: Data Sync Fundamentals
+= User Profile Sample: Couchbase Lite Data Sync
 :idprefix:
 :idseparator: -
 :icons: font
@@ -7,12 +7,13 @@
 :page-hide-view-latest: true
 ifndef::env-site,env-github[]
 :toc: left
-:toclevels: 3
+:page-toclevels: 3@
 endif::[]
-
 toc::[]
-// BEGIN Tutorial Attributes
 
+
+// BEGIN Tutorial Attributes
+:install_script: install_tutorial.sh
 :target-version: {major}.{minor}
 :target-version-full: {major}.{minor}.{maintenance}
 ifdef::releasetag[:target-version-full: {target-version-full}-{releasetag}]
@@ -27,14 +28,13 @@ ifdef::releasetag[:target-version-full: {target-version-full}-{releasetag}]
 :sgw-config-filename-2x8: sync-gateway-config-userprofile-demo-2-x.json
 // END Tutorial Attributes
 
-// BEGIN Tutorial Cross-reference link
 
+// BEGIN Tutorial Cross-reference links
 
-// Tutorial Links
-
-:standalone--xref: xref:standalone@userprofile-couchbase-mobile:userprofile:userprofile_basic.adoc[Standalone]
-:query--xref: xref:query@userprofile-couchbase-mobile:userprofile:userprofile_query.adoc[Query]
-:sync--xref: xref:sync@userprofile-couchbase-mobile:userprofile:userprofile_sync.adoc[Sync]
+// Inter-Tutorial Links
+:standalone--xref: xref:standalone@userprofile-couchbase-mobile:userprofile:userprofile_basic.adoc[Standalone tutorial]
+:query--xref: xref:query@userprofile-couchbase-mobile:userprofile:userprofile_query.adoc[Query tutorial]
+:sync--xref: xref:sync@userprofile-couchbase-mobile:userprofile:userprofile_sync.adoc[Sync tutorial]
 
 // CBL Doc Links
 :cbl-documentation-component--xref: pass:q,a[xref:{target-version}@couchbase-lite:]
@@ -55,22 +55,21 @@ ifdef::releasetag[:target-version-full: {target-version-full}-{releasetag}]
 :sync-function-api-require-access--xref: {documentation-module--xref}sync-function-api-require-access-cmd.adoc[requireAccess()]
 :sync-function-api-require-user--xref: {documentation-module--xref}sync-function-api-require-user-cmd.adoc[requireUser()]
 :sync-gateway-docs--xref: {documentation-module--xref}index.adoc[Sync Gateway Documentation]
-:sync-gateway-config-overview--xref: {documentation-module--xref}configuration-overview.adoc[Sync Gateway Configuration].
-:sync-gateway-config-legacy--xref: {documentation-module--xref}configuration-properties-legacy.adoc[legacy configuration option].
-:whatsnew--xref: {documentation-component--xref}:whatsnew.adoc[New in {target-version-full}] for more.
+:sync-gateway-config-overview--xref: {documentation-module--xref}configuration-overview.adoc[Sync Gateway Configuration]
+:sync-gateway-config-legacy--xref: {documentation-module--xref}configuration-properties-legacy.adoc[legacy configuration option]
 :rest-api--url: https://docs.couchbase.com/sync-gateway/{target-version}/rest-api.html
 :rest-api-document-put--url: {rest-api--url}#/document/AddOrUpdateDocument[PUT Document REST API]
 :rest-api-document-get--url: {rest-api--url}#/document/GetDocument[GET Document REST API]
 
 // Git Content Links
-:git-tutorial-root: https://github.com/ibsoln/userprofile-couchbase-mobile
-// :git-tutorial-root: https://github.com/couchbaselabs/userprofile-couchbase-mobile
-// :git-sync--url: https://github.com/rajagp/userprofile-couchbase-mobile-cordova-android/blob/main/sync/
-:git-sync--url: {git-tutorial-root}/blob/feature/sync-ib/content/modules/userprofile/examples/
+:git-tutorial-root: https://github.com/couchbaselabs/userprofile-couchbase-mobile
+// Allow override from antora.yml file
+ifdef::github_root_override[:git-tutorial-root: {github_root_override}]
+// :git-tutorial-root: https://github.com/ibsoln/userprofile-couchbase-mobile
+:git-sync--url: {git-tutorial-root}/blob/feature/sync/content/modules/userprofile/examples/
 :config-filename: sync-gateway-config-userprofile-demo
-:config-file-3x0-legacy--url: {git-sync--url}{config-filename}-3-x-legacy.json
-:config-file-2x8--url: {git-sync--url}{config-filename}-2-x.json
-:userprofile-demo-download--url: https://github.com/couchbaselabs/userprofile-couchbase-mobile/archive/sync.zip[here]
+:config-file-3x0-legacy--url: {git-sync--url}{config-filename}-3-x-legacy.json[sync-gateway-config-userprofile-demo-3-x-legacy.json]
+:config-file-2x8--url: {git-sync--url}{config-filename}-2-x.json[sync-gateway-config-userprofile-demo-2-x.json]
 
 // External Site Links
 :mac-app-store--url: https://itunes.apple.com/us/app/xcode/id497799835?mt=12[Mac App Store^]
@@ -78,13 +77,23 @@ ifdef::releasetag[:target-version-full: {target-version-full}-{releasetag}]
 :github-download--url: https://git-scm.com/book/en/v2/Getting-Started-Installing-Git[git-scm.org^]
 :curl-download--url: https://curl.haxx.se/download.html[curl website^]
 :docker-download--url: https://docs.docker.com/get-docker/[Get Docker^]
+
+// Blog Links
+:blog--url: https://blog.couchbase.com
+:blog-sync-function-related--url: {blog--url}/?s=sync+function[Sync function blogs^]
+:blog-replication-protocol--url: {blog--url}data-replication-couchbase-mobile/[Overview of Replication Protocol^]
+:blog-doc-conflicts--url: https://blog.couchbase.com/document-conflicts-couchbase-mobile/[Document Conflicts & Resolution ^]
+
+
 // END Tutorial Cross-reference link
 
 
 == Introduction
+
+
 Couchbase Sync Gateway is a key component of the Couchbase Mobile stack.
 It is an Internet-facing synchronization mechanism that securely syncs data across devices as well as between devices and the cloud.
-Couchbase Mobile {target-version} introduces centralized persistent module configuration of synchronization, which simplifies the administration of Sync Gateway clusters -- see {whatsnew--xref}
+Couchbase Mobile {target-version} introduces centralized persistent module configuration of synchronization, which simplifies the administration of Sync Gateway clusters -- see {sync-gateway-config-overview--xref}
 
 
 The core functions of the Sync Gateway include:
@@ -93,33 +102,35 @@ The core functions of the Sync Gateway include:
 * Authorization & Access Control
 * Data Validation
 
-This tutorial will demonstrate how to -
+.What You Will Learn
+****
+In this tutorial you will learn how to:
 
-* Setup a basic Couchbase Sync Gateway configuration to sync content between multiple Couchbase Lite enabled clients.
+* Setup a basic Couchbase Sync Gateway configuration to sync content between multiple Couchbase Lite enabled clients -- see: <<lbl-sync-gateway>>. +
 We will will cover the basics of the {sync-gateway-config-overview--xref}
 
-* Configure your Sync Gateway to enforce data routing, access control and authorization.
-We will cover the basics of the {sync-function--xref}
+* Configure your Sync Gateway to enforce data routing, access control and authorization -- see: <<lbl-sync-function>>. +
+We will cover the basics of the {sync-function--xref}.
 
 * Configure your Couchbase Lite clients for replication with the Sync Gateway
-* Use "Live Queries" or Query events within your Couchbase Lite clients to be asynchronously notified of changes
+
+* Use "Live Queries" or Query events within your Couchbase Lite clients to be asynchronously notified of changes -- see: <<lbl-query-events>>
 
 We will be using a Swift App as an example of a Couchbase Lite enabled client.
 
 ====
 You can learn more about the Sync Gateway here in the {sync-gateway-docs--xref}.
 ====
-
+****
 
 == Prerequisites
 This tutorial assumes familiarity with building Swift apps with Xcode and with Couchbase Lite.
 
 * If you are unfamiliar with the basics of Couchbase Lite, it is recommended that you walk through the following tutorials
 
-** Fundamentals of using Couchbase Lite as a {standalone--xref} database
+** Fundamentals of using Couchbase Lite as a standalone database -- see: {standalone--xref}.
 
-** {query--xref}
- with a prebuilt version of Couchbase Lite database
+** Using queries with a prebuilt version of Couchbase Lite database -- see: {query--xref}.
 
 * iOS (Xcode) +
 Download the latest version from the {mac-app-store--url}
@@ -143,7 +154,8 @@ We will be using Docker to run images of both Couchbase Server and the Sync Gate
 
 == System Overview
 
-We will be working with the simple "User Profile" app which we introduced in the {standalone--xref} tutorial and extended in the {query--xref} tutorial.
+
+We will be working with the simple "User Profile" app which we introduced in the {standalone--xref} and extended in the {query--xref}.
 
 In this tutorial, we will be extending that app to support data sync.
 It will do the following
@@ -159,27 +171,18 @@ image::userprofile_app_overview.gif[{alt-text}]
 
 == App Installation
 
+
 === Fetching App Source Code
-
-You have two options
-
-==== Option 1 : Git Clone
-
-- Clone the *_sync_* branch of the `User Profile Demo` project from GitHub.
+Clone the *_sync_* branch of the `User Profile Demo` project from GitHub.
 Type the following command in your terminal
-+
+
 [source, bash,  subs="attributes+"]
 ----
 git clone -b sync https://github.com/couchbaselabs/userprofile-couchbase-mobile.git
 ----
 
-==== Option 2 : Download .zip
-
-- Download the `User Profile Demo` project from {userprofile-demo-download--url}
-
 === Installing Couchbase Lite Framework
-
-Next, we will download the Couchbase Lite {target-version-full} framework.
+Next, we will download the Couchbase Lite {target-version} framework.
 
 The Couchbase Lite iOS framework is distributed via SPM, CocoaPods, Carthage or you can download the pre-built framework -- see the {cbl-install--xref} documentation for more information.
 
@@ -190,13 +193,12 @@ To do this, type the following in a command terminal:
 ----
 cd /path/to/UserProfileDemo/content/modules/userprofile/examples
 
-sh install_3.0.0-beta02.sh
+sh {install_script}
 ----
 
 Next, let's verify the installation.
 
 === Try it Out
-
 . Open the `UserProfileDemo.xcodeproj` Xcode project file, located at +
 `/path/to/UserProfileDemo/content/modules/userprofile/examples`
 +
@@ -214,7 +216,9 @@ image::user_profile_login_2.png[{alt-text}]
 
 
 == Data Model
-If you followed along with the {query--xref} tutorial, you can skip this section and proceed to the <<Backend Installation>> section.
+
+
+If you followed along with the {query--xref}, you can skip this section and proceed to the <<Backend Installation>> section.
 We have not changed the Data model for this tutorial.
 
 Couchbase Lite is a JSON Document Store.
@@ -251,7 +255,7 @@ The _"user"_ Document is encoded to a native struct named _UserRecord_ as shown 
 [source,{tutorial-platform}, subs="attributes+, macros+"]
 ====
 ----
-include::{examplesdir}/UserProfileDemo/model/UserRecord.swift[indent=0, tags=userrecord]
+include::example$UserProfileDemo/model/UserRecord.swift[indent=0, tags=userrecord]
 ----
 ====
 
@@ -280,7 +284,6 @@ Each Document represents a university -- see <<ex-university-doc>>
 ====
 
 ==== UniversityRecord
-
 The _"university"_ Document is encoded to a native struct named _UniversityRecord_ -- as shown in <<ex-university-rec>>
 
 [#ex-university-rec]
@@ -288,16 +291,17 @@ The _"university"_ Document is encoded to a native struct named _UniversityRecor
 ====
 [source,{tutorial-platform}, subs="attributes+, macros+"]
 ----
-include::{examplesdir}/UserProfileDemo/model/UniversityRecord.swift[indent=0, tags=universityrecord]
+include::example$UserProfileDemo/model/UniversityRecord.swift[indent=0, tags=universityrecord]
 ----
 ====
 
-// BEGIN Docker Text
+
 == Backend Installation
-We will install <<Couchbase Server>> and <<Sync Gateway>> using Docker.
+
+
+We will install <<Couchbase Server>> and <<lbl-sync-gateway>> using Docker.
 
 === Prerequisites
-
 * You must have Docker installed on your laptop.
 For more on Docker -- see: {docker-download--url}
 * On Windows, you may need admin privileges.
@@ -340,7 +344,6 @@ priyacouch/couchbase-server-userprofile:7.0.0-dev
 ----
 
 ==== Test Server Install
-
 The server could take a few minutes to deploy and fully initialize; so be patient.
 
 . Check the Docker logs using the command:
@@ -369,19 +372,18 @@ image::confirm-bucket-created.png[]
 +
 image::confirm-admin-user-created.png[]
 
-
+[#lbl-sync-gateway]
 === Sync Gateway
-
 Now we will install, configure and run Sync Gateway.
 
 [#lbl-install]
 ==== Configuration
-
-When using Sync Gateway {target-version-full}, we can opt to provide a bootstrap configuration -- see: {sync-gateway-config-overview--xref}.
+When using Sync Gateway {target-version}, we can opt to provide a bootstrap configuration -- see: {sync-gateway-config-overview--xref}.
 We would then provision database, sync and other configuration using the Admin REST endpoints
-Alternatively, we can continue to run in legacy-mode, using the Pre-{target-version-full} configuration.
+Alternatively, we can continue to run in legacy-mode, using the Pre-{target-version} configuration.
 
-In this tutorial -- for the purposes of backward compatibility -- we will run 3.x using its {sync-gateway-config-legacy--xref}.
+In this tutorial -- for the purposes of backward compatibility -- we will run 3.x using its
+{sync-gateway-config-legacy--xref}.
 That is, we will be running with the `disable_persistent_config` option in the configuration file set to `true`.
 You can, if you wish, run a 2.8 version of Sync Gateway instead.
 
@@ -390,24 +392,19 @@ They are available in the "sync" branch of the github repo hosting the app, whic
 `/path/to/cloned/repo/userprofile-couchbase-mobile/content/modules/userprofile/examples`
 
 .Available configuration files
-[#tbl-config-files,cols="1,3a,6a"]
+[#tbl-config-files,cols="^1a,4a"]
 !===
 
 | 3.x
-| Sync Gateway {target-version-full} configuration file +
-Legacy Mode
 | {config-file-3x0-legacy--url}
 
 | 2.x
-| Sync Gateway 2.8 configuration file
 | {config-file-2x8--url}
 
 !===
 
-
 [#lbl-deploy]
 ==== Deploy
-
 Let us configure and launch Sync Gateway in a Docker container.
 
 . Switch to the the folder containing the cloned configuration files, using:
@@ -446,20 +443,19 @@ Note the use of `disable_persistent_config` -- both within the configuration fil
 
 [source, bash, subs="attributes+, macros+"]
 ----
-docker run -p 4984-4985:4984-4985 \
+docker run -p 4984-4986:4984-4986 \
 --network workshop \
 --name sync-gateway \
 -d \
 -v `pwd`/{sgw-config-filename-3x0}:\
 /etc/sync_gateway/sync_gateway.json \
-couchbase/sync-gateway:3.0.0-beta02-enterprise \
--adminInterface :4985 \
+couchbase/sync-gateway:3.0-enterprise \
 -disable_persistent_config \
 /etc/sync_gateway/sync_gateway.json
 ----
 --
 
-Sync Gateway (2.x)::
+Sync Gateway 2.x::
 +
 --
 
@@ -467,14 +463,13 @@ Configuring and running Sync Gateway 2.8 in Docker
 
 [source, bash, subs="attributes+, macros+"]
 ----
-docker run -p 4984-4985:4984-4985 \
+docker run -p 4984-4986:4984-4986 \
 --network workshop \
 --name sync-gateway \
 -d \
 -v `pwd`/sync-gateway-config-userprofile-demo-2-x.json:\
 /etc/sync_gateway/sync_gateway.json \
 couchbase/sync-gateway:2.8.4-enterprise \
--adminInterface :4985 \
 /etc/sync_gateway/sync_gateway.json
 ----
 --
@@ -486,7 +481,7 @@ For Windows Systems::
 [{tabs}, subs="attributes+,macros+"]
 =====
 
-Sync Gateway ({target-version})::
+Sync Gateway {target-version}::
 +
 --
 Configuring and running Sync Gateway {target-version} in legacy mode
@@ -503,7 +498,7 @@ couchbase/sync-gateway:{target-version-full}-enterprise ^
 /etc/sync_gateway/sync_gateway.json
 ----
 --
-Sync Gateway (2.x)::
+Sync Gateway 2.x::
 +
 --
 Configuring and running Sync Gateway 2.8
@@ -523,9 +518,7 @@ couchbase/sync-gateway:2.8.4-enterprise ^
 --
 =====
 
-
 ==== Test the Installation
-
 Now we can confirm that the Sync Gateway is up and running.
 
 . Check the log messages
@@ -549,7 +542,9 @@ You should see equivalent of the following message
 Now that we have the server and the sync gateway installed, we can verify data sync between Couchbase Lite enabled apps.
 
 
+[#lbl-sync-function]
 == Sync Function
+
 
 A key component of the sync process is the Sync Function and we will first look at how that can be set-up to control how data sync works.
 
@@ -568,7 +563,6 @@ Now you can follow along with the rest of the sections below.
 
 [#lbl-auth, reftext=Authorization]
 === Authorization
-
 We use _Basic Authentication_ in our application.
 The Id of the user making the request is specified in the `Authorization` header.
 
@@ -583,9 +577,7 @@ You will see that we are using the Sync function's {sync-function-api-require-us
 ----
 function sync(doc, oldDoc) {
 
-  /* Authorization */
-  // Verify the user making the request is the same as the one in docs email
-  requireUser(doc.email);
+include::example${config-filename}-3-x-legacy.json[tags="authorization", indent=0]
 
 }
 ----
@@ -593,7 +585,6 @@ function sync(doc, oldDoc) {
 
 [#lbl-valid, reftext="Data Validation"]
 === Data Validation
-
 In the sync function we also do some basic validation of the contents of the Document -- as shown in <<ex-validation>>.
 
 [#ex-validation]
@@ -602,48 +593,7 @@ In the sync function we also do some basic validation of the contents of the Doc
 [source,javascript, subs="attributes+, macros+"]
 ----
 
-  // ...
-  /* Data Validation */
-
-  if (!isDelete()) {
-    // Validate the presence of email fields
-    validateNotEmpty("email", doc.email); // <.>
-
-    // Check if document is being created / added for first time
-    // We allow any user to create the document
-    if (isCreate()) {
-
-      // Validate that the document Id _id is prefixed by owner.
-      var expectedDocId = "user" + "::" + doc.email;
-
-      if (expectedDocId != doc._id) { // <.>
-          throw({forbidden: "user doc Id must be of form user:email"});
-      }
-
-    } else {
-        // Validate that the email hasn't changed.
-      validateReadOnly("email", doc.email, oldDoc.email); // <.>
-    }
-
-  }
-
-  /* Helper functions */
-
-  // Verify that specified property exists
-  function validateNotEmpty(key, value) {
-    if (!value) {
-      throw({forbidden: key + " is not provided."});
-    }
-  }
-
-
-  // Verify that specified property value has not changed during update
-  function validateReadOnly(name, value, oldValue) {
-    if (value != oldValue) {
-      throw({forbidden: name + " is read-only."});
-    }
-  }
-  // ...
+include::example${config-filename}-3-x-legacy.json[tags="data-validation", indent=0]
 
 ----
 
@@ -673,29 +623,19 @@ As we shall see in a later section, clients can use channels to pull just a subs
 [source,javascript]
 ----
 
-  /* Routing */
-  // Subsequent updates to document must be authorized
-  var email = getEmail(); // <.>
-
-  // Add doc to the user's channel.
-  channel("channel." + email); // <.>
-
-  // get email Id property
-  function getEmail() {
-    return (isDelete() ? oldDoc.email : doc.email);
-  }
-  // ...
+include::example${config-filename}-3-x-legacy.json[tags="routing", indent=0]
 
 ----
 <.> Retrieve the the `email` property specified in the document.
 We will uses this as our user and channel name
-<.> The channel comes into existence the first time a document is added to it.
-Here we generate the channel name from the email property.
+<.> Here we generate the channel name from the email property.
+<.> Here we route the document to the channel.
+The channel comes into existence the first time a document is added to it.
+
 ====
 
 [#lbl-access, reftext="Access Control"]
 === Access Control
-
 We can enforce access control to channels using the {sync-function-api-access--xref} API.
 The approach shown in <<ex-access>> ensures that only users with access to a specific channel are able to retrieve documents in the channel.
 
@@ -704,23 +644,17 @@ The approach shown in <<ex-access>> ensures that only users with access to a spe
 ====
 [source,javascript]
 ----
-  // ...
-  /* Access Control */
-  // Give user read access to channel
-   if (!isDelete()) {
-    // Deletion of user document is essentially deletion of user
-       access(email, // <.>
-               "channel." + email) // <.>
-   }
-  // ...
+
+include::example${config-filename}-3-x-legacy.json[tags="access-control", indent=0]
+
 ----
-<.> Here we use to the email property retrieved in <<ex-routing>> as the `username`
-<.> Now we specify the channel the user is allowed to access
+<.> Here we use the email property retrieved in <<ex-routing>> as the `username` and specify the channel the user is allowed to access
 
 ====
 
 
 == Starting Replication
+
 
 Two-way Replication between the app and the Sync Gateway is enabled when the user logs into the app.
 
@@ -731,7 +665,7 @@ To see the code behind this, open the project's *`DatabaseManager.swift`* file a
 ====
 [source,{tutorial-platform}, subs="attributes+, macros+"]
 ----
-include::{examplesdir}/UserProfileDemo/model/DatabaseManager.swift[indent=0, tags=startPushAndPullReplicationForCurrentUser]
+include::example$UserProfileDemo/model/DatabaseManager.swift[indent=0, tags=startPushAndPullReplicationForCurrentUser]
 ----
 ====
 
@@ -743,7 +677,7 @@ You could also use this to, optionally, override the default configuration setti
 ====
 [source,{tutorial-platform}, subs="attributes+, macros+"]
 ----
-include::{examplesdir}/UserProfileDemo/model/DatabaseManager.swift[indent=0, tags=replicationconfig]
+include::example$UserProfileDemo/model/DatabaseManager.swift[indent=0, tags=replicationconfig]
 ----
 
 <.> Initialize with `source` as the local Couchbase Lite database and the `remote` target as the Sync Gateway
@@ -770,7 +704,7 @@ Now we initialize the `Replicator` with the `ReplicatorConfiguration` -- as show
 ====
 [source,{tutorial-platform}]
 ----
-include::{examplesdir}/UserProfileDemo/model/DatabaseManager.swift[indent=0, tags=replicationinit]
+include::example$UserProfileDemo/model/DatabaseManager.swift[indent=0, tags=replicationinit]
 ----
 ====
 
@@ -785,7 +719,7 @@ It is an optional step and is shown here in <<ex-callback>>.
 ====
 [source,{tutorial-platform}, subs="attributes+, macros+"]
 ----
-include::{examplesdir}/UserProfileDemo/model/DatabaseManager.swift[indent=0, tags=replicationlistener]
+include::example$UserProfileDemo/model/DatabaseManager.swift[indent=0, tags=replicationlistener]
 ----
 ====
 
@@ -796,33 +730,36 @@ Now, with all that done, we can start the replicator -- see: <<ex-start>>.
 ====
 [source,{tutorial-platform}, subs="attributes+, macros+"]
 ----
-include::{examplesdir}/UserProfileDemo/model/DatabaseManager.swift[indent=0, tags=replicationstart]
+include::example$UserProfileDemo/model/DatabaseManager.swift[indent=0, tags=replicationstart]
 ----
 ====
 
 
 == Stopping Replication
+
+
 When user logs out of the app, the replication is stopped before the database is closed.
 
 . Open the *`DatabaseManager.swift`* file and locate the `stopAllReplicationForCurrentUser()` function.
 +
 [source,{tutorial-platform}, subs="attributes+, macros+"]
 ----
-include::{examplesdir}/UserProfileDemo/model/DatabaseManager.swift[indent=0, tags=stopAllReplicationForCurrentUser]
+include::example$UserProfileDemo/model/DatabaseManager.swift[indent=0, tags=stopAllReplicationForCurrentUser]
 ----
 +
 . Stop the replicator and remove any associated change listeners
 +
 [source,{tutorial-platform}, subs="attributes+, macros+"]
 ----
-include::{examplesdir}/UserProfileDemo/model/DatabaseManager.swift[indent=0, tags=replicationstop]
+include::example$UserProfileDemo/model/DatabaseManager.swift[indent=0, tags=replicationstop]
 ----
-
 
 TIP: When you close a database, any active replicators, listeners and-or live queries are also be closed.
 
 
+[#lbl-query-events]
 == Query Events / Live Queries
+
 
 Couchbase Lite applications can set up _live queries_ in order to be asynchronously notified of changes to the database that affect the results of the query.
 This can be very useful, for instance, in keeping a UI View up-to-date with the results of a query.
@@ -837,18 +774,18 @@ Calling this function with a value of `true` implies that the caller wishes to b
 +
 [source,{tutorial-platform}, subs="attributes+, macros+"]
 ----
-include::{examplesdir}/UserProfileDemo/presenter/UserPresenter.swift[indent=0, tags=fetchRecordForCurrentUserWithLiveModeEnabled]
+include::example$UserProfileDemo/presenter/UserPresenter.swift[indent=0, tags=fetchRecordForCurrentUserWithLiveModeEnabled]
 ----
 +
 . Build the Query -- see: <<ex-query>> -- using `QueryBuilder` API.
-If you are unfamiliar with this API, please check out this {query--xref} tutorial.
+If you are unfamiliar with this API, please check out this {query--xref}.
 +
 [#ex-query]
 .Defining a query using QueryBuilder
 ====
 [source,{tutorial-platform}, subs="attributes+, macros+"]
 ----
-include::{examplesdir}/UserProfileDemo/presenter/UserPresenter.swift[indent=0, tags=livequerybuilder]
+include::example$UserProfileDemo/presenter/UserPresenter.swift[indent=0, tags=livequerybuilder]
 ----
 
 <.> We query for documents based on document Id.
@@ -861,7 +798,7 @@ In our app, there should be exactly one user profile document corresponding to t
 ====
 [source,{tutorial-platform}, subs="attributes+, macros+"]
 ----
-include::{examplesdir}/UserProfileDemo/presenter/UserPresenter.swift[indent=0, tags=livequery]
+include::example$UserProfileDemo/presenter/UserPresenter.swift[indent=0, tags=livequery]
 ----
 
 <.> Attach a listener callback to the query.
@@ -881,6 +818,7 @@ at key _"userprofile"_.
 
 
 == Exercises
+
 
 === Exercise 1
 In this exercise, we will observe how changes made on one app are synced across to the other app
@@ -975,19 +913,23 @@ You can choose to update any other profile information
 
 . As soon as you update the document via the Sync Gateway REST API, confirm that the changes show up in the mobile app on the simulator.
 +
-image::https://raw.githubusercontent.com/couchbaselabs/userprofile-couchbase-mobile/sync/content/modules/userprofile/assets/images/sync_from_sgw.gif[App Sync]
+image::sync_from_sgw.gif[App Sync]
 
 // NOTE: From <<Exercise 2>> above, you observed that changes made on the Sync Gateway are propagated to the Couchbase Lite clients. However, if you tried to update the attachment / image using the link:[Attachments REST API], you would not see the image getting updated on the client side. This is a link:[known issue] in 2.0 and should be fixed in the next release.
 
 
 == Handling Conflicts during Data Synchronization
+
+
 Data conflicts are inevitable in an environment where you can potentially have multiple writes updating the same data concurrently.
 Couchbase Mobile supports _Automated Conflict Resolution_.
 
-You can learn more about automated conflict resolution in this https://blog.couchbase.com/document-conflicts-couchbase-mobile/[blog post].
+You can learn more about automated conflict resolution in this blog  {blog-doc-conflicts--url}.
 
 
 == Learn More
+
+
 Congratulations on completing this tutorial!
 
 This tutorial walked you through an example of how to use a Sync Gateway to synchronize data between Couchbase Lite enabled clients.
@@ -995,10 +937,17 @@ We discussed how to configure your Sync Gateway to enforce relevant access contr
 
 Check out the following links for further details
 
-=== Further Reading
+.Further Reading
+****
 
-* https://developer.couchbase.com/documentation/mobile/2.0/guides/sync-gateway/config-properties/index.html[Sync Gateway Configuration]
-* https://blog.couchbase.com/?s=sync+function[Sync function] blogs
-* https://blog.couchbase.com/data-replication-couchbase-mobile/[Overview of Replication Protocol 2.0]
-* https://blog.couchbase.com/using-docker-with-couchbase-mobile/[Installing Sync Gateway using Docker]
+* {sync-gateway-config-overview--xref}
 
+* {blog--url}[Couchbase Mobile Blog]
+
+* {blog-sync-function-related--url}
+
+* {blog-replication-protocol--url}
+
+* {blog-doc-conflicts--url}
+
+****

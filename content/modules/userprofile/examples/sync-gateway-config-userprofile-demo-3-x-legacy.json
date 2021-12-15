@@ -54,18 +54,22 @@ function sync(doc, oldDoc) {
 
     console.log("********Procesing Doc. Is oldDoc == null? " + (oldDoc == null));
 
+    // tag::data-validation[]
     /* Data Validation */
 
-    // Validate the presence of email field. This is the "username"
+    // Validate the presence of email field.
+    // This is the "username" <.>
     validateNotEmpty("email", doc.email);
 
-    // Validate that the document Id _id is prefixed by owner.
+    // Validate that the document Id _id is prefixed by owner <.>
     var expectedDocId = "user" + "::" + doc.email;
 
+    // <.>
     if (expectedDocId != doc._id) {
-        // reject document
-        throw({forbidden: "user doc Id must be of form user::email"});
+      // reject document
+      throw({forbidden: "user doc Id must be of form user::email"});
     }
+    // end::data-validation[]
 
    try {
 
@@ -88,27 +92,33 @@ function sync(doc, oldDoc) {
        // If non admin client replication
        if (!isDelete()) {
 
-          /* Authorization */
+         // tag::authorization[]
+         /* Authorization */
 
-          // Verify the user making the request is the same as the one in doc's email
-          requireUser(doc.email);
+         // Verify the user making the request is the same as the one in doc's email
+         requireUser(doc.email);
 
-          // Check if document is being created / added for first time
-          // We allow any user to create the document
-          if (isCreate()) {
+         // end::authorization[]
+         // Check if document is being created / added for first time
+         // We allow any user to create the document
+         if (isCreate()) {
 
+            // tag::routing[]
             /* Routing */
 
             // Add doc to the user's channel.
-            var username = getEmail();
+            var username = getEmail(); // <.>
 
-            var channelId = "channel."+ username;
+            var channelId = "channel."+ username; // <.>
 
-            channel(channelId);
+            channel(channelId); // <.>
+            // end::routing[]
 
-            // Give user access to document
-            access(username,channelId);
+            // tag::access-control[]
+            // Give user access to document <.>
+            access(username, channelId);
 
+            // end::access-control[]
           } else {
 
               // This is an update
