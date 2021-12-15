@@ -1,4 +1,4 @@
-= User Profile Sample: Couchbase Lite Query Introduction
+= User Profile Sample: Couchbase Lite Query
 :idprefix:
 :idseparator: -
 :icons: font
@@ -7,102 +7,206 @@
 :page-hide-view-latest: true
 ifndef::env-site,env-github[]
 :toc: left
-:toclevels: 3
+:page-toclevels: 3@
 endif::[]
+:tabs:
 
 toc::[]
 
+
+// BEGIN Tutorial Attributes
+:install_script: install_tutorial.sh
+:target-version: {major}.{minor}
+:target-version-full: {major}.{minor}.{maintenance}
+ifdef::releasetag[:target-version-full: {target-version-full}-{releasetag}]
+:tutorial-component: {page-component-name}
+:tutorial-title: {page-component-title}
+:tutorial-module: {page-module}
+:tutorial-section: {version}
+:tutorial-platform: swift
+:emailId: demo@example.com
+:revision-to-update: 3-033fcbaf269d65a9247067be76d664f1111d033b
+:sgw-config-filename-3x0: sync-gateway-config-userprofile-demo-3-x-legacy.json
+:sgw-config-filename-2x8: sync-gateway-config-userprofile-demo-2-x.json
+// END Tutorial Attributes
+
+// BEGIN Tutorial Cross-reference link
+
+
+// Tutorial Links
+
+:standalone--xref: xref:standalone@userprofile-couchbase-mobile:userprofile:userprofile_basic.adoc[Standalone]
+:query--xref: xref:query@userprofile-couchbase-mobile:userprofile:userprofile_query.adoc[Query]
+:sync--xref: xref:sync@userprofile-couchbase-mobile:userprofile:userprofile_sync.adoc[Sync]
+
+// CBL Doc Links
+:cbl-documentation-component--xref: pass:q,a[xref:{target-version}@couchbase-lite:]
+:cbl-documentation-module--xref: pass:q,a[{cbl-documentation-component--xref}{tutorial-platform}:]
+:cbl-blobs--xref: {cbl-documentation-module--xref}blob.adoc[Working with Blobs]
+:cbl-install--xref: {cbl-documentation-module--xref}gs-install.adoc[Get Started - Install]
+:cbl-prepare--xref: {cbl-documentation-module--xref}gs-prereqs[Get Started - Prerequisites]
+
+// Git Content Links
+// :git-tutorial-root: https://github.com/ibsoln/userprofile-couchbase-mobile
+:git-tutorial-root: https://github.com/couchbaselabs/userprofile-couchbase-mobile
+// :git-sync--url: https://github.com/rajagp/userprofile-couchbase-mobile-cordova-android/blob/main/sync/
+:git-sync--url: {git-tutorial-root}/blob/feature/sync/content/modules/userprofile/examples/
+:config-filename: sync-gateway-config-userprofile-demo
+:config-file-3x0-legacy--url: {git-sync--url}{config-filename}-3-x-legacy.json[sync-gateway-config-userprofile-demo-3-x-legacy.json]
+:config-file-2x8--url: {git-sync--url}{config-filename}-2-x.json[sync-gateway-config-userprofile-demo-2-x.json]
+:userprofile-demo-download--url: https://github.com/couchbaselabs/userprofile-couchbase-mobile/archive/sync.zip[here]
+
+// External Site Links
+:mac-app-store--url: https://itunes.apple.com/us/app/xcode/id497799835?mt=12[Mac App Store^]
+:github-account--url: https://github.com[free github account^]
+:github-download--url: https://git-scm.com/book/en/v2/Getting-Started-Installing-Git[git-scm.org^]
+:curl-download--url: https://curl.haxx.se/download.html[curl website^]
+
+// Blog Links
+:blog--url: https://blog.couchbase.com
+:blog-xcode-playground--url: https://blog.couchbase.com/xcode-playground-couchbase-mobile/[Xcode Playground For Couchbase Lite]
+:blog-query-api--url: https://blog.couchbase.com/sql-for-json-query-interface-couchbase-mobile/[Fundamentals of the Couchbase Lite Query API]
+:blog-query-array-handling--url: https://blog.couchbase.com/querying-array-collections-couchbase-mobile/[Handling Arrays in Queries]
+:blog-query-full-text-search--url: https://blog.couchbase.com/full-text-search-couchbase-mobile-2-0/[Couchbase Lite Full Text Search API]
+:blog-query-join--url: https://blog.couchbase.com/join-queries-couchbase-mobile/[Couchbase Lite JOIN Query]
+
+// END Tutorial Cross-reference link
+
+
+
+
+
 == Introduction
-Couchbase Lite 2.x brings powerful querying and Full-Text-Search(FTS) capabilties to the edge. The new query interface is based on link:https://www.couchbase.com/products/n1ql[N1QL], Couchbase’s declarative query language that extends link:https://www.sqlite.org/index.html[SQL] for JSON. If you are familiar with SQL, you will feel right at home with the semantics of the new API.  The query API is designed using the link:https://en.wikipedia.org/wiki/Fluent_interface[Fluent API Design Pattern], and it uses method cascading to read to like a Domain Specific Language (DSL). This makes the interface very intuitive and easy to understand.
+Couchbase Lite brings powerful querying and Full-Text-Search(FTS) capabilities to the edge.
+The new query interface is based on link:https://www.couchbase.com/products/n1ql[N1QL], Couchbase’s declarative query language that extends link:https://www.sqlite.org/index.html[SQL] for JSON.
+If you are familiar with SQL, you will feel right at home with the semantics of the new API.
+The query API is designed using the link:https://en.wikipedia.org/wiki/Fluent_interface[Fluent API Design Pattern], and it uses method cascading to read to like a Domain Specific Language (DSL).
+This makes the interface very intuitive and easy to understand.
 
 Couchbase Lite can be used as a standalone embedded database within your mobile app.
 
-This tutorial will walk through a simple swift app that will 
+.What You Will Learn
+****
+This tutorial will walk through a simple swift app that will
 
-* Demonstrate how you can bundle, load and use a  **_prebuilt_** instance of Couchbase Lite 2.x 
+* Demonstrate how you can bundle, load and use a  **_prebuilt_** instance of Couchbase Lite
 * Introduce you to the basics of the `QueryBuilder` interface
 
 ====
 You can learn more about Couchbase Mobile https://developer.couchbase.com/mobile[here]
 ====
+****
+
 
 == Prerequisites
-This tutorial assumes familiarity with building swift apps with Xcode and with the basics of Couchbase Lite
+This tutorial assumes familiarity with building Swift apps with Xcode and with Couchbase Lite.
 
-* If you are unfamiliar with the basics of Couchbase Lite, it is recommended that you walk through the link:https://developer.couchbase.com/documentation/mobile/2.0/userprofile_basic.html[Fundamentals Tutorial] on using Couchbase Lite 2.x as a standalone database
+* If you are unfamiliar with the basics of Couchbase Lite, it is recommended that you walk through the tutorial _Fundamentals of using Couchbase Lite as a {standalone--xref} database_
 
-* iOS (Xcode 10+) 
-  Download latest version from the link:https://itunes.apple.com/us/app/xcode/id497799835?mt=12[Mac App Store]
-                        
-* git (Optional)
+* iOS (Xcode) +
+Download the latest version from the {mac-app-store--url}
++
+NOTE: If you are on an older version of Xcode, which you need to retain for other development needs, make a copy of your existing version of Xcode and install the latest Xcode version.
+That way you can have multiple versions of Xcode on your Mac.
+
+* git (Optional) +
 This is required if you would prefer to pull the source code from GitHub repo.
-** Create a link:https://github.com[free github account] if you don't already have one
-** git can be downloaded from link:https://git-scm.com/book/en/v2/Getting-Started-Installing-Git[git-scm.org]
+** Create a {github-account--url} if you don't already have one
+** git can be downloaded from {github-download--url}
+
 
 == App Overview
-We will be working with a very simple "User Profile" app. If you had walked through the link:https://developer.couchbase.com/documentation/mobile/2.0/userprofile_basic.html[Fundamentals tutorial], you would quickly realize that this version extends the functionality introduced in the version introduced in that tutorial.
+We will be working with a very simple _User Profile_ app.
+If you have walked through the {standalone--xref} tutorial, you will recognize that this version extends the functionality introduced in the app introduced in that tutorial.
 
-This app does the following 
+This app does the following
 
-* Allows users to log in and create or update his/her user profile information. You could do that in the link:https://developer.couchbase.com/documentation/mobile/2.0/userprofile_basic.html[Fundamentals tutorial]
-* As part of profile information, users can now selecting a "university" from a list of possible options
+* Allows users to log in and create or update his/her user profile information.
+Just as you could in the {standalone--xref} tutorial.
+* Includes a second record type.
+As part of profile information, users can now select a "university" from a list of possible options.
++
+The list of matching universities is found by quering (using the new Query API) a local _prebuilt_ "University"  Database, which is bundled in the app.
+* The user profile information is persisted as a Document in the local Couchbase Lite Database.
+So subsquently, when the user logs out and logs back in again, the profile information is loaded from the Database.
 
-The list of matching univerisities is queried (using the new Query API) from a local _prebuilt_ "University" Couchbase Lite Database that is bundled in the app. The user profile information is persisted as a Document in the local Couchbase Lite Database. So subsquently, when the user logs out and logs back in again, the profile information is loaded from the Database.
+:alt-text: The sample user profile application running in a simulator
+.{alt-text}
+image::university_app_overview.gif[{alt-text}]
 
-image::https://raw.githubusercontent.com/couchbaselabs/userprofile-couchbase-mobile/query/content/modules/userprofile/assets/images/university_app_overview.gif[App Overview]
 
 == Installation
 
+
 === Fetching App Source Code
+Clone the *_query_* branch of the `User Profile Demo` project from GitHub.
+Type the following command in your terminal
 
-==== Option 1 : Git Clone
-
-- Clone the *_query_* branch of the `User Profile Demo` project from GitHub. Type the following command in your terminal
-+
-[source,bash] 
+[source,bash]
 ----
-  git clone -b query https://github.com/couchbaselabs/userprofile-couchbase-mobile.git
+git clone -b query https://github.com/couchbaselabs/userprofile-couchbase-mobile.git
 ----
-
-==== Option 2 : Download .zip
-
-- Download the  `User Profile Demo` project from link:https://github.com/couchbaselabs/userprofile-couchbase-mobile/archive/query.zip[here]
 
 === Installing Couchbase Lite Framework
+Next, we will download the Couchbase Lite {target-version-full} framework.
 
-- Next, we will download the Couchbase Lite 2.8 framework. The Couchbase Lite iOS framework is link:https://developer.couchbase.com/documentation/mobile/current/couchbase-lite/swift.html[distributed] via Cocoapods, Carthage or you can download the pre-built framework. In our example, we will be downloading the pre-built version of the framework. For this, do the following
-+
-[source,bash] 
+The Couchbase Lite iOS framework is distributed via SPM, CocoaPods, Carthage or you can download the pre-built framework -- see the {cbl-install--xref} documentation for more information.
+
+In our example, we will download the pre-built version of the frameworks.
+To do this, type the following in a command terminal:
+
+[source, bash,  subs="attributes+"]
 ----
-  cd /path/to/UserProfileDemo/content/modules/userprofile/examples
+cd /path/to/UserProfileDemo/content/modules/userprofile/examples
 
-  sh install_12.sh
+sh {install_script}
 ----
 
-Now, let's verify the installation
+Next, let's verify the installation.
 
-=== Try it Out
-* Open the `UserProfileDemo.xcodeproj`. The project would be located at `/path/to/UserProfileDemo/content/modules/userprofile/examples`
+
+.Try it Out
+****
+. Open the `UserProfileDemo.xcodeproj`.
+The project would be located at `/path/to/UserProfileDemo/content/modules/userprofile/examples`
 +
 [source,bash]
 ----
 open UserProfileDemo.xcodeproj
 ----
-+
-* Build and run the project using the _simulator_ in Xcode. While you can run the app on a real device, we recommend the Simulator so you can see the debug logs in the output console.
-* Verify that you see the login screen
-+
-image::user_profile_login.png[User Profile Login Screen Image]
+
+. Build and run the project using the _simulator_ in Xcode. +
+While you can run the app on a real device, we recommend the Simulator so you can see the debug logs in the output console.
+. Verify that you see the login screen
+****
+
+
+:alt-text: User Profile Login Screen Image
+.{alt-text}
+image::user_profile_login.png[{alt-text}]
+
 
 == Data Model
-Couchbase Lite is a JSON Document Store. A Document is a logical collection of named fields and values.The values are any valid JSON types. In addition to the standard JSON types, Couchbase Lite supports some special types like `Date` and `Blob`.
-While it is not required or enforced, it is a recommended practice to include a _"type"_ property that can serve as a namespace for related. 
 
-=== The "User Profile" Document
-The app deals with a single Document with a _"type"_ property of _"user"_.  The document ID is of the form _"user::<email>"_.
-An example of a document would be 
 
-```json
+Couchbase Lite is a JSON Document Store.
+A Document is a logical collection of named fields and values.
+The values are any valid JSON types.
+
+In addition to the standard JSON types, Couchbase Lite supports some special types like `Date` and `Blob`.
+While it is not required or enforced, it is a recommended practice to include a _"type"_ property that can serve as a namespace for related documents.
+
+The app deals with two Document types: _User Profile_ and _University_.
+
+=== The User Profile Document
+The _User Profile_ Document has a `type` property of _user_ as shown in  <<ex-user-profile-doc>>.
+Its document ID is of the form _"user::{emailId}"_.
+
+.A user profile document
+[#ex-user-profile-doc]
+====
+[source, json]
+----
 {
     "type":"user",
     "name":"Jane Doe",
@@ -111,22 +215,31 @@ An example of a document would be
     "image":CBLBlob (image/jpg),
     "university":"Rensselaer Polytechnic"
 }
-```
-
-=== UserRecord 
-
-The _"user"_ Document is encoded to a native struct named _UserRecord_.
-
-[source,swift]
 ----
-include::{examplesdir}/UserProfileDemo/model/UserRecord.swift[tags=userrecord]
+====
+
+==== The User Record
+
+The _"user"_ Document is encoded to a native struct named _UserRecord_ as shown in <<ex-user-rec>>
+
+[#ex-user-rec]
+.The encoding of a UserRecord to a native structure
+[source,{tutorial-platform}, subs="attributes+, macros+"]
+====
 ----
+include::example$UserProfileDemo/model/UserRecord.swift[indent=0, tags=userrecord]
+----
+====
 
-== The "University" Document
-The app comes bundled with a collection of Documents of type _"university"_. Each Document represents a university.
+=== The University Document
+The app comes bundled with a collection of Documents of type _"university"_.
+Each Document represents a university -- see <<ex-university-doc>>
 
-
-```json
+[#ex-university-doc]
+.A university document
+====
+[source, json]
+----
 {
     "type":"university","web_pages": [
       "http://www.rpi.edu/"
@@ -139,24 +252,36 @@ The app comes bundled with a collection of Documents of type _"university"_. Eac
     ],
     "country": "United States"
 }
-```
-
-=== UniversityRecord 
-
-The _"university"_ Document is encoded to a native struct named _UniversityRecord_.
-
-[source,swift]
 ----
-include::{examplesdir}/UserProfileDemo/model/UniversityRecord.swift[tags=universityrecord]
+====
+
+==== UniversityRecord
+
+The _"university"_ Document is encoded to a native struct named _UniversityRecord_ -- as shown in <<ex-university-rec>>
+
+[#ex-university-rec]
+.The encoding of a UniversityRecord to a native structure
+====
+[source,{tutorial-platform}, subs="attributes+, macros+"]
 ----
+include::example$UserProfileDemo/model/UniversityRecord.swift[indent=0, tags=universityrecord]
+----
+====
+
 
 == Using a Prebuilt Database
-There are several reasons why you may want to bundle your app with a prebuilt database. This would be suited for data that does not change or change that often, so you can avoid the bandwidth and latency involved in fetching/syncing this data from a remote server. This also improves the overall user experience by reducing the start-up time.
+There are several reasons why you may want to bundle your app with a prebuilt database.
+This would be suited for data that does not change or change that often, so you can avoid the bandwidth and latency involved in fetching/syncing this data from a remote server.
+This also improves the overall user experience by reducing the start-up time.
 
-In our app, the instance of Couchbase Lite that holds the pre-loaded _"university"_ data is separate from the Couchbase Lite instance that holds _"user"_ data hold the pre-loaded data.  A separate Couchbase Lite instance is not required. However, in our case, since there can be many users potentially using the app on a given device,  it makes more sense to keep it separate. This is to avoid duplication of pre-loaded data for every user.
+In our app, the instance of Couchbase Lite that holds the pre-loaded _"university"_ data is separate from the Couchbase Lite instance that holds _"user"_ data hold the pre-loaded data.
+A separate Couchbase Lite instance is not required.
+However, in our case, since there can be many users potentially using the app on a given device, it makes more sense to keep it separate.
+This is to avoid duplication of pre-loaded data for every user.
 
 === Location of the cblite file
-The pre-built database will be in the form of a `cblite` file. It should be be in your app project bundle
+The pre-built database will be in the form of a `cblite` file.
+It should be be in your app project bundle.
 
 * In the `UserProfileDemo.xcodeproj` project explorer, locate the `universities.cblite2` file
 +
@@ -164,61 +289,80 @@ image::cblite_location.png[Prebuilt Database Location]
 
 
 === Loading the Prebuilt Database
-* Open the **DatabaseManager.swift** file and locate the `openPrebuiltDatabase()` function. The prebuilt database is common to all users of the app (on the device). So it will be loaded once and shared by all users on the device.
+* Open the **DatabaseManager.swift** file and locate the `openPrebuiltDatabase()` function.
+The prebuilt database is common to all users of the app (on the device).
+So it will be loaded once and shared by all users on the device.
 +
 [source,swift]
 ----
-include::{examplesdir}/UserProfileDemo/model/DatabaseManager.swift[tags=openPrebuiltDatabase]
+include::example$UserProfileDemo/model/DatabaseManager.swift[indent=0, tags=openPrebuiltDatabase]
 ----
 
 * First, we create an instance of `DatabaseConfiguration` object and specify the path where the database would be located
 +
 [source,swift]
 ----
-include::{examplesdir}/UserProfileDemo/model/DatabaseManager.swift[tags=prebuiltdbconfig]
+include::example$UserProfileDemo/model/DatabaseManager.swift[indent=0, tags=prebuiltdbconfig]
 ----
 
-* Then we determine if the "universities" database already exists at the specified location. It would not be present if this is the first time we are using the app, in which case, we locate the _"universities.cblite"_ resource in the App's main bundle and we copy it over to the Database folder.
+* Then we determine if the "universities" database already exists at the specified location.
+It would not be present if this is the first time we are using the app, in which case, we locate the _"universities.cblite"_ resource in the App's main bundle and we copy it over to the Database folder.
 +
 If the database is already present at the specified Database location, we simply open the database.
-+ 
++
 [source,swift]
 ----
-include::{examplesdir}/UserProfileDemo/model/DatabaseManager.swift[tags=prebuiltdbopen]
+include::example$UserProfileDemo/model/DatabaseManager.swift[indent=0, tags=prebuiltdbopen]
 ----
 
 === Indexing the Prebuilt Database
-* Creating indexes for non-FTS based queries is optional. However, in order to speed up queries, you can create indexes on the properties that you would query against. Indexing is handled eagerly.
+* Creating indexes for non-FTS based queries is optional.
+However, in order to speed up queries, you can create indexes on the properties that you would query against.
+Indexing is handled eagerly.
 
-* In the **DatabaseManager.swift** file, locate the `createUniversityDatabaseIndexes()` function. We create an index on the `name` and `location` properties of the documents in the _university_ database.
+* In the **DatabaseManager.swift** file, locate the `createUniversityDatabaseIndexes()` function.
+We create an index on the `name` and `location` properties of the documents in the _university_ database.
 +
 [source,swift]
 ----
-include::{examplesdir}/UserProfileDemo/model/DatabaseManager.swift[tags=createUniversityDatabaseIndexes]
+include::example$UserProfileDemo/model/DatabaseManager.swift[indent=0, tags=createUniversityDatabaseIndexes]
 ----
 
 === Closing the Database
 When a user logs out, we close the Prebuilt Database along with other user-specific databases
 
-* In the **DatabaseManager.swift** file, locate the `closePrebuiltDatabase()` function. 
+* In the **DatabaseManager.swift** file, locate the `closePrebuiltDatabase()` function.
 +
 [source,swift]
 ----
-include::{examplesdir}/UserProfileDemo/model/DatabaseManager.swift[tags=closePrebuiltDatabase]
+include::example$UserProfileDemo/model/DatabaseManager.swift[indent=0, tags=closePrebuiltDatabase]
 ----
 
 * Closing the database is pretty straightforward
 +
 [source,swift]
 ----
-include::{examplesdir}/UserProfileDemo/model/DatabaseManager.swift[tags=dbclose]
+include::example$UserProfileDemo/model/DatabaseManager.swift[indent=0, tags=dbclose]
 ----
 
-=== Try It Out
-* The app should be running in the simulator
-* Log into the app with any email Id and password. Let's use the values _"demo@example.com"_ and _"password"_ for user Id and password fields respectively. If this is the first time that _any_ user is signing in to the app, the pre-built database will be loaded from the App Bundle. In addition, new user-specific Database will be created / opened.
-* Confirm that the console log output has a message similar to the one below. In my example, I am logging in with a user email Id of _"demo@example.com"_.
+.Try Out the App
+****
+The app should be running in the simulator.
+
+. Log into the app with any email Id and password.
+Let's use the values _"demo@example.com"_ and _"password"_ for user Id and password fields respectively.
+If this is the first time that _any_ user is signing in to the app, the pre-built database will be loaded from the App Bundle.
+In addition, new user-specific Database will be created / opened.
+. Confirm that the console log output has a message similar to the one shown in <<ex-sample-output>>.
+This output also indicates the location of the Prebuilt database as well as the Database for the user.
+This would be within the _Application Support_ folder see: <<img-dbloc>>
 +
+In this example, we are logging in with a user email Id of _"demo@example.com"_.
+. Open the folder in your Finder app and verify that a Database with name _"univerities"_ exists along with a user specific Database with name _"userprofile"_
+****
+.Sample output
+[#ex-sample-output]
+====
 [source,bash]
 ----
 Will open Prebuilt DB  at path /Users/priya.rajagopal/Library/Developer/CoreSimulator/Devices/E4E62394-9940-4AF8-92FC-41E3C794B216/data/Containers/Data/Application/A9425551-7F52-461D-B4F5-CC04315154D6/Library/Application Support
@@ -227,85 +371,136 @@ Will open Prebuilt DB  at path /Users/priya.rajagopal/Library/Developer/CoreSimu
 
 2018-05-04 17:04:16.319721-0400 UserProfileDemo[54115:13479070] CouchbaseLite minimum log level is Verbose
 Will open/create DB  at path /Users/priya.rajagopal/Library/Developer/CoreSimulator/Devices/E4E62394-9940-4AF8-92FC-41E3C794B216/data/Containers/Data/Application/A9425551-7F52-461D-B4F5-CC04315154D6/Library/Application Support/demo@example.com
----- 
-* The above log message indicate the location of the Prebuilt database as well as the Database for the user. This would be within the _Application Support_ folder.
-* Open the folder in your Finder app and verify that a Database with name _"univerities"_ exists along with a user specific Database with name _"userprofile"_
-+
+----
+====
+
+[#img-dbloc]
+.Database location
 image::db_locations.png[Database Locations]
 
+
 == Exploring the Query API
-The Query API in Couchbase Lite 2.0 is extensive. In our app, we will be using the `QueryBuilder` API to make a simple _pattern matching_ query using the `like` operator. 
+
+
+The Query API in Couchbase Lite is extensive.
+
+In our app, we will be using the `QueryBuilder` API to make a simple _pattern matching_ query using the `like` operator.
 
 === Fetching University Document
-From the "Your Profile" screen, when the user taps on the "University" cell, a search screen is displayed where the user can enter the search criteria (name and optionally, the location) for the university. When the search criteria is entered, the local _"universities"_ Database is queried for <<The "University" Document>> documents that match the specified search criteria. 
+From the "Your Profile" screen, when the user taps on the "University" cell, a search screen is displayed where the user can enter the search criteria (name and optionally, the location) for the university.
+
+When the search criteria is entered, the local _"universities"_ Database is queried for <<The "University" Document>> documents that match the specified search criteria.
 
 * Open the **UniversityPresenter.swift** file and locate the `fetchUniversityRecords()` function.
 +
 [source,swift]
 ----
-include::{examplesdir}/UserProfileDemo/presenter/UniversityPresenter.swift[tags=fetchUniversityRecords]
+include::example$UserProfileDemo/presenter/UniversityPresenter.swift[indent=0, tags=fetchUniversityRecords]
 ----
 
 * We build the Query using the `QueryBuilder` API that will look for Documents that match the specified criteria.
 +
 [source,swift]
 ----
-include::{examplesdir}/UserProfileDemo/presenter/UniversityPresenter.swift[tags=buildquery]
+include::example$UserProfileDemo/presenter/UniversityPresenter.swift[indent=0, tags=buildquery]
 ----
 +
-<1> Build a `QueryExpression` that uses the `like` operator to look for the specified _"name"_ string in the _"name"_ property. Notice couple of things here: (a) The use of *wildcard "%" operator* to denote that we are looking for the presence of the string anywhere in the _"name"_ property and (b) The use of `Function.lowercase()` to convert the search string into lowercase equivalent. Since `like` operator does _case-senstive matching_, we convert the search string and the property value to lowercase equivalents and compare the two.
-<2> If the location criteria was specified in the search, then Build a `QueryExpression` that uses the `like` operator to look for the specified _"location"_ string in the _"location"_ property.
-<3> The `SelectResult.all()` specifiees that we are interested in all properties in Documents that match the specified criteria
-<4> The `DataSource.database(db)` specified the Data Source
-<5> We include the `where` clause that is the logical ANDing of the QueryExpression in <1> and <2>
-
+<.> Build a `QueryExpression` that uses the `like` operator to look for the specified _"name"_ string in the _"name"_ property.
+Notice couple of things here: +
+(a)
+The use of *wildcard "%" operator* to denote that we are looking for the presence of the string anywhere in the _"name"_ property and +
+(b)
+The use of `Function.lowercase()` to convert the search string into lowercase equivalent.
+Since `like` operator does _case-senstive matching_, we convert the search string and the property value to lowercase equivalents and compare the two.
+<.> If the location criteria was specified in the search, then Build a `QueryExpression` that uses the `like` operator to look for the specified _"location"_ string in the _"location"_ property.
+<.> The `SelectResult.all()` specifiees that we are interested in all properties in Documents that match the specified criteria
+<.> The `DataSource.database(db)` specified the Data Source
+<.> We include the `where` clause that is the logical ANDing of the QueryExpression in <1> and <2>
 
 * We run the Query by calling the `execute()` method on the Query that was constructed in the previous step
 +
 [source,swift]
 ----
-include::{examplesdir}/UserProfileDemo/presenter/UniversityPresenter.swift[tags=runquery]
+include::example$UserProfileDemo/presenter/UniversityPresenter.swift[indent=0, tags=runquery]
 ----
-<1> Create an instance of <<UniversityRecord>> type
-<1> Use specific type getters to fetch property values. These <<UniversityRecord>> instance is populated with these property values.
-<2> Getters also available for `array` types. This returns a Couchbase Lite `ArrayObject` type. So you would have to use `toArray()` to convert the Couchbase Lite native array equivalent.
+<.> Create an instance of <<UniversityRecord>> type
+<.> Use specific type getters to fetch property values.
+The <<UniversityRecord>> instance is populated with these property values.
+<.> Getters also available for `array` types.
+This returns a Couchbase Lite `ArrayObject` type.
+So you would have to use `toArray()` to convert the Couchbase Lite native array equivalent.
 
-=== Try It Out
-* You should have followed the steps discussed in the "Try It Out" section under <<Loading the Prebuilt Database>>
-* Tap on "University" table cell
-* You should see a screen show that allows you enter the search criteria for the university
-* Enter "Harv" for name . You can optionally enter "united states" for location
-* Confirm that you see a list of universities that match the criteria
+.Try Out the Query
+****
+You should have followed the steps discussed in the "Try It Out" section under <<Loading the Prebuilt Database>>
+
+. Tap on "University" table cell
+. You should see a screen show that allows you enter the search criteria for the university
+. Enter "Harv" for name .
+You can optionally enter "united states" for location
+. Confirm that you see a list of universities that match the criteria  -- see: <<ex-try-out-query>> -- _List_ tab
+// +
+// image::https://raw.githubusercontent.com/couchbaselabs/userprofile-couchbase-mobile/query/content/modules/userprofile/assets/images/university_list.gif[University List]
 +
+. Select a university
+. Press "Done" button
+. Confirm that the university you selected shows up in the University table cell  -- see: <<ex-try-out-query>> -- _Selection_ tab +
+// +
+// image::https://raw.githubusercontent.com/couchbaselabs/userprofile-couchbase-mobile/query/content/modules/userprofile/assets/images/university_selection.gif[University Selection]
+You can optionally fill in other entries in the User Profile screen
+. Tap "Done" button
+. Confirm that you see an alert message "Successfully Updated Profile". +
+The Document will be updated this time.
+. Tap "Log Off" and log out of the app
+. Log back into the app with the same user email Id and password that you used earlier.
+In my example, I used _"demo@example.com"_ and _"password"_.
+So I will log in with those credentials again.
+. Confirm that you see the profile screen  with the _university_ value that you set earlier -- see: <<ex-try-out-query>> -- _Log Off/On_ tab
+// +
+// image::https://raw.githubusercontent.com/couchbaselabs/userprofile-couchbase-mobile/query/content/modules/userprofile/assets/images/profile_update.gif[Log Off and Log Back On]
+****
+
+.Try Out the Query
+[#ex-try-out-query]
+====
+
+[tabs]
+=====
+
+List::
++
+--
 image::https://raw.githubusercontent.com/couchbaselabs/userprofile-couchbase-mobile/query/content/modules/userprofile/assets/images/university_list.gif[University List]
+--
+
+Selection::
 +
-* Select a university 
-* Press "Done" button
-* Confirm that the university you selected shows up in the University table cell
-+
+--
 image::https://raw.githubusercontent.com/couchbaselabs/userprofile-couchbase-mobile/query/content/modules/userprofile/assets/images/university_selection.gif[University Selection]
+--
+
+Log Off/On::
 +
-* You can optionally fill in other entries in the User Profile screen
-* Tap "Done" button
-* Confirm that you see an alert message "Succesfully Updated Profile". The Document will be updated this time.
-* Tap "Log Off" and log out of the app
-* Log back into the app with the same user email Id and password that you used earlier. In my example, I used _"demo@example.com"_ and _"password"_. So I will log in with those credentials again.
-* Confirm that you see the profile screen  with the _university_ value that you set earlier. 
-+
+--
 image::https://raw.githubusercontent.com/couchbaselabs/userprofile-couchbase-mobile/query/content/modules/userprofile/assets/images/profile_update.gif[Log Off and Log Back On]
+--
+
+=====
+
+====
+
 
 == Learn More
 Congratulations on completing this tutorial!
 
-This tutorial walked you through an example of how to use a pre-built Couchbase Lite database. We looked at a simple Query example. Check out the following links for further details on the Query API including a Xcode playground for testing the APIs.
+This tutorial walked you through an example of how to use a pre-built Couchbase Lite database.
+We looked at a simple Query example.
+Check out the following links for further details on the Query API including a Xcode playground for testing the APIs.
 
 === Further Reading
-* link:https://blog.couchbase.com/xcode-playground-couchbase-mobile/[Xcode Playground For Couchbase Lite 2.0]
+* {blog-xcode-playground--url}
+* {blog-query-api--url}
+* {blog-query-array-handling--url}
+* {blog-query-full-text-search--url}
+* {blog-query-join--url}
 
-* link:https://blog.couchbase.com/sql-for-json-query-interface-couchbase-mobile/[Fundamentals of the Couchbase Lite 2.0 Query API]
-
-* link:https://blog.couchbase.com/querying-array-collections-couchbase-mobile/[Handling Arrays in Queries]
-
-* link:https://blog.couchbase.com/full-text-search-couchbase-mobile-2-0/[Couchbase Lite 2.0 Full Text Search API]
-
-* link:https://blog.couchbase.com/join-queries-couchbase-mobile/[Couchbase Lite 2.0 JOIN Query]
