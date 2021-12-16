@@ -2,7 +2,7 @@
 ** xref:standalone@userprofile-couchbase-mobile:userprofile:userprofile_basic.adoc[Standalone]
 ** xref:query@userprofile-couchbase-mobile:userprofile:userprofile_query.adoc[Query]
 ** xref:sync@userprofile-couchbase-mobile:userprofile:userprofile_sync.adoc[Sync]
-** xref:backgroundfetch@userprofile-couchbase-mobile:userprofile:background-fetch.adoc[Background Fetch]
+// ** xref:backgroundfetch@userprofile-couchbase-mobile:userprofile:background-fetch.adoc[Background Fetch]
 * Getting Started on Xamarin
 ** xref:standalone@userprofile-couchbase-mobile:userprofile:xamarin/userprofile_basic.adoc[Standalone]
 ** xref:query@userprofile-couchbase-mobile:userprofile:xamarin/userprofile_query.adoc[Query]
