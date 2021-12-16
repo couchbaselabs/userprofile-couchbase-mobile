@@ -267,7 +267,9 @@ extension DatabaseManager {
 extension DatabaseManager {
     
     fileprivate func enableCrazyLevelLogging() {
-        Database.setLogLevel(.verbose, domain: .query)
+        Database.log.console.domains = .all
+        Database.log.console.level = .debug
+        
     }
     
 }
