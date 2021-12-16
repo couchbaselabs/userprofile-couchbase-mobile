@@ -16,7 +16,7 @@ enum UniversityDocumentKeys:String {
     case domains
     case name
     case webPages = "web_pages"
-    
+
 }
 
 // MARK: UniversityPresenterProtocol
@@ -47,52 +47,52 @@ extension UniversityPresenter {
             guard let db = dbMgr.universityDB else {
                 fatalError("db is not initialized at this point!")
             }
-            
+
             // tag::buildquery[]
             var whereQueryExpr = Function.lower(Expression.property(UniversityDocumentKeys.name.rawValue))
-                .like(Expression.string("%\(name.lowercased())%")) // <1>
-            
+                .like(Expression.string("%\(name.lowercased())%")) // <.>
+
             if let countryExpr = countryStr {
                 let countryQueryExpr = Function.lower(Expression.property(UniversityDocumentKeys.country.rawValue))
-                    .like(Expression.string("%\(countryExpr.lowercased())%"))// <2>
-                
-                whereQueryExpr = whereQueryExpr.and(countryQueryExpr) // <3>
+                    .like(Expression.string("%\(countryExpr.lowercased())%"))
+
+                whereQueryExpr = whereQueryExpr.and(countryQueryExpr) // <.>
             }
-            
-            let universityQuery = QueryBuilder.select(SelectResult.all()) // <4>
-                .from(DataSource.database(db)) // <5>
-                .where(whereQueryExpr) // <6>
-            
+
+            let universityQuery = QueryBuilder.select(SelectResult.all()) // <.>
+                .from(DataSource.database(db)) // <.>
+                .where(whereQueryExpr) // <.>
+
             print(try? universityQuery.explain())
             // end::buildquery[]
-            
+
             // tag::runquery[]
             var universities = Universities()
-            
+
             for result in try universityQuery.execute() {
                 if let university = result.dictionary(forKey: "universities"){
-                    
-                    var universityRecord = UniversityRecord() // <1>
-                    universityRecord.name =  university.string(forKey: UniversityDocumentKeys.name.rawValue) // <2>
-                    universityRecord.country  =  university.string(forKey: UniversityDocumentKeys.country.rawValue) // <1>
-                    universityRecord.webPages  =  university.array(forKey: UniversityDocumentKeys.webPages.rawValue)?.toArray() as? [String] // <3>
-                    
+
+                    var universityRecord = UniversityRecord() // <.>
+                    universityRecord.name =  university.string(forKey: UniversityDocumentKeys.name.rawValue) // <.>
+                    universityRecord.country  =  university.string(forKey: UniversityDocumentKeys.country.rawValue)
+                    universityRecord.webPages  =  university.array(forKey: UniversityDocumentKeys.webPages.rawValue)?.toArray() as? [String] // <.>
+
                     universities.append(universityRecord)
 
                 }
             }
             // end::runquery[]
-            
+
             self.associatedView?.dataFinishedLoading()
             self.associatedView?.updateUIWithUniversityRecords(universities, error: nil)
-            
+
         }
         catch {
             handler(nil,UserProfileError.DocumentFetchException)
             return
         }
     }
-  
+
 }
 
 
@@ -100,7 +100,7 @@ extension UniversityPresenter {
 extension UniversityPresenter:PresenterProtocol {
     func attachPresentingView(_ view:PresentingViewProtocol) {
         self.associatedView = view as? UniversityPresentingViewProtocol
-        
+
     }
     func detachPresentingView(_ view:PresentingViewProtocol) {
         self.associatedView = nil
