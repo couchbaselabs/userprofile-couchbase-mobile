@@ -1,9 +1,5 @@
-name: userprofile-couchbase-mobile
-title: User Profile Tutorial
-version: 'query'
-display-version: 'Query'
-nav:
-  - modules/userprofile/nav.adoc
+name: tutorials
+version: 'master'
 asciidoc:
   attributes:
     prerelease:
