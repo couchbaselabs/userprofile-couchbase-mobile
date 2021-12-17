@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4909C6B2276B6F74004CA0FE /* CouchbaseLiteSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 4909C6B1276B6F74004CA0FE /* CouchbaseLiteSwift */; };
+		49C06796276C9A7F00FC0CD1 /* CouchbaseLiteSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 49C06795276C9A7F00FC0CD1 /* CouchbaseLiteSwift */; };
 		5F61CCB2204C9F2C00399C1D /* CustomTextEntryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F61CCB1204C9F2C00399C1D /* CustomTextEntryTableViewCell.swift */; };
 		5F61CCB4204C9F4400399C1D /* CustomTextEntryTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5F61CCB3204C9F4400399C1D /* CustomTextEntryTableViewCell.xib */; };
 		5F61CCB6204E47B500399C1D /* CustomImageEntryTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5F61CCB5204E47B500399C1D /* CustomImageEntryTableViewCell.xib */; };
@@ -77,7 +77,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4909C6B2276B6F74004CA0FE /* CouchbaseLiteSwift in Frameworks */,
+				49C06796276C9A7F00FC0CD1 /* CouchbaseLiteSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -196,7 +196,7 @@
 			);
 			name = UserProfileDemo;
 			packageProductDependencies = (
-				4909C6B1276B6F74004CA0FE /* CouchbaseLiteSwift */,
+				49C06795276C9A7F00FC0CD1 /* CouchbaseLiteSwift */,
 			);
 			productName = UserProfileDemo;
 			productReference = 5F86E8472037E292007ED29E /* UserProfileDemo.app */;
@@ -209,7 +209,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0920;
-				LastUpgradeCheck = 0920;
+				LastUpgradeCheck = 1320;
 				ORGANIZATIONNAME = "Couchbase Inc.";
 				TargetAttributes = {
 					5F86E8462037E292007ED29E = {
@@ -228,7 +228,7 @@
 			);
 			mainGroup = 5F86E83E2037E292007ED29E;
 			packageReferences = (
-				4909C6B0276B6F74004CA0FE /* XCRemoteSwiftPackageReference "couchbase-lite-swift-ee" */,
+				49C06794276C9A7F00FC0CD1 /* XCRemoteSwiftPackageReference "couchbase-lite-swift-ee" */,
 			);
 			productRefGroup = 5F86E8482037E292007ED29E /* Products */;
 			projectDirPath = "";
@@ -315,6 +315,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -322,8 +323,10 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -372,6 +375,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -379,8 +383,10 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -487,7 +493,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		4909C6B0276B6F74004CA0FE /* XCRemoteSwiftPackageReference "couchbase-lite-swift-ee" */ = {
+		49C06794276C9A7F00FC0CD1 /* XCRemoteSwiftPackageReference "couchbase-lite-swift-ee" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/couchbase/couchbase-lite-swift-ee.git";
 			requirement = {
@@ -498,9 +504,9 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		4909C6B1276B6F74004CA0FE /* CouchbaseLiteSwift */ = {
+		49C06795276C9A7F00FC0CD1 /* CouchbaseLiteSwift */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 4909C6B0276B6F74004CA0FE /* XCRemoteSwiftPackageReference "couchbase-lite-swift-ee" */;
+			package = 49C06794276C9A7F00FC0CD1 /* XCRemoteSwiftPackageReference "couchbase-lite-swift-ee" */;
 			productName = CouchbaseLiteSwift;
 		};
 /* End XCSwiftPackageProductDependency section */
