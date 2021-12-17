@@ -1,0 +1,3 @@
+** xref:standalone@userprofile-couchbase-mobile:userprofile:userprofile_basic.adoc[Standalone I]
+** xref:query@userprofile-couchbase-mobile:userprofile:userprofile_query.adoc[Query I]
+** xref:sync@userprofile-couchbase-mobile:userprofile:userprofile_sync.adoc[Sync I]
