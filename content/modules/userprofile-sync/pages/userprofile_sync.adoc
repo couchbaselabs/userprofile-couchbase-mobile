@@ -26,15 +26,16 @@ ifdef::releasetag[:target-version-full: {target-version-full}-{releasetag}]
 :revision-to-update: 3-033fcbaf269d65a9247067be76d664f1111d033b
 :sgw-config-filename-3x0: sync-gateway-config-userprofile-demo-3-x-legacy.json
 :sgw-config-filename-2x8: sync-gateway-config-userprofile-demo-2-x.json
+
 // END Tutorial Attributes
 
 
 // BEGIN Tutorial Cross-reference links
 
 // Inter-Tutorial Links
-:standalone--xref: xref:standalone@userprofile-couchbase-mobile:userprofile:userprofile_basic.adoc[Standalone tutorial]
-:query--xref: xref:query@userprofile-couchbase-mobile:userprofile:userprofile_query.adoc[Query tutorial]
-:sync--xref: xref:sync@userprofile-couchbase-mobile:userprofile:userprofile_sync.adoc[Sync tutorial]
+:standalone--xref: xref:userprofile-standalone:userprofile_basic.adoc[Standalone tutorial]
+:query--xref: xref:userprofile-query:userprofile_query.adoc[Query tutorial]
+:sync--xref: xref:userprofile-sync:userprofile_sync.adoc[Sync tutorial]
 
 // CBL Doc Links
 :cbl-documentation-component--xref: pass:q,a[xref:{target-version}@couchbase-lite:]
@@ -61,15 +62,23 @@ ifdef::releasetag[:target-version-full: {target-version-full}-{releasetag}]
 :rest-api-document-put--url: {rest-api--url}#/document/AddOrUpdateDocument[PUT Document REST API]
 :rest-api-document-get--url: {rest-api--url}#/document/GetDocument[GET Document REST API]
 
+
 // Git Content Links
-:git-tutorial-root: https://github.com/couchbaselabs/userprofile-couchbase-mobile
+:git-branch: DOC-9382/sync
+// ifdef::github_branch_override[:git-branch: {github_branch_override}]
+
+:git-tutorial-root: https://github.com/ibsoln/userprofile-couchbase-mobile
 // Allow override from antora.yml file
-ifdef::github_root_override[:git-tutorial-root: {github_root_override}]
+// ifdef::github_root_override[:git-tutorial-root: {github_root_override}]
 // :git-tutorial-root: https://github.com/ibsoln/userprofile-couchbase-mobile
-:git-sync--url: {git-tutorial-root}/blob/feature/sync/content/modules/userprofile/examples/
+
+:git-sync--url: {git-tutorial-root}/blob/{git-branch}/content/modules/userprofile-sync/examples/
 :config-filename: sync-gateway-config-userprofile-demo
-:config-file-3x0-legacy--url: {git-sync--url}{config-filename}-3-x-legacy.json[sync-gateway-config-userprofile-demo-3-x-legacy.json]
-:config-file-2x8--url: {git-sync--url}{config-filename}-2-x.json[sync-gateway-config-userprofile-demo-2-x.json]
+
+:config-file-3x0-legacy--url: {git-sync--url}{sgw-config-filename-3x0}[sync-gateway-config-userprofile-demo-3-x-legacy.json]
+:config-file-2x8--url: {git-sync--url}{sgw-config-filename-2x8}[sync-gateway-config-userprofile-demo-2-x.json]
+
+Seeking {config-file-3x0-legacy--url}
 
 // External Site Links
 :mac-app-store--url: https://itunes.apple.com/us/app/xcode/id497799835?mt=12[Mac App Store^]
@@ -361,7 +370,7 @@ image::log-output.png[]
 
 . Now check the required data is in place:
 
-.. Open up http://localhost:8091^ in a browser
+.. Open up http://localhost:8091[http://localhost:8091^] in a browser
 .. Sign in as “Administrator” and “password” in login page
 
 .. Go to “buckets” menu and confirm “userprofile” bucket is created
@@ -488,13 +497,12 @@ Configuring and running Sync Gateway {target-version} in legacy mode
 
 [source, dos, subs="attributes+, macros+"]
 ----
-docker run -p 4984-4985:4984-4985 ^
+docker run -p 4984-4986:4984-4986 ^
 --network workshop ^
 --name sync-gateway ^
 -d -v %cd%{sgw-config-filename-3x0}:^
 /etc/sync_gateway/sync_gateway.json ^
 couchbase/sync-gateway:{target-version-full}-enterprise ^
--adminInterface :4985 ^
 /etc/sync_gateway/sync_gateway.json
 ----
 --
@@ -505,14 +513,13 @@ Configuring and running Sync Gateway 2.8
 
 [source, dos, subs="attributes+, macros+"]
 ----
-docker run -p 4984-4985:4984-4985 ^
+docker run -p 4984-4986:4984-4986 ^
 --network workshop ^
 --name sync-gateway ^\
 -d ^
 -v %cd%/sync-gateway-config-userprofile-demo-2-x.json:^
 etc/sync_gateway/sync_gateway.json ^
 couchbase/sync-gateway:2.8.4-enterprise ^
--adminInterface :4985 ^
 /etc/sync_gateway/sync_gateway.json
 ----
 --
@@ -886,14 +893,17 @@ You will need this when you update the document
 
 . In the command terminal, issue the following command to update the user profile document via {rest-api-document-put--url}
 +
+We chose to update the address field via the REST API.
+You can choose to update any other profile information if you like.
+You will be prompted to enter the users password when you submit the curl command.
++
 [source,bash, subs="attributes+"]
 ----
-curl --location --request \
-PUT 'http://localhost:4984/userprofile/user::{emailId}?rev=3-033fcbaf269d65a9247067be76d664f1111d033b' --user '{emailId}' \ // <.>
+curl --location --request PUT 'http://localhost:4984/userprofile/user::demo@example.com?rev=3-033fcbaf269d65a9247067be76d664f1111d033b' --user 'demo@example.com' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "address": "101 Main Street",
-    "email": "{emailId}",
+    "email": "demo@example.com",
     "image": {
         "@type": "blob",
         "content_type": "image/jpeg",
@@ -905,9 +915,11 @@ PUT 'http://localhost:4984/userprofile/user::{emailId}?rev=3-033fcbaf269d65a9247
     "university": "British Institute in Paris, University of London"
 }'
 ----
-<.> Here we specify the user id (`user::{emailId}`) and the revision Id (from the previous step) to select the item we want to update
-<.> We updated the address field via the REST API.
-You can choose to update any other profile information
+Here, in the `PUT`, we specify the:
+
+* user id (`user::{emailId}`)
+* revision Id (from the previous step `3-033fcbaf269d65a9247067be76d664f1111d033b`) to select the item we want to update
+
 
 . Confirm that you get a HTTP _"201 Created"_ status code
 
