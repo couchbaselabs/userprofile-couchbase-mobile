@@ -15,6 +15,6 @@ asciidoc:
     # These overrides provide for testing by pointing to a different GH repo and or branch
     # Remove these overrides when not required
     #
-    github_root_override: https://github.com/ibsoln/userprofile-couchbase-mobile
-    github_branch_override: DOC-9382-Standalon
+    github_root_override: https://github.com/ibsoln/userprofile-couchbase-mobile/blob/
+    github_branch_override: DOC-9382/standalone
 

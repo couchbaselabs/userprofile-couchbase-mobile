@@ -77,13 +77,13 @@ ifdef::releasetag[:target-version-full: {target-version-full}-{releasetag}]
 
 // Git Content Links
 // :git-tutorial-root: https://github.com/ibsoln/userprofile-couchbase-mobile
-:git-tutorial-root: https://github.com/couchbaselabs/userprofile-couchbase-mobile
+// :git-tutorial-root: https://github.com/couchbaselabs/userprofile-couchbase-mobile
 // :git-sync--url: https://github.com/rajagp/userprofile-couchbase-mobile-cordova-android/blob/main/sync/
-:git-sync--url: {git-tutorial-root}/blob/feature/sync/content/modules/userprofile/examples/
-:config-filename: sync-gateway-config-userprofile-demo
-:config-file-3x0-legacy--url: {git-sync--url}{config-filename}-3-x-legacy.json[sync-gateway-config-userprofile-demo-3-x-legacy.json]
-:config-file-2x8--url: {git-sync--url}{config-filename}-2-x.json[sync-gateway-config-userprofile-demo-2-x.json]
-:userprofile-demo-download--url: https://github.com/couchbaselabs/userprofile-couchbase-mobile/archive/sync.zip[here]
+// :git-sync--url: {git-tutorial-root}/blob/feature/sync/content/modules/userprofile/examples/
+// :config-filename: sync-gateway-config-userprofile-demo
+// :config-file-3x0-legacy--url: {git-sync--url}{config-filename}-3-x-legacy.json[sync-gateway-config-userprofile-demo-3-x-legacy.json]
+// :config-file-2x8--url: {git-sync--url}{config-filename}-2-x.json[sync-gateway-config-userprofile-demo-2-x.json]
+// :userprofile-demo-download--url: https://github.com/couchbaselabs/userprofile-couchbase-mobile/archive/sync.zip[here]
 
 // External Site Links
 :mac-app-store--url: https://itunes.apple.com/us/app/xcode/id497799835?mt=12[Mac App Store^]
