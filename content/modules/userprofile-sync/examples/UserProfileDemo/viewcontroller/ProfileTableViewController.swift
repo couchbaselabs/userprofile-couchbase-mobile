@@ -474,6 +474,7 @@ extension ProfileTableViewController {
             self.record = record
             self.selectedUniversity = self.selectedUniversity ?? record?.university 
             self.tableView.reloadData()
+            self.selectedUniversity = nil
         default:
             self.showAlertWithTitle(NSLocalizedString("Error!", comment: ""), message: (error?.localizedDescription) ?? "Failed to fetch date user record")
         }
