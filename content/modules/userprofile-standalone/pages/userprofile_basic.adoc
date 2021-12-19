@@ -137,7 +137,7 @@ You can learn more about Couchbase Mobile https://developer.couchbase.com/mobile
 == Prerequisites
 This tutorial assumes familiarity with building Swift apps with Xcode and with Couchbase Lite.
 
-* iOS (Xcode) +
+* iOS (Xcode 12/13) +
 Download the latest version from the {mac-app-store--url}
 +
 NOTE: If you are on an older version of Xcode, which you need to retain for other development needs, make a copy of your existing version of Xcode and install the latest Xcode version.
@@ -172,12 +172,12 @@ Type the following command in your terminal
 git clone -b standalone https://github.com/couchbaselabs/userprofile-couchbase-mobile.git
 ----
 
-=== Installing Couchbase Lite Framework
-Next, we will download the Couchbase Lite {target-version-full} framework.
+=== Installing Couchbase Lite XCFramework
+Next, we will download the Couchbase Lite {target-version} XCFramework.
 
-The Couchbase Lite iOS framework is distributed via SPM, CocoaPods, Carthage or you can download the pre-built framework -- see the {cbl-install--xref} documentation for more information.
+The Couchbase Lite iOS XCFramework is distributed via SPM, CocoaPods, Carthage or you can download the pre-built framework -- see the {cbl-install--xref} documentation for more information.
 
-In our example, we will download the pre-built version of the frameworks.
+In our example, we will download the pre-built version of the XCFramework, using a script.
 To do this, type the following in a command terminal:
 
 [source, bash,  subs="attributes+"]
