@@ -34,10 +34,10 @@ ifdef::releasetag[:target-version-full: {target-version-full}-{releasetag}]
 
 
 // Tutorial Links
+:standalone--xref: xref:userprofile-standalone:userprofile_basic.adoc[Standalone]
+:query--xref: xref:userprofile-query:userprofile_query.adoc[Query]
+:sync--xref: xref:userprofile-sync:userprofile_sync.adoc[Sync]
 
-:standalone--xref: xref:standalone@userprofile-couchbase-mobile:userprofile:userprofile_basic.adoc[Standalone]
-:query--xref: xref:query@userprofile-couchbase-mobile:userprofile:userprofile_query.adoc[Query]
-:sync--xref: xref:sync@userprofile-couchbase-mobile:userprofile:userprofile_sync.adoc[Sync]
 
 // CBL Doc Links
 :cbl-documentation-component--xref: pass:q,a[xref:{target-version}@couchbase-lite:]
@@ -46,15 +46,6 @@ ifdef::releasetag[:target-version-full: {target-version-full}-{releasetag}]
 :cbl-install--xref: {cbl-documentation-module--xref}gs-install.adoc[Get Started - Install]
 :cbl-prepare--xref: {cbl-documentation-module--xref}gs-prereqs[Get Started - Prerequisites]
 
-// Git Content Links
-// // :git-tutorial-root: https://github.com/ibsoln/userprofile-couchbase-mobile
-// :git-tutorial-root: https://github.com/couchbaselabs/userprofile-couchbase-mobile
-// // :git-sync--url: https://github.com/rajagp/userprofile-couchbase-mobile-cordova-android/blob/main/sync/
-// :git-sync--url: {git-tutorial-root}/blob/feature/sync/content/modules/userprofile/examples/
-// :config-filename: sync-gateway-config-userprofile-demo
-// :config-file-3x0-legacy--url: {git-sync--url}{config-filename}-3-x-legacy.json[sync-gateway-config-userprofile-demo-3-x-legacy.json]
-// :config-file-2x8--url: {git-sync--url}{config-filename}-2-x.json[sync-gateway-config-userprofile-demo-2-x.json]
-// :userprofile-demo-download--url: https://github.com/couchbaselabs/userprofile-couchbase-mobile/archive/sync.zip[here]
 
 // External Site Links
 :mac-app-store--url: https://itunes.apple.com/us/app/xcode/id497799835?mt=12[Mac App Store^]
