@@ -45,10 +45,9 @@ ifdef::releasetag[:target-version-full: {target-version-full}-{releasetag}]
 
 
 // Tutorial Links
-
-:standalone--xref: xref:standalone@userprofile-couchbase-mobile:userprofile:userprofile_basic.adoc[Standalone]
-:query--xref: xref:query@userprofile-couchbase-mobile:userprofile:userprofile_query.adoc[Query]
-:sync--xref: xref:sync@userprofile-couchbase-mobile:userprofile:userprofile_sync.adoc[Sync]
+:standalone--xref: xref:userprofile-standalone:userprofile_basic.adoc[Standalone tutorial]
+:query--xref: xref:userprofile-query:userprofile_query.adoc[Query tutorial]
+:sync--xref: xref:userprofile-sync:userprofile_sync.adoc[Sync tutorial]
 
 // CBL Doc Links
 :cbl-documentation-component--xref: pass:q,a[xref:{target-version}@couchbase-lite:]

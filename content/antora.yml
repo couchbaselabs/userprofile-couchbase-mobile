@@ -11,10 +11,3 @@ asciidoc:
     base: 0
     # Use to add a release number suffix eg for betas (3.0.0-beta02)
     releasetag:
-    #
-    # These overrides provide for testing by pointing to a different GH repo and or branch
-    # Remove these overrides when not required
-    #
-    # github_root_override: https://github.com/ibsoln/userprofile-couchbase-mobile/blob/
-    # github_branch_override: DOC-9382/standalone
-
