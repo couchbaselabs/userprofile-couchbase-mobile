@@ -64,14 +64,8 @@ ifdef::releasetag[:target-version-full: {target-version-full}-{releasetag}]
 
 
 // Git Content Links
-:git-branch: DOC-9382/sync
-// ifdef::github_branch_override[:git-branch: {github_branch_override}]
-
-:git-tutorial-root: https://github.com/ibsoln/userprofile-couchbase-mobile
-// Allow override from antora.yml file
-// ifdef::github_root_override[:git-tutorial-root: {github_root_override}]
-// :git-tutorial-root: https://github.com/ibsoln/userprofile-couchbase-mobile
-
+:git-branch: sync
+:git-tutorial-root: https://github.com/couchbaselabs/userprofile-couchbase-mobile
 :git-sync--url: {git-tutorial-root}/blob/{git-branch}/content/modules/userprofile-sync/examples/
 :config-filename: sync-gateway-config-userprofile-demo
 
