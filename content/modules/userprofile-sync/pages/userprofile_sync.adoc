@@ -64,15 +64,12 @@ ifdef::releasetag[:target-version-full: {target-version-full}-{releasetag}]
 
 
 // Git Content Links
-:git-branch: sync
-:git-tutorial-root: https://github.com/couchbaselabs/userprofile-couchbase-mobile
-:git-sync--url: {git-tutorial-root}/blob/{git-branch}/content/modules/userprofile-sync/examples/
 :config-filename: sync-gateway-config-userprofile-demo
 
-:config-file-3x0-legacy--url: {git-sync--url}{sgw-config-filename-3x0}[sync-gateway-config-userprofile-demo-3-x-legacy.json]
-:config-file-2x8--url: {git-sync--url}{sgw-config-filename-2x8}[sync-gateway-config-userprofile-demo-2-x.json]
+:config-file-3x0-legacy--url: link:{attachmentsdir}/{sgw-config-filename-3x0}[sync-gateway-config-userprofile-demo-3-x-legacy.json^]
 
-Seeking {config-file-3x0-legacy--url}
+:config-file-2x8--url: link:{attachmentsdir}/{sgw-config-filename-2x8}[sync-gateway-config-userprofile-demo-2-x.json^]
+
 
 // External Site Links
 :mac-app-store--url: https://itunes.apple.com/us/app/xcode/id497799835?mt=12[Mac App Store^]
@@ -392,12 +389,15 @@ You can, if you wish, run a 2.8 version of Sync Gateway instead.
 
 The configuration files corresponding to this sample application are shown in <<tbl-config-files>>.
 They are available in the "sync" branch of the github repo hosting the app, which you cloned -- look in: +
-`/path/to/cloned/repo/userprofile-couchbase-mobile/content/modules/userprofile/examples`
+`/path/to/cloned/repo/userprofile-couchbase-mobile/content/modules/userprofile-sync/assets/attachments` +
+{empty}
 
 .Available configuration files
+
 [#tbl-config-files,cols="^1a,4a"]
 !===
-
+h| Release
+h| Filename
 | 3.x
 | {config-file-3x0-legacy--url}
 
