@@ -66,9 +66,9 @@ ifdef::releasetag[:target-version-full: {target-version-full}-{releasetag}]
 // Git Content Links
 :config-filename: sync-gateway-config-userprofile-demo
 
-:config-file-3x0-legacy--url: link:{attachmentsdir}/{sgw-config-filename-3x0}[sync-gateway-config-userprofile-demo-3-x-legacy.json^]
+:config-file-3x0-legacy--url: link:../examples/{sgw-config-filename-3x0}[sync-gateway-config-userprofile-demo-3-x-legacy.json^]
 
-:config-file-2x8--url: link:{attachmentsdir}/{sgw-config-filename-2x8}[sync-gateway-config-userprofile-demo-2-x.json^]
+:config-file-2x8--url: link:../examples/{sgw-config-filename-2x8}[sync-gateway-config-userprofile-demo-2-x.json^]
 
 
 // External Site Links
