@@ -1,0 +1,463 @@
+= User Profile Sample: Couchbase Lite Fundamentals
+:page-hide-view-latest: true
+:idprefix:
+:idseparator: -
+:icons: font
+:quick-uri: https://asciidoctor.org/docs/asciidoc-syntax-quick-reference/
+:page-aliases: tutorials:userprofile-couchbase-mobile:standalone/userprofile/userprofile_basic
+ifndef::env-site,env-github[]
+:toc: left
+:toclevels: 3
+endif::[]
+
+toc::[]
+
+
+:idprefix:
+:idseparator: -
+:icons: font
+:quick-uri: https://asciidoctor.org/docs/asciidoc-syntax-quick-reference/
+:page-aliases: tutorials:userprofile-couchbase-mobile:sync/userprofile/userprofile_sync
+:page-hide-view-latest: true
+ifndef::env-site,env-github[]
+:toc: left
+:toclevels: 3
+endif::[]
+
+toc::[]
+// BEGIN Tutorial Attributes
+:install_script: install_tutorial.sh
+:target-version: {major}.{minor}
+:target-version-full: {major}.{minor}.{maintenance}
+ifdef::releasetag[:target-version-full: {target-version-full}-{releasetag}]
+:tutorial-component: {page-component-name}
+:tutorial-title: {page-component-title}
+:tutorial-module: {page-module}
+:tutorial-section: {version}
+:tutorial-platform: swift
+:emailId: demo@example.com
+:revision-to-update: 3-033fcbaf269d65a9247067be76d664f1111d033b
+:sgw-config-filename-3x0: sync-gateway-config-userprofile-demo-3-x-legacy.json
+:sgw-config-filename-2x8: sync-gateway-config-userprofile-demo-2-x.json
+// END Tutorial Attributes
+
+// BEGIN Tutorial Cross-reference link
+
+
+// Tutorial Links
+:standalone--xref: xref:userprofile-standalone:userprofile_basic.adoc[Standalone tutorial]
+:query--xref: xref:userprofile-query:userprofile_query.adoc[Query tutorial]
+:sync--xref: xref:userprofile-sync:userprofile_sync.adoc[Sync tutorial]
+
+// CBL Doc Links
+:cbl-documentation-component--xref: pass:q,a[xref:{target-version}@couchbase-lite:]
+:cbl-documentation-module--xref: pass:q,a[{cbl-documentation-component--xref}{tutorial-platform}:]
+:cbl-blobs--xref: {cbl-documentation-module--xref}blob.adoc[Working with Blobs]
+:cbl-install--xref: {cbl-documentation-module--xref}gs-install.adoc[Get Started - Install]
+:cbl-prepare--xref: {cbl-documentation-module--xref}gs-prereqs[Get Started - Prerequisites]
+
+// SGW Doc Links
+:documentation-component--xref: pass:q,a[xref:{target-version}@sync-gateway:]
+:documentation-module--xref: pass:q,a[{documentation-component--xref}:]
+:access-control-model--xref: {documentation-module--xref}access-control.adoc[Access Control Model]
+:channels--xref: {documentation-module--xref}channels.adoc[Channels]
+:prepare--xref: {documentation-module--xref}get-started-prepare.adoc[Get Started - Prepare]
+:sync-function--xref: pass:q,a[{documentation-module--xref}sync-function.adoc[Sync Function API]]
+:sync-function-api-access--xref: {documentation-module--xref}sync-function-api-access-cmd.adoc[access()]
+:sync-function-api-channel--xref: {documentation-module--xref}sync-function-api-channel-cmd.adoc[channel()]
+:sync-function-api-require-access--xref: {documentation-module--xref}sync-function-api-require-access-cmd.adoc[requireAccess()]
+:sync-function-api-require-user--xref: {documentation-module--xref}sync-function-api-require-user-cmd.adoc[requireUser()]
+:sync-gateway-docs--xref: {documentation-module--xref}index.adoc[Sync Gateway Documentation]
+:sync-gateway-config-overview--xref: {documentation-module--xref}configuration-overview.adoc[Sync Gateway Configuration]
+:sync-gateway-config-legacy--xref: {documentation-module--xref}configuration-properties-legacy.adoc[legacy configuration option]
+:rest-api--url: https://docs.couchbase.com/sync-gateway/{target-version}/rest-api.html
+:rest-api-document-put--url: {rest-api--url}#/document/AddOrUpdateDocument[PUT Document REST API]
+:rest-api-document-get--url: {rest-api--url}#/document/GetDocument[GET Document REST API]
+
+// Git Content Links
+// :git-tutorial-root: https://github.com/ibsoln/userprofile-couchbase-mobile
+// :git-tutorial-root: https://github.com/couchbaselabs/userprofile-couchbase-mobile
+// :git-sync--url: https://github.com/rajagp/userprofile-couchbase-mobile-cordova-android/blob/main/sync/
+// :git-sync--url: {git-tutorial-root}/blob/feature/sync/content/modules/userprofile/examples/
+// :config-filename: sync-gateway-config-userprofile-demo
+// :config-file-3x0-legacy--url: {git-sync--url}{config-filename}-3-x-legacy.json[sync-gateway-config-userprofile-demo-3-x-legacy.json]
+// :config-file-2x8--url: {git-sync--url}{config-filename}-2-x.json[sync-gateway-config-userprofile-demo-2-x.json]
+// :userprofile-demo-download--url: https://github.com/couchbaselabs/userprofile-couchbase-mobile/archive/sync.zip[here]
+
+// External Site Links
+:mac-app-store--url: https://itunes.apple.com/us/app/xcode/id497799835?mt=12[Mac App Store^]
+:github-account--url: https://github.com[free github account^]
+:github-download--url: https://git-scm.com/book/en/v2/Getting-Started-Installing-Git[git-scm.org^]
+:curl-download--url: https://curl.haxx.se/download.html[curl website^]
+:docker-download--url: https://docs.docker.com/get-docker/[Get Docker^]
+
+// Blog Links
+:blog--url: https://blog.couchbase.com
+:blog-sync-function-related--url: {blog--url}/?s=sync+function[Sync function blogs]
+:blog-replication-protocol--url: {blog--url}data-replication-couchbase-mobile/[Overview of Replication Protocol]
+
+
+// END Tutorial Cross-reference link
+
+
+
+
+== Introduction
+Couchbase Mobile brings the power of NoSQL to the edge.
+It is comprised of three components:
+
+* _Couchbase Lite_, an embedded, NoSQL JSON Document Style database for your mobile apps
+* _Sync Gateway_, an internet-facing synchronization mechanism that securely syncs data between mobile clients and server, and
+* _Couchbase Server_, a highly scalable, distributed NoSQL database platform
+
+Couchbase Mobile supports flexible deployment models.
+You can deploy:
+
+* Couchbase Lite as a standalone embedded database within your mobile apps or,
+* Couchbase Lite enabled mobile clients with a Sync Gateway to synchronize data between your mobile clients or,
+* Couchbase Lite enabled clients with a Sync Gateway to sync data between mobile clients and the Couchbase Server, which can persist data in the cloud (public or private)
+
+.What You Will Learn
+****
+This tutorial will walk you through a very basic example of how you can use *Couchbase Lite in standalone mode* within your Swift app.
+In this mode, Couchbase Lite will serve as a local, embedded data store within your iOS App and can be a replacement for SQLite or Core Data.
+
+You will learn the fundamentals of:
+
+* Database Operations
+* Document CRUD Operations
+
+====
+You can learn more about Couchbase Mobile https://developer.couchbase.com/mobile[here]
+====
+****
+
+
+== Prerequisites
+This tutorial assumes familiarity with building Swift apps with Xcode and with Couchbase Lite.
+
+* iOS (Xcode 12/13) +
+Download the latest version from the {mac-app-store--url}
++
+NOTE: If you are on an older version of Xcode, which you need to retain for other development needs, make a copy of your existing version of Xcode and install the latest Xcode version.
+That way you can have multiple versions of Xcode on your Mac.
+
+* git (Optional) +
+This is required if you would prefer to pull the source code from GitHub repo.
+** Create a {github-account--url} if you don't already have one
+** git can be downloaded from {github-download--url}
+
+
+== App Overview
+We will be working with a very simple _User Profile_ app.
+It does one thing -- Allow a user to log in and create or update their user profile data*
+
+The user profile data is persisted as a Document in the local Couchbase Lite Database.
+So, when the user logs out and logs back in again, the profile information is loaded from the Database.
+
+:alt-text: The sample user profile application running in a simulator
+.{alt-text}
+image::user_profile.gif[{alt-text}]
+
+
+== Installation
+
+
+Clone the *_standalone_* branch of the `User Profile Demo` project from GitHub.
+Type the following command in your terminal
+
+[source,bash]
+----
+git clone -b standalone https://github.com/couchbaselabs/userprofile-couchbase-mobile.git
+----
+
+=== Installing Couchbase Lite XCFramework
+Next, we will download the Couchbase Lite {target-version} XCFramework.
+
+The Couchbase Lite iOS XCFramework is distributed via SPM, CocoaPods, Carthage or you can download the pre-built framework -- see the {cbl-install--xref} documentation for more information.
+
+In our example, we will download the pre-built version of the XCFramework, using a script.
+To do this, type the following in a command terminal:
+
+[source, bash,  subs="attributes+"]
+----
+cd /path/to/UserProfileDemo/content/modules/userprofile/examples
+
+sh {install_script}
+----
+
+Next, let's verify the installation.
+
+.Try it Out
+****
+. Open the `UserProfileDemo.xcodeproj` Xcode project file, located at +
+`/path/to/UserProfileDemo/content/modules/userprofile/examples`
++
+[source, bash,  subs="attributes+"]
+----
+open UserProfileDemo.xcodeproj
+----
+
+. Use Xcode to build and run the project using a simulator.
+
+. Verify that you see the login screen on both the simulators
+
+****
+
+:alt-text: User Profile Login Screen Image
+.{alt-text}
+image::user_profile_login.png[{alt-text}]
+
+== Data Model
+Couchbase Lite is a JSON Document Store.
+A Document is a logical collection of named fields and values.
+The values are any valid JSON types.
+In addition to the standard JSON types, Couchbase Lite supports `Date` and `Blob` data types.
+While it is not required or enforced, it is a recommended practice to include a _"type"_ property that can serve as a namespace for related documents.
+
+[#lbl-user-profile-document]
+=== The User Profile Document
+The app deals with a single Document with a _"type"_ property of _"user"_ as shown in  <<ex-user-profile-doc>>.
+The document ID is of the form _"user::{emailId}"_.
+
+[#ex-user-profile-doc]
+.A user profile document
+====
+[source, json]
+----
+{
+    "type":"user",
+    "name":"Jane Doe",
+    "email":"jame.doe@earth.org",
+    "address":"101 Main Street",
+    "image":CBLBlob (image/jpg) <.>
+}
+----
+<.> The special 'blob' data type associated with the profile image -- see: {cbl-blobs--xref}
+
+====
+
+[#lbl-user-record]
+=== The User Record
+
+The _"user"_ Document is encoded to a native struct named _UserRecord_ as shown in <<ex-user-rec>>
+
+[#ex-user-rec]
+.The encoding of a UserRecord to a native structure
+[source,{tutorial-platform}, subs="attributes+, macros+"]
+====
+----
+include::example$UserProfileDemo/model/UserRecord.swift[indent=0, tags=userrecord]
+----
+====
+
+
+== Basic Database Operations
+In this section, we will do a code walk-through of the basic Database operations
+
+[#lbl-create-open-database]
+=== Create / Open a Database
+When a user logs in, we create an empty Couchbase Lite Database for the user if one does not exist.
+
+* Open the *DatabaseManager.swift* file and locate the `openOrCreateDatabaseForUser()` function.
++
+[source,swift]
+----
+include::example$UserProfileDemo/model/DatabaseManager.swift[tags=openOrCreateDatabaseForUser]
+----
+
+* We create an instance of the `DatabaseConfiguration`.
+This is an optional step.
+In our case, we would like to override the default path of the Database.
+Every user has their own instance of the Database that is located in a folder corresponding to the user.
++
+[source,swift]
+----
+include::example$UserProfileDemo/model/DatabaseManager.swift[tags=dbconfig, indent=0]
+----
+
+* Then we create a local Couchbase Lite database named *_"userprofile"_* for the user.
+If a database already exists for the user, the existing version is returned.
++
+[source,swift]
+----
+include::example$UserProfileDemo/model/DatabaseManager.swift[tags=dbcreate, indent=0]
+----
+
+=== Listening to Database Changes
+You can be asynchronously notified of any change (add, delete, update) to the Database by registering a change listener with the Database.
+In our app, we are not doing anything special with the Database change notification other than logging the change.
+In a real world app, you would use this notification for instance, to update the UI.
+
+* Open the *DatabaseManager.swift* file and locate the `registerForDatabaseChanges()` function.
+[source,swift]
++
+----
+include::example$UserProfileDemo/model/DatabaseManager.swift[tags=registerForDatabaseChanges, indent=0]
+----
+
+* We register a change listener with the database.
+This is an optional step. We track the `ListenerToken` as it is needed for removing the listener.
++
+[source,swift]
+----
+include::example$UserProfileDemo/model/DatabaseManager.swift[tags=adddbchangelistener, indent=0]
+----
+
+=== Close a Database
+When a user logs out, we close the Couchbase Lite Database associated with the user and deregister any database change listeners
+
+* Open the *DatabaseManager.swift* file and locate the `closeDatabaseForCurrentUser()` function.
++
+[source,swift]
+----
+include::example$UserProfileDemo/model/DatabaseManager.swift[tags=closeDatabaseForCurrentUser, indent=0]
+----
+
+* Closing the database is pretty straightforward
++
+[source,swift]
+----
+include::example$UserProfileDemo/model/DatabaseManager.swift[tags=dbclose, indent=0]
+----
+
+=== Deregistering for  Database Changes
+
+* Open the *DatabaseManager.swift* file and locate the `deregisterForDatabaseChanges()` function.
++
+[source,swift]
+----
+include::example$UserProfileDemo/model/DatabaseManager.swift[tags=deregisterForDatabaseChanges, indent=0]
+----
+
+* We stop listening to database changes by passing in the `ListenerToken` associated with the listener.
++
+[source,swift]
+----
+include::example$UserProfileDemo/model/DatabaseManager.swift[tags=removedbchangelistener, indent=0]
+----
+
+=== Try It Out
+* The app should be running in the simulator
+* Log into the app with any email Id and password. Let's use the values _"demo@example.com"_ and _"password"_ for user Id and password fields respectively.
+If this is the first time that the user is signing in, a new Database will be created.
+If not, the user's existing database will be opened.
+* Confirm that the console log output has a message similar to the one below.
+In my example, I am logging in with a user email Id of _"demo@example.com"_.
++
+[source,bash]
+----
+Will open/create DB  at path Will open/create DB  at path /Users/priya.rajagopal/Library/Developer/CoreSimulator/Devices/E4E62394-9940-4AF8-92FC-41E3C794B216/data/Containers/Data/Application/65EAD047-B29A-400C-803F-F799BAE99CBA/Library/Application Support/demo@example.com
+----
+* The above log message indicates the location of the Database for the user
+* Open the folder in your Finder app and verify that a Database with name _"userprofile"_ is exists for the user
++
+image::db_location.png[User Profile Database Location]
+
+== Document Operations
+Once an instance of the Couchbase Lite Database is created/opened for the specific user, we can perform basic Document functions on the Database.
+In this section, we will walk-through the code that describes basic Document operations
+
+=== Reading a Document
+Once the user logs in, the user is taken to the "Your Profile" screen.
+A request is made to load  <<lbl-user-profile-document>>  for the user.
+When the user logs in the very first time, there would be no _user profile_ document for the user.
+
+* Open the *UserPresenter.swift* file and locate the `userProfileDocId` definition.
+This document Id is constructed by prefixing the term "user::" to the email Id of the user.
++
+[source,swift]
+----
+include::example$UserProfileDemo/presenter/UserPresenter.swift[tags=userProfileDocId]
+----
+
+* In the *UserPresenter.swift* file, locate the `fetchRecordForCurrentUser()` function.
++
+[source,swift]
+----
+include::example$UserProfileDemo/presenter/UserPresenter.swift[tags=fetchRecordForCurrentUser]
+----
+
+
+* We try to fetch the document with specified `userProfileDocId` from the database.
++
+[source,swift]
+----
+include::example$UserProfileDemo/presenter/UserPresenter.swift[tags=docfetch]
+----
+<1> Create an instance of <<lbl-user-record>> object
+<2> Set the `email` property of the UserRecord with the email Id of the logged in user. This value is not editable.
+<3> Fetch a *immutable* copy of the Document from the Database
+<4> If document exists and is fetched succesfully, we use appropriate type-getters to fetch the various members of the Document based on the property name. Specifically, note the support of the `getBlob` type to fetch the value of a property of type `Blob`
+
+
+
+=== Creating / Updating a Document
+A <<lbl-user-profile-document>> is created for the user when the user taps the "Done" button on the "Profile Screen".
+The function below applies whether you are creating a document or updating an existing version
+
+* Open the *UserPresenter.swift* file and locate the `setRecordForCurrentUser()` method.
++
+[source,swift]
+----
+include::example$UserProfileDemo/presenter/UserPresenter.swift[tags=setRecordForCurrentUser]
+----
+
+
+* We create a *mutable* instance of the Document. By default, all APIs in Couchbase Lite deal with immutable objects, thereby making them *thread-safe* by design. In order to mutate an object,  you must explicitly get a mutable copy of the object.
+Use appropriate type-setters to set the various properties of the Document
++
+[source,swift]
+----
+include::example$UserProfileDemo/presenter/UserPresenter.swift[tags=docset]
+----
+<1> Specifically, note the support of the `setBlob` type to fetch the value of a property of type `Blob`.
+
+* Save the document
++
+[source,swift]
+----
+include::example$UserProfileDemo/presenter/UserPresenter.swift[tags=docsave]
+----
+
+
+=== Deleting a Document
+We don't delete a Document in this sample app. However, deletion of a document is pretty straightforward and this is how you would do it.
+
+[source,swift]
+----
+if let doc = db.document(withID: idOfDocToRemove) {
+	try db.deleteDocument(doc)
+}
+----
+
+=== Try It Out
+* You should have followed the steps discussed in the "Try It Out" section under <<lbl-create-open-database>>
+* Enter a "name" for the user in the Text Entry box and Tap "Done"
+* Confirm that you see an alert message "Succesfully Updated Profile". The first time, you update the profile screen, the Document will be created.
++
+image::doc_create.png[User Profile Document Creation]
++
+* Now tap on the "Tap!" button and select an image from the Photo Album. Tap "Done".
++
+image::https://raw.githubusercontent.com/couchbaselabs/userprofile-couchbase-mobile/standalone/content/modules/userprofile/assets/images/image_selection.gif[Image Selection]
++
+* Confirm that you see an alert message "Succesfully Updated Profile". The Document will be updated this time.
+* Tap "Log Off" and log out of the app
+* Log back into the app with the same user email Id and password that you used earlier. In my example, I used _"demo@example.com"_ and _"password"_. So I will log in with those credentials again.
+* Confirm that you see the profile screen  with the _name_ and _image_ values that you set earlier.
++
+image::https://raw.githubusercontent.com/couchbaselabs/userprofile-couchbase-mobile/standalone/content/modules/userprofile/assets/images/log_off_on.gif[Log Off and Log Back On]
+
+== Learn More
+Congratulations on completing this tutorial!
+
+This tutorial walked you through a very basic example of how to get up and running with Couchbase Lite as a local-only, standalone embedded data store in your iOS app.
+If you want to learn more about Couchbase Mobile, check out the following links.
+
+.Further Reading
+****
+* {blog--url}[Couchbase Mobile Blog]
+* {cbl-install--xref}
+
+****
