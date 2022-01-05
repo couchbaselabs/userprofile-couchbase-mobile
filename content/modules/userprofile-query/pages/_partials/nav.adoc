@@ -1,0 +1,8 @@
+// Redundant - tutorial picks up nav from sync branch instead
+** xref:userprofile-couchbase-mobile:userprofile-standalone:userprofile_basic.adoc[Standalone I]
+** xref:userprofile-couchbase-mobile:userprofile-query:userprofile_query.adoc[Query I]
+** xref:userprofile-couchbase-mobile:userprofile-sync:userprofile_sync.adoc[Sync I]
+
+** xref:userprofile-standalone:userprofile_basic.adoc[Standalone II]
+** xref:userprofile-query:userprofile_query.adoc[Query II]
+** xref:userprofile-sync:userprofile_sync.adoc[Sync II]

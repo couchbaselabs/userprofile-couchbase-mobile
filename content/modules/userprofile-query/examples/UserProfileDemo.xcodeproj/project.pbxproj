@@ -3,10 +3,11 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 48;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		49C06796276C9A7F00FC0CD1 /* CouchbaseLiteSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 49C06795276C9A7F00FC0CD1 /* CouchbaseLiteSwift */; };
 		5F61CCB2204C9F2C00399C1D /* CustomTextEntryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F61CCB1204C9F2C00399C1D /* CustomTextEntryTableViewCell.swift */; };
 		5F61CCB4204C9F4400399C1D /* CustomTextEntryTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5F61CCB3204C9F4400399C1D /* CustomTextEntryTableViewCell.xib */; };
 		5F61CCB6204E47B500399C1D /* CustomImageEntryTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5F61CCB5204E47B500399C1D /* CustomImageEntryTableViewCell.xib */; };
@@ -24,8 +25,6 @@
 		5F86E880203B65FF007ED29E /* StoryboardExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F86E87F203B65FF007ED29E /* StoryboardExtension.swift */; };
 		5F86E884203B66B5007ED29E /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F86E883203B66B5007ED29E /* DatabaseManager.swift */; };
 		5F86E886203B788C007ED29E /* ProfileTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F86E885203B788C007ED29E /* ProfileTableViewController.swift */; };
-		5F9C43E8209A2112004607AE /* CouchbaseLiteSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F9C43E6209A20BA004607AE /* CouchbaseLiteSwift.framework */; };
-		5F9C43E9209A2112004607AE /* CouchbaseLiteSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5F9C43E6209A20BA004607AE /* CouchbaseLiteSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5F9C43F2209A6FA1004607AE /* UniversityRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F9C43F1209A6FA1004607AE /* UniversityRecord.swift */; };
 		5F9C43F4209A7002004607AE /* UniversityTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F9C43F3209A7002004607AE /* UniversityTableViewController.swift */; };
 		5F9C43F6209A703C004607AE /* UniversityPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F9C43F5209A703C004607AE /* UniversityPresenter.swift */; };
@@ -40,7 +39,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				5F9C43E9209A2112004607AE /* CouchbaseLiteSwift.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -67,7 +65,6 @@
 		5F86E87F203B65FF007ED29E /* StoryboardExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryboardExtension.swift; sourceTree = "<group>"; };
 		5F86E883203B66B5007ED29E /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
 		5F86E885203B788C007ED29E /* ProfileTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileTableViewController.swift; sourceTree = "<group>"; };
-		5F9C43E6209A20BA004607AE /* CouchbaseLiteSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CouchbaseLiteSwift.framework; path = iOS/CouchbaseLiteSwift.framework; sourceTree = "<group>"; };
 		5F9C43F1209A6FA1004607AE /* UniversityRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversityRecord.swift; sourceTree = "<group>"; };
 		5F9C43F3209A7002004607AE /* UniversityTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversityTableViewController.swift; sourceTree = "<group>"; };
 		5F9C43F5209A703C004607AE /* UniversityPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversityPresenter.swift; sourceTree = "<group>"; };
@@ -80,7 +77,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5F9C43E8209A2112004607AE /* CouchbaseLiteSwift.framework in Frameworks */,
+				49C06796276C9A7F00FC0CD1 /* CouchbaseLiteSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,7 +109,6 @@
 		5F86E83E2037E292007ED29E = {
 			isa = PBXGroup;
 			children = (
-				5F9C43E6209A20BA004607AE /* CouchbaseLiteSwift.framework */,
 				5F86E8492037E292007ED29E /* UserProfileDemo */,
 				5F86E8482037E292007ED29E /* Products */,
 			);
@@ -199,6 +195,9 @@
 			dependencies = (
 			);
 			name = UserProfileDemo;
+			packageProductDependencies = (
+				49C06795276C9A7F00FC0CD1 /* CouchbaseLiteSwift */,
+			);
 			productName = UserProfileDemo;
 			productReference = 5F86E8472037E292007ED29E /* UserProfileDemo.app */;
 			productType = "com.apple.product-type.application";
@@ -210,7 +209,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0920;
-				LastUpgradeCheck = 0920;
+				LastUpgradeCheck = 1320;
 				ORGANIZATIONNAME = "Couchbase Inc.";
 				TargetAttributes = {
 					5F86E8462037E292007ED29E = {
@@ -228,6 +227,9 @@
 				Base,
 			);
 			mainGroup = 5F86E83E2037E292007ED29E;
+			packageReferences = (
+				49C06794276C9A7F00FC0CD1 /* XCRemoteSwiftPackageReference "couchbase-lite-swift-ee" */,
+			);
 			productRefGroup = 5F86E8482037E292007ED29E /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -313,6 +315,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -320,8 +323,10 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -347,7 +352,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -370,6 +375,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -377,8 +383,10 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -398,10 +406,11 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -421,7 +430,10 @@
 					"$(PROJECT_DIR)/iOS",
 				);
 				INFOPLIST_FILE = UserProfileDemo/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.couchbase.UserProfileDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
@@ -445,7 +457,10 @@
 					"$(PROJECT_DIR)/iOS",
 				);
 				INFOPLIST_FILE = UserProfileDemo/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.couchbase.UserProfileDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
@@ -476,6 +491,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		49C06794276C9A7F00FC0CD1 /* XCRemoteSwiftPackageReference "couchbase-lite-swift-ee" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/couchbase/couchbase-lite-swift-ee.git";
+			requirement = {
+				kind = exactVersion;
+				version = "3.0.0-beta02";
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		49C06795276C9A7F00FC0CD1 /* CouchbaseLiteSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 49C06794276C9A7F00FC0CD1 /* XCRemoteSwiftPackageReference "couchbase-lite-swift-ee" */;
+			productName = CouchbaseLiteSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 5F86E83F2037E292007ED29E /* Project object */;
 }
