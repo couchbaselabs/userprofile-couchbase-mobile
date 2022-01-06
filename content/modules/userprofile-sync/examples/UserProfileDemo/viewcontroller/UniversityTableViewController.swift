@@ -84,11 +84,11 @@ class UniversityTableViewController:UITableViewController , PresentingViewProtoc
         
         searchButton =  UIButton.init(type: .custom)
         searchButton.frame =  CGRect(x: 5, y: 100, width: self.view.frame.width - 10, height: 44)
-        searchButton.setTitle(NSLocalizedString("Lookup", comment: ""), for: UIControlState.normal)
-        searchButton.setBackgroundImage(#imageLiteral(resourceName: "cyan"), for: UIControlState.normal)
-        searchButton.setTitleColor(UIColor.gray, for: UIControlState.disabled)
-        searchButton.setTitleColor(UIColor.white, for: UIControlState.normal)
-        searchButton.addTarget(self, action: #selector(onUniversitiesLookup), for: UIControlEvents.touchUpInside)
+        searchButton.setTitle(NSLocalizedString("Lookup", comment: ""), for: UIControl.State.normal)
+        searchButton.setBackgroundImage(#imageLiteral(resourceName: "cyan"), for: UIControl.State.normal)
+        searchButton.setTitleColor(UIColor.gray, for: UIControl.State.disabled)
+        searchButton.setTitleColor(UIColor.white, for: UIControl.State.normal)
+        searchButton.addTarget(self, action: #selector(onUniversitiesLookup), for: UIControl.Event.touchUpInside)
         searchButton.isEnabled = false
         view.addSubview(searchButton)
         return view

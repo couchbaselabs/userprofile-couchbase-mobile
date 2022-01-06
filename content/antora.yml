@@ -1,5 +1,14 @@
-name: userprofile-couchbase-mobile
-title: User Profile Tutorial
-version: 'sync'
-nav:
-  - modules/userprofile/nav.adoc
+name: tutorials
+version: 'master'
+asciidoc:
+  attributes:
+    # prerelease:
+    # is-beta: false
+    release: '3.0'
+    major: 3
+    minor: 0
+    maintenance: 0
+    base: 0
+    # Use to add a release number suffix eg for betas (3.0.0-beta02)
+    releasetag:
+    #

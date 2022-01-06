@@ -1,0 +1,4 @@
+* Getting Started on iOS
+** xref:userprofile-standalone:userprofile_basic.adoc[Standalone]
+** xref:userprofile-query:userprofile_query.adoc[Query]
+** xref:userprofile-sync:userprofile_sync.adoc[Sync]
