@@ -1,6 +1,6 @@
 ## Overview
-This repo hosts a bunch of sample iOS apps in swift that demonstrate various features of the Couchbase Mobile 2.0 stack. 
-Each app is hosted in a separate branch.
+This repo hosts a bunch of sample iOS apps in swift that demonstrate various features of the Couchbase Mobile stack. 
+Each version of the app is hosted in a separate branch.
 
 ### "master" branch
 Hosts this README 
@@ -20,7 +20,4 @@ This branch hosts app that demonstrates basic query and full-text-search operati
 
 This branch hosts an app supports syncing of documents between Couchbase Lite database and remote Sync Gateway . 
 
-### "background" branch
-[Link](https://github.com/couchbaselabs/userprofile-couchbase-mobile/tree/backgroundfetch)
 
-This branch hosts an app that supports the IOS background fetch mode. It does a one-shot replication with the remote Sync Gateway when woken up in the background 
