@@ -65,10 +65,9 @@ ifdef::releasetag[:target-version-full: {target-version-full}-{releasetag}]
 
 // Git Content Links
 :config-filename: sync-gateway-config-userprofile-demo
-
-:config-file-3x0-legacy--url: link:../examples/{sgw-config-filename-3x0}[sync-gateway-config-userprofile-demo-3-x-legacy.json^]
-
-:config-file-2x8--url: link:../examples/{sgw-config-filename-2x8}[sync-gateway-config-userprofile-demo-2-x.json^]
+:examplesdirectory: https://github.com/couchbaselabs/userprofile-couchbase-mobile/tree/sync/content/modules/userprofile-sync/examples/
+:config-file-3x0-legacy--url: {examplesdirectory}{sgw-config-filename-3x0}[sync-gateway-config-userprofile-demo-3-x-legacy.json^]
+:config-file-2x8--url: {examplesdirectory}{sgw-config-filename-2x8}[sync-gateway-config-userprofile-demo-2-x.json^]
 
 
 // External Site Links
@@ -80,9 +79,10 @@ ifdef::releasetag[:target-version-full: {target-version-full}-{releasetag}]
 
 // Blog Links
 :blog--url: https://blog.couchbase.com
+:blog-mobile--url: {blog--url}/category/couchbase-mobile/?ref=blog-menu
 :blog-sync-function-related--url: {blog--url}/?s=sync+function[Sync function blogs^]
-:blog-replication-protocol--url: {blog--url}data-replication-couchbase-mobile/[Overview of Replication Protocol^]
-:blog-doc-conflicts--url: https://blog.couchbase.com/document-conflicts-couchbase-mobile/[Document Conflicts & Resolution ^]
+:blog-replication-protocol--url: {blog--url}/data-replication-couchbase-mobile/[Overview of Replication Protocol^]
+:blog-doc-conflicts--url: {blog--url}/document-conflicts-couchbase-mobile/[Document Conflicts & Resolution ^]
 
 
 // END Tutorial Cross-reference link
@@ -389,7 +389,7 @@ You can, if you wish, run a 2.8 version of Sync Gateway instead.
 
 The configuration files corresponding to this sample application are shown in <<tbl-config-files>>.
 They are available in the "sync" branch of the github repo hosting the app, which you cloned -- look in: +
-`/path/to/cloned/repo/userprofile-couchbase-mobile/content/modules/userprofile-sync/assets/attachments` +
+`/path/to/cloned/repo/userprofile-couchbase-mobile/content/modules/userprofile-sync/examples/` +
 {empty}
 
 .Available configuration files
@@ -414,8 +414,9 @@ Let us configure and launch Sync Gateway in a Docker container.
 +
 [source, bash, subs="attributes+, macros+"]
 ----
-cd /path/to/cloned/repo/userprofile-couchbase-mobile/content/modules/userprofile/examples
+cd /path/to/cloned/repo/userprofile-couchbase-mobile/content/modules/userprofile-sync/examples
 ----
+
 
 . Make sure no Sync Gateway container exists, using:
 +
@@ -947,7 +948,7 @@ Check out the following links for further details
 
 * {sync-gateway-config-overview--xref}
 
-* {blog--url}[Couchbase Mobile Blog]
+* {blog-mobile--url}[Couchbase Mobile Blog]
 
 * {blog-sync-function-related--url}
 
