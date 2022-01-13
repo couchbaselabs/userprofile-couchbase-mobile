@@ -61,9 +61,9 @@ extension UniversityPresenter {
             }
             
             let universityQueryString = "SELECT * FROM universities WHERE \(whereExpr)"
-            let universityQuery = db.createQuery(query: universityQueryString)
+            let universityQuery = try db.createQuery(universityQueryString)
             
-            print(try? universityQuery.explain())
+            print(try universityQuery.explain())
          
             // end::buildquery[]
             
