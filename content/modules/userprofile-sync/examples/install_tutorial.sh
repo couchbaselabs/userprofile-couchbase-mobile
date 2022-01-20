@@ -9,7 +9,7 @@ else
   if [ $# = 1 ]
   then
     target="cbl.zip"
-    release="https://packages.couchbase.com/releases/couchbase-lite-ios/"$1"/couchbase-lite-swift_enterprise_"$1".zip"
+    release="https://packages.couchbase.com/releases/couchbase-lite-ios/"$1"/couchbase-lite-swift_xc_enterprise_"$1".zip"
     echo Retrieving $release
     echo Creating $target
     
