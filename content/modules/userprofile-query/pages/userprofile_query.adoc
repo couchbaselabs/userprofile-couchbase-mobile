@@ -15,7 +15,6 @@ toc::[]
 
 
 // BEGIN Tutorial Attributes
-:install_script: install_tutorial.sh
 :target-version: {major}.{minor}
 :target-version-full: {major}.{minor}.{maintenance}
 ifdef::releasetag[:target-version-full: {target-version-full}-{releasetag}]
@@ -149,8 +148,10 @@ To do this, type the following in a command terminal:
 ----
 cd /path/to/UserProfileDemo/content/modules/userprofile/examples
 
-sh {install_script}
+sh install_tutorial.sh 3.0.0 // <.>
+
 ----
+<.> Where 3.0.0 is the required Couchbase Lite release number.
 
 Next, let's verify the installation.
 
