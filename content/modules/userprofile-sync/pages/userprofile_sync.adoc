@@ -422,8 +422,9 @@ docker stop sync-gateway && docker rm sync-gateway
 You should see configuration files for the latest major version and the previous major version in this folder -- see: <<tbl-config-files>>.
 Choose an appropriate version.
 
-[caption=]
-.For non-Windows Systems
+[discrete]
+===== For non-Windows Systems
+
 [tabs]
 ====
 
@@ -465,9 +466,12 @@ couchbase/sync-gateway:2.8.4-enterprise \
 ----
 --
 ====
-[caption=]
-.For Windows Systems
+
+[discrete]
+===== For Windows Systems
+
 [tabs]
+
 ====
 
 Sync Gateway {target-version}::
