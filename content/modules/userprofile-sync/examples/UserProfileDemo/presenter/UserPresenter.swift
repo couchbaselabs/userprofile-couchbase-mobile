@@ -44,8 +44,8 @@ class UserPresenter:UserPresenterProtocol {
     fileprivate var userQuery:Query?
     
     // tag::userProfileDocId[]
-    lazy var userProfileDocId: String = {
-        let userId = dbMgr.currentUserCredentials?.user
+    fileprivate lazy var userProfileDocId: String? = {
+        let userId = DatabaseManager.shared.currentUserCredentials?.user
         return "user::\(userId ?? "")"
     }()
     // end::userProfileDocId[]
@@ -56,6 +56,7 @@ class UserPresenter:UserPresenterProtocol {
             userQuery?.removeChangeListener(withToken: userQueryToken)
         }
         userQuery = nil
+        self.userProfileDocId = nil
     }
 }
 
@@ -129,7 +130,7 @@ extension UserPresenter {
             self.associatedView?.dataStartedLoading()
         
             // fetch document corresponding to the user Id
-            if let doc = db.document(withID: self.userProfileDocId)  { // <3>
+            if let doc = db.document(withID: self.userProfileDocId!)  { // <3>
             
                 profile.email  =  doc.string(forKey: UserRecordDocumentKeys.email.rawValue)
                 profile.address = doc.string(forKey:UserRecordDocumentKeys.address.rawValue)
@@ -207,6 +208,7 @@ extension UserPresenter:PresenterProtocol {
         
     }
     func detachPresentingView(_ view:PresentingViewProtocol) {
+      
         self.associatedView = nil
     }
 }

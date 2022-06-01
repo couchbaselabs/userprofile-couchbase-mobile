@@ -43,7 +43,7 @@ class DatabaseManager {
     // tag:replicationdefs
     fileprivate var _pushPullRepl:Replicator?
     fileprivate var _pushPullReplListener:ListenerToken?
-    fileprivate var kRemoteSyncUrl = "ws://localhost:4984" // <1>
+    fileprivate var kRemoteSyncUrl = "wss://doo9q6ixlrpnpzqt.apps.cloud.couchbase.com:4984" // <1>
     // end:replicationdefs
 
     fileprivate var _applicationDocumentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).last
@@ -102,7 +102,7 @@ extension DatabaseManager {
             options.directory = userFolderPath
             // end::dbconfig[]
 
-            print("Will open/create DB  at path \(userFolderPath)")
+            print("Will open/create DB  at path \(userFolderPath) with user :\(user)")
             // tag::dbcreate[]
             // Create a new DB or get handle to existing DB at specified path
             _db = try Database(name: kDBName, config: options)
@@ -301,6 +301,7 @@ extension DatabaseManager {
         config.replicatorType = .pushAndPull // <.>
         config.continuous =  true // <.>
         config.authenticator =  BasicAuthenticator(username: user, password: password) // <.>
+      //  config.acceptOnlySelfSignedServerCertificate = true;
 
 
         // This should match what is specified in the sync gateway config

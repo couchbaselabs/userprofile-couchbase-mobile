@@ -16,7 +16,7 @@ class ProfileTableViewController:UITableViewController, UserPresentingViewProtoc
     
     fileprivate var record:UserRecord?
     
-    lazy var userPresenter:UserPresenter = UserPresenter()
+    fileprivate var userPresenter:UserPresenter?
     
     fileprivate var nameTextEntry:UITextView?
     fileprivate var emailTextEntry:UITextView?
@@ -99,15 +99,17 @@ class ProfileTableViewController:UITableViewController, UserPresentingViewProtoc
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
-        self.userPresenter.attachPresentingView(self)
-        self.userPresenter.fetchRecordForCurrentUserWithLiveModeEnabled(__: true)
+        self.userPresenter = UserPresenter()
+        self.userPresenter?.attachPresentingView(self)
+        self.userPresenter?.fetchRecordForCurrentUserWithLiveModeEnabled(__: true)
 
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         selectedUniversity = nil
-        self.userPresenter.detachPresentingView(self)
+        self.userPresenter?.detachPresentingView(self)
+        self.userPresenter = nil
     }
     
     private func initializeTable() {
@@ -134,7 +136,7 @@ class ProfileTableViewController:UITableViewController, UserPresentingViewProtoc
     
     deinit {
         selectedUniversity = nil
-        self.userPresenter.detachPresentingView(self)
+        self.userPresenter?.detachPresentingView(self)
 
     }
     
@@ -158,7 +160,7 @@ extension ProfileTableViewController {
         }
         
     
-        self.userPresenter.setRecordForCurrentUser(userProfile) { [weak self](error) in
+        self.userPresenter?.setRecordForCurrentUser(userProfile) { [weak self](error) in
             guard let `self` = self else {
                 return
             }
