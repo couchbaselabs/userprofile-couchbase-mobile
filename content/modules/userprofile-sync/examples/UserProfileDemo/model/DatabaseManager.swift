@@ -43,7 +43,7 @@ class DatabaseManager {
     // tag:replicationdefs
     fileprivate var _pushPullRepl:Replicator?
     fileprivate var _pushPullReplListener:ListenerToken?
-    fileprivate var kRemoteSyncUrl = "wss://doo9q6ixlrpnpzqt.apps.cloud.couchbase.com:4984" // <1>
+    fileprivate var kRemoteSyncUrl = "ws://localhost:4984" // <1>
     // end:replicationdefs
 
     fileprivate var _applicationDocumentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).last
