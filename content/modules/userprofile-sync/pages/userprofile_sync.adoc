@@ -454,7 +454,7 @@ docker run -p 4984-4986:4984-4986 \
 -d \
 -v `pwd`/{sgw-config-filename-3x0}:\
 /etc/sync_gateway/sync_gateway.json \
-couchbase/sync-gateway:3.0-enterprise \
+couchbase/sync-gateway:{target-version-full}-enterprise \
 /etc/sync_gateway/sync_gateway.json
 ----
 --
